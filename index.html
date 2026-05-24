@@ -1,0 +1,837 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MovaEdu — O Futuro da Educação</title>  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --bg: #060816;
+      --bg-secondary: #0b1020;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --primary: #4d7cff;
+      --secondary: #8b5cf6;
+      --cyan: #00e5ff;
+      --text: #ffffff;
+      --muted: #a7b0c7;
+      --shadow: 0 0 40px rgba(0,229,255,.15);
+    }
+
+    body.light {
+      --bg: #f2f7ff;
+      --bg-secondary: #ffffff;
+      --card: rgba(255,255,255,0.8);
+      --border: rgba(0,0,0,0.08);
+      --text: #0c1020;
+      --muted: #4f5b7a;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(77,124,255,.18), transparent 25%),
+        radial-gradient(circle at right, rgba(139,92,246,.18), transparent 30%),
+        radial-gradient(circle at bottom, rgba(0,229,255,.10), transparent 25%),
+        var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: .4s ease;
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(255,255,255,.4);
+      border-radius: 50%;
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      20% { opacity: 1; }
+      to {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(18px);
+      background: rgba(6,8,22,.55);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+
+    nav {
+      max-width: 1400px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 25px;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--primary), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 500;
+      transition: .3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--cyan);
+    }
+
+    .btn {
+      border: none;
+      padding: 12px 22px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: .35s;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: var(--shadow);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+      align-items: center;
+      gap: 60px;
+      max-width: 1400px;
+      margin: auto;
+      padding: 80px 25px;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1;
+      margin-bottom: 25px;
+      font-weight: 900;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #fff, var(--cyan), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 30px;
+      max-width: 700px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .outline-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.15);
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .orb {
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, rgba(0,229,255,.5), transparent 60%),
+        radial-gradient(circle at top, rgba(77,124,255,.5), transparent 50%),
+        radial-gradient(circle at bottom, rgba(139,92,246,.6), transparent 50%);
+      filter: blur(15px);
+      animation: pulse 4s infinite ease-in-out;
+      position: absolute;
+    }
+
+    @keyframes pulse {
+      0%,100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .dashboard-preview {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      padding: 25px;
+      border-radius: 30px;
+      background: var(--card);
+      backdrop-filter: blur(30px);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      overflow: hidden;
+    }
+
+    .dashboard-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.08), transparent);
+      transform: translateX(-100%);
+      animation: shine 5s infinite;
+    }
+
+    @keyframes shine {
+      to {
+        transform: translateX(100%);
+      }
+    }
+
+    .preview-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .badge {
+      background: rgba(0,229,255,.12);
+      color: var(--cyan);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: .8rem;
+      border: 1px solid rgba(0,229,255,.2);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 18px;
+      margin-top: 25px;
+    }
+
+    .card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      padding: 20px;
+      border-radius: 22px;
+      transition: .35s;
+      backdrop-filter: blur(20px);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0,229,255,.3);
+      box-shadow: 0 0 30px rgba(0,229,255,.08);
+    }
+
+    .card h3 {
+      font-size: .95rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .card strong {
+      font-size: 2rem;
+    }
+
+    section {
+      padding: 100px 25px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      margin-bottom: 15px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      max-width: 800px;
+      margin: auto;
+      line-height: 1.8;
+    }
+
+    .features {
+      max-width: 1400px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 25px;
+    }
+
+    .feature-card {
+      padding: 30px;
+      border-radius: 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      transition: .4s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(0,229,255,.15), transparent 70%);
+      top: -100px;
+      right: -100px;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(0,229,255,.25);
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    }
+
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, rgba(77,124,255,.2), rgba(0,229,255,.15));
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .feature-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .ai-section {
+      max-width: 1400px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+      gap: 40px;
+      align-items: center;
+    }
+
+    .ai-box {
+      padding: 35px;
+      border-radius: 30px;
+      background: linear-gradient(145deg, rgba(77,124,255,.15), rgba(139,92,246,.12));
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(30px);
+      box-shadow: var(--shadow);
+    }
+
+    .ai-box h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .ai-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .ai-item {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .dashboard-grid {
+      max-width: 1400px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 25px;
+    }
+
+    .dashboard-card {
+      background: var(--card);
+      border-radius: 28px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(30px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      margin-top: 18px;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--cyan));
+      border-radius: 999px;
+      animation: grow 3s infinite alternate;
+    }
+
+    @keyframes grow {
+      from {
+        width: 0%;
+      }
+      to {
+        width: 0%;
+      }
+    }
+
+    .social-feed {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      gap: 25px;
+    }
+
+    .post {
+      padding: 28px;
+      border-radius: 26px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+    }
+
+    .post-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .avatar {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    .post p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 20px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .cta {
+      max-width: 1200px;
+      margin: auto;
+      text-align: center;
+      padding: 70px 40px;
+      border-radius: 40px;
+      background:
+        linear-gradient(135deg, rgba(77,124,255,.18), rgba(139,92,246,.18));
+      border: 1px solid rgba(255,255,255,.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta h2 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 20px;
+    }
+
+    footer {
+      padding: 50px 25px;
+      text-align: center;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,.06);
+      margin-top: 100px;
+    }
+
+    .floating {
+      animation: floating 4s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0%,100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .theme-toggle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.05);
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    @media(max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        text-align: center;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style></head>
+<body>  <div class="particles" id="particles"></div>  <header>
+    <nav>
+      <div class="logo">MovaEdu</div><div class="nav-links">
+    <a href="#features">Recursos</a>
+    <a href="#ai">IA Mentor</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#community">Comunidade</a>
+    <button class="theme-toggle" onclick="toggleTheme()">☀</button>
+    <button class="btn">Entrar</button>
+  </div>
+</nav>
+
+  </header>  <section class="hero">
+    <div class="hero-content">
+      <div class="badge floating">🚀 A Nova Era da Educação</div><h1>
+    O Futuro da
+    <span class="gradient-text">Educação Inteligente</span>
+  </h1>
+
+  <p>
+    A MovaEdu transforma aprendizado em uma experiência imersiva,
+    gamificada e revolucionária. Uma plataforma movida por inteligência
+    artificial, comunidade e evolução pessoal.
+  </p>
+
+  <div class="hero-buttons">
+    <button class="btn">Começar Agora</button>
+    <button class="btn outline-btn">Explorar Plataforma</button>
+  </div>
+</div>
+
+<div class="hero-visual">
+  <div class="orb"></div>
+
+  <div class="dashboard-preview floating">
+    <div class="preview-top">
+      <div>
+        <h3>Seu progresso</h3>
+        <strong>Nível 0</strong>
+      </div>
+
+      <div class="badge">0 XP</div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+
+    <div class="stats">
+      <div class="card">
+        <h3>Ranking Global</h3>
+        <strong>#0</strong>
+      </div>
+
+      <div class="card">
+        <h3>Streak Diário</h3>
+        <strong>0🔥</strong>
+      </div>
+
+      <div class="card">
+        <h3>Conquistas</h3>
+        <strong>0🏆</strong>
+      </div>
+
+      <div class="card">
+        <h3>IA Mentor</h3>
+        <strong>Ativo</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </section>  <section id="features">
+    <div class="section-title">
+      <h2>Ecossistema Inteligente</h2>
+      <p>
+        Uma plataforma criada para unir aprendizado, tecnologia, comunidade e evolução.
+      </p>
+    </div><div class="features">
+
+  <div class="feature-card">
+    <div class="feature-icon">🧠</div>
+    <h3>IA Mentor</h3>
+    <p>
+      Inteligência artificial que acompanha desempenho, identifica talentos,
+      sugere conteúdos e cria desafios personalizados.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">🎮</div>
+    <h3>Gamificação Total</h3>
+    <p>
+      Sistema completo de XP, streaks, níveis, raridades, títulos e recompensas.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">🌎</div>
+    <h3>Comunidade Viva</h3>
+    <p>
+      Feed social moderno com debates, curtidas, comentários e colaboração.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">📈</div>
+    <h3>Evolução Visual</h3>
+    <p>
+      Barra de progresso, animações de nível e sensação constante de crescimento.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">🏆</div>
+    <h3>Ranking Competitivo</h3>
+    <p>
+      Rankings semanais, globais e por equipes incentivando desempenho saudável.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">📚</div>
+    <h3>Trilhas Inteligentes</h3>
+    <p>
+      Aprendizado personalizado com metas, calendário e conteúdos dinâmicos.
+    </p>
+  </div>
+
+</div>
+
+  </section>  <section id="ai">
+    <div class="ai-section">
+      <div class="ai-box">
+        <div class="badge">IA Integrada</div><h3>Seu Mentor Virtual</h3>
+
+    <p style="line-height:1.8; color: var(--muted); margin-top:20px;">
+      A inteligência artificial da MovaEdu acompanha toda a jornada do estudante,
+      criando uma experiência personalizada e futurista.
+    </p>
+
+    <div class="ai-list">
+      <div class="ai-item">✔ Analisa desempenho em tempo real</div>
+      <div class="ai-item">✔ Detecta dificuldades automaticamente</div>
+      <div class="ai-item">✔ Sugere conteúdos personalizados</div>
+      <div class="ai-item">✔ Recomenda profissões compatíveis</div>
+      <div class="ai-item">✔ Cria missões e desafios únicos</div>
+    </div>
+  </div>
+
+  <div class="dashboard-preview">
+    <div class="preview-top">
+      <div>
+        <h3>IA Mentor</h3>
+        <strong>Ana • Online</strong>
+      </div>
+
+      <div class="badge">IA Premium</div>
+    </div>
+
+    <div class="card">
+      <h3>Recomendação de carreira</h3>
+      <strong>Nenhuma recomendação ainda</strong>
+      <p style="margin-top:10px;color:var(--muted)">
+        A IA começará a analisar os dados quando os alunos iniciarem suas atividades.
+      </p>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <h3>Próxima missão</h3>
+      <strong>Nenhuma missão ativa</strong>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </section>  <section id="dashboard">
+    <div class="section-title">
+      <h2>Dashboard Inteligente</h2>
+      <p>
+        Controle total da evolução do aluno em um painel moderno e cinematográfico.
+      </p>
+    </div><div class="dashboard-grid">
+
+  <div class="dashboard-card">
+    <div class="badge">Perfil</div>
+    <h3 style="margin-top:20px;font-size:1.6rem;">Perfil do Aluno</h3>
+    <p style="margin-top:15px;color:var(--muted);line-height:1.7;">
+      Avatar personalizado, bio, habilidades, metas e conquistas.
+    </p>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="badge">Missões</div>
+    <h3 style="margin-top:20px;font-size:1.6rem;">Desafios Diários</h3>
+    <p style="margin-top:15px;color:var(--muted);line-height:1.7;">
+      Sistema de tarefas, streaks e evolução contínua.
+    </p>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="badge">Eventos</div>
+    <h3 style="margin-top:20px;font-size:1.6rem;">Temporadas Escolares</h3>
+    <p style="margin-top:15px;color:var(--muted);line-height:1.7;">
+      Eventos especiais, rankings temáticos e recompensas limitadas.
+    </p>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="badge">Equipes</div>
+    <h3 style="margin-top:20px;font-size:1.6rem;">Sistema de Turmas</h3>
+    <p style="margin-top:15px;color:var(--muted);line-height:1.7;">
+      Competição saudável entre equipes e colaboração social.
+    </p>
+  </div>
+
+</div>
+
+  </section>  <section id="community">
+    <div class="section-title">
+      <h2>Comunidade MovaEdu</h2>
+      <p>
+        Muito além de um sistema escolar. Uma rede social educacional moderna.
+      </p>
+    </div><div class="social-feed">
+
+  <div class="post">
+    <div class="post-top">
+      <div class="user">
+        <div class="avatar">?</div>
+        <div>
+          <strong>Nenhum usuário ainda</strong>
+          <div style="color:var(--muted); font-size:.9rem;">Os rankings aparecerão quando os alunos começarem</div>
+        </div>
+      </div>
+
+      <div class="badge">0 XP</div>
+    </div>
+
+    <p>
+      Os feeds sociais, conquistas e atividades serão gerados automaticamente pelos usuários.
+    </p>
+
+    <div class="post-actions">
+      <span>❤️ 0 curtidas</span>
+      <span>💬 0 comentários</span>
+      <span>🏆 Nenhum destaque</span>
+    </div>
+  </div>
+
+  <div class="post">
+    <div class="post-top">
+      <div class="user">
+        <div class="avatar">?</div>
+        <div>
+          <strong>Comunidade vazia</strong>
+          <div style="color:var(--muted); font-size:.9rem;">Aguardando os primeiros projetos</div>
+        </div>
+      </div>
+
+      <div class="badge">TOP 0</div>
+    </div>
+
+    <p>
+      Os projetos, debates e interações aparecerão dinamicamente após integração com Firebase.
+    </p>
+
+    <div class="post-actions">
+      <span>🔥 0 curtidas</span>
+      <span>💬 0 comentários</span>
+  
