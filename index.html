@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Escravo, Nem Pensar! — CETI José Marques</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,3466 +10,846 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
-/* =========================================================
-   PALETA
-========================================================= */
-
 :root {
     --bg: #F8EFD9;
     --bg-soft: #F2E4C4;
     --header: #B44E2A;
     --header-dark: #8E3B23;
-
     --sidebar: #14293A;
     --sidebar-hover: #1F3B52;
-
     --card: #F4E7C9;
     --card-hover: #EFDDBD;
-
     --text: #14293A;
     --text-soft: #5C4635;
-
     --cream: #FFF4D9;
     --white: #FFFDF8;
-
     --orange: #D66B38;
     --ocre: #D38C35;
     --red: #A5412E;
-
     --shadow: 0 8px 25px rgba(20,41,58,.12);
-
     --radius: 18px;
-
     --sidebar-width: 260px;
 }
 
 [data-theme="dark"] {
     --bg: #101820;
     --bg-soft: #172633;
-
     --header: #C9603C;
     --header-dark: #A7462C;
-
     --sidebar: #09131D;
     --sidebar-hover: #172A3A;
-
     --card: #1C2B37;
     --card-hover: #243744;
-
     --text: #FFF8E8;
     --text-soft: #D8C9B4;
-
     --cream: #FFF4D9;
     --white: #FFFFFF;
-
     --orange: #D97A49;
     --ocre: #D99A4A;
     --red: #C65A43;
-
     --shadow: 0 8px 25px rgba(0,0,0,.35);
 }
 
-
-/* =========================================================
-   RESET
-========================================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
     font-family: "DM Sans", sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-
-    background-image:
-        radial-gradient(
-            rgba(180,78,42,.055) 1px,
-            transparent 1px
-        );
-
+    background-image: radial-gradient(rgba(180,78,42,.055) 1px, transparent 1px);
     background-size: 18px 18px;
-
     transition: background .3s, color .3s;
 }
 
-button,
-input,
-textarea,
-select {
-    font-family: inherit;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
+button, input, textarea, select { font-family: inherit; }
 
 .header {
     height: 115px;
     background: var(--header);
     color: var(--cream);
-
     display: flex;
     align-items: center;
-
     padding: 18px 35px;
-
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-
+    top: 0; left: 0; right: 0;
     z-index: 1000;
-
     box-shadow: 0 5px 20px rgba(0,0,0,.12);
-
     overflow: hidden;
 }
 
 .header::after {
     content: "";
-
     position: absolute;
-
-    right: 30px;
-    top: -80px;
-
-    width: 260px;
-    height: 260px;
-
+    right: 30px; top: -80px;
+    width: 260px; height: 260px;
     border-radius: 50%;
-
     border: 30px solid rgba(255,244,217,.08);
 }
 
 .logo {
-    width: 75px;
-    height: 75px;
-
+    width: 75px; height: 75px;
     background: var(--cream);
-
     color: var(--sidebar);
-
     border-radius: 18px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    display: flex; align-items: center; justify-content: center;
     margin-right: 25px;
-
     font-size: 35px;
-
     box-shadow: 0 5px 15px rgba(0,0,0,.15);
-
     z-index: 2;
 }
 
-.header-content {
-    z-index: 2;
-}
-
-.header h1 {
-    font-family: "Oswald", sans-serif;
-
-    font-size: clamp(2rem, 4vw, 3.3rem);
-
-    letter-spacing: 1px;
-
-    text-transform: uppercase;
-
-    line-height: 1;
-}
-
-.header p {
-    margin-top: 8px;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    letter-spacing: .5px;
-}
+.header-content { z-index: 2; }
+.header h1 { font-family: "Oswald", sans-serif; font-size: clamp(2rem, 4vw, 3.3rem); letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
+.header p { margin-top: 8px; font-size: 14px; font-weight: 600; letter-spacing: .5px; }
 
 .theme-button {
-    margin-left: auto;
-
-    z-index: 3;
-
-    background: rgba(20,41,58,.8);
-
-    color: var(--cream);
-
-    border: none;
-
-    padding: 12px 18px;
-
-    border-radius: 30px;
-
-    cursor: pointer;
-
-    font-weight: 700;
-
-    transition: .2s;
+    margin-left: auto; z-index: 3;
+    background: rgba(20,41,58,.8); color: var(--cream);
+    border: none; padding: 12px 18px; border-radius: 30px;
+    cursor: pointer; font-weight: 700; transition: .2s;
 }
-
-.theme-button:hover {
-    transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
+.theme-button:hover { transform: translateY(-2px); }
 
 .sidebar {
-    position: fixed;
-
-    left: 0;
-    top: 115px;
-    bottom: 0;
-
-    width: var(--sidebar-width);
-
-    background: var(--sidebar);
-
-    color: white;
-
-    padding: 25px 16px;
-
-    overflow-y: auto;
-
-    z-index: 900;
-
-    transition: transform .3s;
+    position: fixed; left: 0; top: 115px; bottom: 0;
+    width: var(--sidebar-width); background: var(--sidebar);
+    color: white; padding: 25px 16px; overflow-y: auto;
+    z-index: 900; transition: transform .3s;
 }
 
-.menu-title {
-    color: #D38C35;
-
-    font-family: "Oswald", sans-serif;
-
-    text-transform: uppercase;
-
-    font-size: 13px;
-
-    letter-spacing: 1.5px;
-
-    margin: 0 12px 15px;
-}
-
-.menu {
-    list-style: none;
-}
-
-.menu li {
-    margin-bottom: 7px;
-}
-
+.menu-title { color: #D38C35; font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 13px; letter-spacing: 1.5px; margin: 0 12px 15px; }
+.menu { list-style: none; }
+.menu li { margin-bottom: 7px; }
 .menu button {
-    width: 100%;
-
-    border: none;
-
-    background: transparent;
-
-    color: #FFF4D9;
-
-    text-align: left;
-
-    padding: 13px 15px;
-
-    border-radius: 13px;
-
-    cursor: pointer;
-
-    font-size: 15px;
-
-    font-weight: 600;
-
-    transition: .2s;
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    width: 100%; border: none; background: transparent; color: #FFF4D9;
+    text-align: left; padding: 13px 15px; border-radius: 13px;
+    cursor: pointer; font-size: 15px; font-weight: 600; transition: .2s;
+    display: flex; align-items: center; gap: 12px;
 }
+.menu button:hover, .menu button.active { background: var(--sidebar-hover); transform: translateX(3px); }
+.menu-icon { width: 25px; text-align: center; font-size: 19px; }
 
-.menu button:hover,
-.menu button.active {
-    background: var(--sidebar-hover);
-
-    transform: translateX(3px);
-}
-
-.menu-icon {
-    width: 25px;
-
-    text-align: center;
-
-    font-size: 19px;
-}
-
-.admin-menu {
-    position: absolute;
-
-    bottom: 20px;
-
-    left: 16px;
-    right: 16px;
-}
-
-.admin-menu button {
-    background: var(--cream);
-
-    color: var(--sidebar);
-
-    justify-content: center;
-}
-
-
-/* =========================================================
-   MOBILE MENU
-========================================================= */
+.admin-menu { position: absolute; bottom: 20px; left: 16px; right: 16px; }
+.admin-menu button { background: var(--cream); color: var(--sidebar); justify-content: center; }
 
 .mobile-menu {
-    display: none;
-
-    position: fixed;
-
-    top: 135px;
-    left: 15px;
-
-    z-index: 1100;
-
-    background: var(--sidebar);
-
-    color: white;
-
-    border: none;
-
-    width: 48px;
-    height: 48px;
-
-    border-radius: 13px;
-
-    font-size: 24px;
-
-    cursor: pointer;
-
-    box-shadow: var(--shadow);
+    display: none; position: fixed; top: 135px; left: 15px; z-index: 1100;
+    background: var(--sidebar); color: white; border: none;
+    width: 48px; height: 48px; border-radius: 13px; font-size: 24px;
+    cursor: pointer; box-shadow: var(--shadow);
 }
 
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main {
-    margin-left: var(--sidebar-width);
-
-    padding-top: 115px;
-
-    min-height: 100vh;
-}
-
-.content {
-    padding: 35px;
-
-    max-width: 1500px;
-
-    margin: auto;
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
+.main { margin-left: var(--sidebar-width); padding-top: 115px; min-height: 100vh; }
+.content { padding: 35px; max-width: 1200px; margin: 0 auto; width: 100%; }
 
 .hero {
-    min-height: 310px;
-
-    background: var(--bg-soft);
-
-    border-radius: 24px;
-
-    padding: 40px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 30px;
-
-    overflow: hidden;
-
-    position: relative;
-
-    box-shadow: var(--shadow);
+    min-height: 310px; background: var(--bg-soft); border-radius: 24px;
+    padding: 40px; display: flex; align-items: center; justify-content: space-between;
+    gap: 30px; overflow: hidden; position: relative; box-shadow: var(--shadow);
 }
-
-.hero::after {
-    content: "✊";
-
-    position: absolute;
-
-    right: 45px;
-    bottom: -35px;
-
-    font-size: 210px;
-
-    opacity: .08;
-
-    transform: rotate(-8deg);
-}
-
-.hero-text {
-    max-width: 620px;
-
-    z-index: 2;
-}
-
-.hero h2 {
-    font-family: "Oswald", sans-serif;
-
-    font-size: clamp(2rem, 4vw, 3.4rem);
-
-    line-height: 1.05;
-
-    text-transform: uppercase;
-
-    margin-bottom: 18px;
-}
-
-.hero p {
-    color: var(--text-soft);
-
-    font-size: 17px;
-
-    line-height: 1.7;
-
-    margin-bottom: 25px;
-}
+.hero::after { content: "✊"; position: absolute; right: 45px; bottom: -35px; font-size: 210px; opacity: .08; transform: rotate(-8deg); }
+.hero-text { max-width: 620px; z-index: 2; }
+.hero h2 { font-family: "Oswald", sans-serif; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; text-transform: uppercase; margin-bottom: 18px; }
+.hero p { color: var(--text-soft); font-size: 17px; line-height: 1.7; margin-bottom: 25px; }
 
 .primary-button {
-    border: none;
-
-    background: var(--header);
-
-    color: var(--cream);
-
-    padding: 13px 20px;
-
-    border-radius: 10px;
-
-    cursor: pointer;
-
-    font-weight: 700;
-
-    transition: .2s;
+    border: none; background: var(--header); color: var(--cream);
+    padding: 13px 20px; border-radius: 10px; cursor: pointer;
+    font-weight: 700; transition: .2s; display: inline-block;
 }
+.primary-button:hover { background: var(--header-dark); transform: translateY(-2px); }
 
-.primary-button:hover {
-    background: var(--header-dark);
+.section-header { display: flex; align-items: center; gap: 15px; margin: 40px 0 20px; }
+.section-header h2 { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 27px; }
+.section-line { height: 2px; background: var(--header); flex: 1; opacity: .4; }
+.see-all { background: none; border: none; color: var(--header); font-weight: 700; cursor: pointer; }
 
-    transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   SECTION TITLE
-========================================================= */
-
-.section-header {
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    margin: 40px 0 20px;
-}
-
-.section-header h2 {
-    font-family: "Oswald", sans-serif;
-
-    text-transform: uppercase;
-
-    font-size: 27px;
-}
-
-.section-line {
-    height: 2px;
-
-    background: var(--header);
-
-    flex: 1;
-
-    opacity: .4;
-}
-
-.see-all {
-    background: none;
-
-    border: none;
-
-    color: var(--header);
-
-    font-weight: 700;
-
-    cursor: pointer;
-}
-
-
-/* =========================================================
-   CARDS
-========================================================= */
-
-.cards-grid {
-    display: grid;
-
-    grid-template-columns: repeat(4, 1fr);
-
-    gap: 20px;
-}
-
+.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .card {
-    background: var(--card);
-
-    border-radius: var(--radius);
-
-    overflow: hidden;
-
-    border: 1px solid rgba(180,78,42,.15);
-
-    box-shadow: var(--shadow);
-
-    cursor: pointer;
-
-    transition: .3s;
-
-    position: relative;
+    background: var(--card); border-radius: var(--radius); overflow: hidden;
+    border: 1px solid rgba(180,78,42,.15); box-shadow: var(--shadow);
+    cursor: pointer; transition: .3s; position: relative;
+    display: flex; flex-direction: column;
 }
-
-.card:hover {
-    transform: translateY(-7px);
-
-    background: var(--card-hover);
-}
-
+.card:hover { transform: translateY(-7px); background: var(--card-hover); }
 .card-image {
-    height: 160px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--header),
-            var(--orange)
-        );
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    font-size: 65px;
-
-    color: var(--cream);
-
-    position: relative;
-
-    overflow: hidden;
+    height: 180px; background: linear-gradient(135deg, var(--header), var(--orange));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 65px; color: var(--cream); position: relative; overflow: hidden;
+    background-size: cover; background-position: center;
 }
+.card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+.card-body h3 { font-family: "Oswald", sans-serif; font-size: 23px; text-transform: uppercase; margin-bottom: 8px; }
+.card-body p { color: var(--text-soft); line-height: 1.5; font-size: 14px; flex: 1; }
+.card-link { margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; color: var(--header); font-weight: 800; font-size: 14px; }
 
-.card-image::after {
-    content: "";
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
+.stat { background: var(--sidebar); color: var(--cream); padding: 25px; border-radius: 18px; text-align: center; }
+.stat strong { display: block; font-family: "Oswald", sans-serif; font-size: 38px; color: #D38C35; }
+.stat span { font-size: 14px; font-weight: 600; }
 
-    position: absolute;
+.page { display: none; }
+.page.active { display: block; animation: fade .3s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    width: 130px;
-    height: 130px;
+.page-title { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 42px; margin-bottom: 10px; }
+.page-subtitle { color: var(--text-soft); margin-bottom: 30px; }
 
-    border: 18px solid rgba(255,255,255,.09);
-
-    border-radius: 50%;
-
-    right: -40px;
-    bottom: -50px;
-}
-
-.card-body {
-    padding: 20px;
-}
-
-.card-body h3 {
-    font-family: "Oswald", sans-serif;
-
-    font-size: 23px;
-
-    text-transform: uppercase;
-
-    margin-bottom: 8px;
-}
-
-.card-body p {
-    color: var(--text-soft);
-
-    line-height: 1.5;
-
-    font-size: 14px;
-
-    min-height: 64px;
-}
-
-.card-link {
-    margin-top: 15px;
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    color: var(--header);
-
-    font-weight: 800;
-
-    font-size: 14px;
-}
-
-
-/* =========================================================
-   INFO BOXES
-========================================================= */
-
-.stats {
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 20px;
-
-    margin-top: 30px;
-}
-
-.stat {
-    background: var(--sidebar);
-
-    color: var(--cream);
-
-    padding: 25px;
-
-    border-radius: 18px;
-
-    text-align: center;
-}
-
-.stat strong {
-    display: block;
-
-    font-family: "Oswald", sans-serif;
-
-    font-size: 38px;
-
-    color: #D38C35;
-}
-
-.stat span {
-    font-size: 14px;
-
-    font-weight: 600;
-}
-
-
-/* =========================================================
-   PAGE
-========================================================= */
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-
-    animation: fade .3s ease;
-}
-
-@keyframes fade {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.page-title {
-    font-family: "Oswald", sans-serif;
-
-    text-transform: uppercase;
-
-    font-size: 42px;
-
-    margin-bottom: 10px;
-}
-
-.page-subtitle {
-    color: var(--text-soft);
-
-    margin-bottom: 30px;
-}
-
-
-/* =========================================================
-   ACTIVITY DETAIL
-========================================================= */
-
-.detail {
-    background: var(--card);
-
-    border-radius: 22px;
-
-    padding: 30px;
-
-    box-shadow: var(--shadow);
-}
-
+.detail { background: var(--card); border-radius: 22px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 20px; }
 .detail-cover {
-    height: 280px;
-
-    background: var(--header);
-
-    border-radius: 18px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 100px;
-
-    margin-bottom: 30px;
+    height: 320px; background: var(--header); border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 100px; margin-bottom: 30px; background-size: cover; background-position: center;
 }
+.detail h2 { font-family: "Oswald", sans-serif; font-size: 38px; text-transform: uppercase; margin-bottom: 15px; }
+.detail p { color: var(--text-soft); line-height: 1.8; margin-bottom: 20px; }
+.detail-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+.badge { background: var(--header); color: var(--cream); padding: 8px 13px; border-radius: 30px; font-size: 13px; font-weight: 700; }
 
-.detail h2 {
-    font-family: "Oswald", sans-serif;
-
-    font-size: 38px;
-
-    text-transform: uppercase;
-
-    margin-bottom: 15px;
-}
-
-.detail p {
-    color: var(--text-soft);
-
-    line-height: 1.8;
-
-    margin-bottom: 20px;
-}
-
-.detail-meta {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 10px;
-
-    margin-bottom: 25px;
-}
-
-.badge {
-    background: var(--header);
-
-    color: var(--cream);
-
-    padding: 8px 13px;
-
-    border-radius: 30px;
-
-    font-size: 13px;
-
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   GALLERY
-========================================================= */
-
-.gallery {
-    display: grid;
-
-    grid-template-columns: repeat(4, 1fr);
-
-    gap: 15px;
-}
-
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
 .gallery-item {
-    height: 200px;
-
-    border-radius: 15px;
-
-    background: var(--card);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 60px;
-
-    overflow: hidden;
+    height: 220px; border-radius: 15px; background: var(--bg-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; overflow: hidden; background-size: cover; background-position: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-
-/* =========================================================
-   ADMIN
-========================================================= */
-
-.admin-panel {
-    background: var(--card);
-
-    padding: 30px;
-
-    border-radius: 20px;
-
-    box-shadow: var(--shadow);
+.video-wrapper {
+    position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+    border-radius: 18px; margin-top: 20px; box-shadow: var(--shadow);
 }
+.video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-.admin-top {
-    display: flex;
+.admin-panel { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: var(--shadow); }
+.admin-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 25px; }
+.admin-list { display: grid; gap: 12px; }
+.admin-item { background: var(--bg); padding: 17px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+.admin-item h3 { font-family: "Oswald", sans-serif; text-transform: uppercase; }
+.admin-actions { display: flex; gap: 7px; }
 
-    justify-content: space-between;
+.small-button { border: none; padding: 9px 13px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+.edit-button { background: var(--ocre); color: #fff; }
+.delete-button { background: var(--red); color: white; }
 
-    align-items: center;
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.65); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 3000; }
+.modal.show { display: flex; }
+.modal-box { width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; background: var(--bg); border-radius: 20px; padding: 30px; box-shadow: 0 20px 70px rgba(0,0,0,.4); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.modal-header h2 { font-family: "Oswald", sans-serif; text-transform: uppercase; }
+.close { border: none; background: transparent; font-size: 28px; cursor: pointer; color: var(--text); }
 
-    gap: 20px;
-
-    margin-bottom: 25px;
+.form-group { margin-bottom: 17px; }
+.form-group label { display: block; font-size: 13px; font-weight: 800; margin-bottom: 7px; text-transform: uppercase; }
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 12px 14px; border: 1px solid rgba(20,41,58,.2);
+    border-radius: 10px; background: var(--white); color: #222; outline: none;
 }
-
-.admin-list {
-    display: grid;
-
-    gap: 12px;
-}
-
-.admin-item {
-    background: var(--bg);
-
-    padding: 17px;
-
-    border-radius: 14px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 15px;
-}
-
-.admin-item h3 {
-    font-family: "Oswald", sans-serif;
-
-    text-transform: uppercase;
-}
-
-.admin-actions {
-    display: flex;
-
-    gap: 7px;
-}
-
-.small-button {
-    border: none;
-
-    padding: 9px 13px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-weight: 700;
-}
-
-.edit-button {
-    background: var(--ocre);
-
-    color: #fff;
-}
-
-.delete-button {
-    background: var(--red);
-
-    color: white;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal {
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0,0,0,.65);
-
-    display: none;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 20px;
-
-    z-index: 3000;
-}
-
-.modal.show {
-    display: flex;
-}
-
-.modal-box {
-    width: 100%;
-
-    max-width: 650px;
-
-    max-height: 90vh;
-
-    overflow-y: auto;
-
-    background: var(--bg);
-
-    border-radius: 20px;
-
-    padding: 30px;
-
-    box-shadow: 0 20px 70px rgba(0,0,0,.4);
-}
-
-.modal-header {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 25px;
-}
-
-.modal-header h2 {
-    font-family: "Oswald", sans-serif;
-
-    text-transform: uppercase;
-}
-
-.close {
-    border: none;
-
-    background: transparent;
-
-    font-size: 28px;
-
-    cursor: pointer;
-
-    color: var(--text);
-}
-
-.form-group {
-    margin-bottom: 17px;
-}
-
-.form-group label {
-    display: block;
-
-    font-size: 13px;
-
-    font-weight: 800;
-
-    margin-bottom: 7px;
-
-    text-transform: uppercase;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-
-    padding: 12px 14px;
-
-    border: 1px solid rgba(20,41,58,.2);
-
-    border-radius: 10px;
-
-    background: var(--white);
-
-    color: #222;
-
-    outline: none;
-}
-
-.form-group textarea {
-    min-height: 130px;
-
-    resize: vertical;
-}
-
-.form-actions {
-    display: flex;
-
-    justify-content: flex-end;
-
-    gap: 10px;
-
-    margin-top: 25px;
-}
-
-.cancel-button {
-    border: none;
-
-    background: #777;
-
-    color: white;
-
-    padding: 12px 18px;
-
-    border-radius: 9px;
-
-    cursor: pointer;
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-.login-box {
-    max-width: 450px;
-
-    margin: 80px auto;
-
-    background: var(--card);
-
-    padding: 35px;
-
-    border-radius: 20px;
-
-    box-shadow: var(--shadow);
-
-    text-align: center;
-}
-
-.login-icon {
-    font-size: 55px;
-
-    margin-bottom: 15px;
-}
-
-.login-box h2 {
-    font-family: "Oswald", sans-serif;
-
-    font-size: 34px;
-
-    text-transform: uppercase;
-
-    margin-bottom: 10px;
-}
-
-.login-box p {
-    color: var(--text-soft);
-
-    margin-bottom: 25px;
-}
-
-.error {
-    color: var(--red);
-
-    font-size: 13px;
-
-    margin-top: 10px;
-
-    display: none;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer {
-    margin-top: 50px;
-
-    background: var(--sidebar);
-
-    color: var(--cream);
-
-    padding: 25px;
-
-    text-align: center;
-
-    font-size: 13px;
-}
-
-
-/* =========================================================
-   RESPONSIVO
-========================================================= */
+.form-group textarea { min-height: 110px; resize: vertical; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
+.cancel-button { border: none; background: #777; color: white; padding: 12px 18px; border-radius: 9px; cursor: pointer; }
+
+.login-box { max-width: 450px; margin: 80px auto; background: var(--card); padding: 35px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; }
+.login-icon { font-size: 55px; margin-bottom: 15px; }
+.login-box h2 { font-family: "Oswald", sans-serif; font-size: 34px; text-transform: uppercase; margin-bottom: 10px; }
+.login-box p { color: var(--text-soft); margin-bottom: 25px; }
+.error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+
+footer { margin-top: 50px; background: var(--sidebar); color: var(--cream); padding: 25px; text-align: center; font-size: 13px; }
 
 @media (max-width: 1150px) {
-
-    .cards-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .gallery {
-        grid-template-columns: repeat(3, 1fr);
-    }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 850px) {
-
-    .header {
-        height: 90px;
-
-        padding: 12px 18px;
-    }
-
-    .logo {
-        width: 55px;
-        height: 55px;
-
-        font-size: 25px;
-
-        margin-right: 14px;
-    }
-
-    .header h1 {
-        font-size: 1.8rem;
-    }
-
-    .header p {
-        display: none;
-    }
-
-    .theme-button {
-        font-size: 0;
-
-        width: 45px;
-        height: 45px;
-
-        padding: 0;
-    }
-
-    .theme-button::before {
-        content: "🌙";
-
-        font-size: 18px;
-    }
-
-    .sidebar {
-        top: 90px;
-
-        transform: translateX(-100%);
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .mobile-menu {
-        display: block;
-
-        top: 105px;
-    }
-
-    .main {
-        margin-left: 0;
-
-        padding-top: 90px;
-    }
-
-    .content {
-        padding: 25px 18px;
-    }
-
-    .hero {
-        padding: 28px;
-
-        min-height: 300px;
-    }
-
-    .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .gallery {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .header { height: 90px; padding: 12px 18px; }
+    .logo { width: 55px; height: 55px; font-size: 25px; margin-right: 14px; }
+    .header h1 { font-size: 1.8rem; }
+    .header p { display: none; }
+    .theme-button { font-size: 0; width: 45px; height: 45px; padding: 0; }
+    .theme-button::before { content: "🌙"; font-size: 18px; }
+    .sidebar { top: 90px; transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .mobile-menu { display: block; top: 105px; }
+    .main { margin-left: 0; padding-top: 90px; }
+    .content { padding: 25px 18px; }
+    .hero { padding: 28px; min-height: 300px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 560px) {
-
-    .header h1 {
-        font-size: 1.35rem;
-    }
-
-    .logo {
-        width: 48px;
-        height: 48px;
-
-        font-size: 21px;
-    }
-
-    .hero {
-        padding: 23px;
-
-        border-radius: 17px;
-    }
-
-    .hero h2 {
-        font-size: 2rem;
-    }
-
-    .hero p {
-        font-size: 14px;
-    }
-
-    .cards-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .stats {
-        grid-template-columns: 1fr;
-    }
-
-    .gallery {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .admin-top {
-        align-items: flex-start;
-
-        flex-direction: column;
-    }
-
-    .admin-item {
-        align-items: flex-start;
-
-        flex-direction: column;
-    }
-
-    .page-title {
-        font-size: 34px;
-    }
+    .header h1 { font-size: 1.35rem; }
+    .logo { width: 48px; height: 48px; font-size: 21px; }
+    .hero { padding: 23px; border-radius: 17px; }
+    .hero h2 { font-size: 2rem; }
+    .hero p { font-size: 14px; }
+    .stats { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: 1fr; }
+    .admin-top, .admin-item { align-items: flex-start; flex-direction: column; }
+    .page-title { font-size: 34px; }
 }
-
 </style>
 </head>
-
-
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header class="header">
-
-    <div class="logo">
-        ⛓️
-    </div>
-
+    <div class="logo">⛓️</div>
     <div class="header-content">
         <h1>Escravo, Nem Pensar!</h1>
-
-        <p>
-            INFORMAR PARA COMBATER. CONHECER PARA TRANSFORMAR.
-        </p>
+        <p>INFORMAR PARA COMBATER. CONHECER PARA TRANSFORMAR.</p>
     </div>
-
-    <button class="theme-button" onclick="toggleTheme()">
-        🌙 Modo escuro
-    </button>
-
+    <button class="theme-button" onclick="toggleTheme()">🌙 Modo escuro</button>
 </header>
 
-
-<!-- =====================================================
-     MOBILE BUTTON
-===================================================== -->
-
-<button class="mobile-menu" onclick="toggleSidebar()">
-    ☰
-</button>
-
-
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
+<button class="mobile-menu" onclick="toggleSidebar()">☰</button>
 
 <aside class="sidebar" id="sidebar">
-
-    <div class="menu-title">
-        Navegação
-    </div>
-
+    <div class="menu-title">Navegação</div>
     <ul class="menu">
-
-        <li>
-            <button class="active" onclick="showPage('inicio', this)">
-                <span class="menu-icon">🏠</span>
-                Início
-            </button>
-        </li>
-
-        <li>
-            <button onclick="showPage('projeto', this)">
-                <span class="menu-icon">📖</span>
-                Sobre o projeto
-            </button>
-        </li>
-
-        <li>
-            <button onclick="showPage('atividades', this)">
-                <span class="menu-icon">📚</span>
-                Atividades
-            </button>
-        </li>
-
-        <li>
-            <button onclick="showPage('galeria', this)">
-                <span class="menu-icon">📷</span>
-                Galeria
-            </button>
-        </li>
-
-        <li>
-            <button onclick="showPage('materiais', this)">
-                <span class="menu-icon">📄</span>
-                Materiais
-            </button>
-        </li>
-
-        <li>
-            <button onclick="showPage('sobre', this)">
-                <span class="menu-icon">👥</span>
-                Sobre a turma
-            </button>
-        </li>
-
+        <li><button class="active" onclick="showPage('inicio', this)"><span class="menu-icon">🏠</span>Início</button></li>
+        <li><button onclick="showPage('projeto', this)"><span class="menu-icon">📖</span>Sobre o projeto</button></li>
+        <li><button onclick="showPage('atividades', this)"><span class="menu-icon">📚</span>Atividades</button></li>
+        <li><button onclick="showPage('galeria', this)"><span class="menu-icon">📷</span>Galeria</button></li>
+        <li><button onclick="showPage('materiais', this)"><span class="menu-icon">📄</span>Materiais</button></li>
+        <li><button onclick="showPage('sobre', this)"><span class="menu-icon">👥</span>Sobre a turma</button></li>
     </ul>
-
     <div class="admin-menu">
-
-        <button onclick="showLogin()">
-            🔐 Área restrita (ADM)
-        </button>
-
+        <button onclick="showLogin()">🔐 Área restrita (ADM)</button>
     </div>
-
-</aside<!-- =====================================================
-     MAIN
-===================================================== -->
+</aside>
 
 <main class="main">
-
 <div class="content">
 
-
-<!-- =====================================================
-     INÍCIO
-===================================================== -->
-
 <section id="inicio" class="page active">
-
     <div class="hero">
-
         <div class="hero-text">
-
-            <h2>
-                Conhecer é o primeiro passo para combater o trabalho escravo.
-            </h2>
-
-            <p>
-                Este espaço reúne as atividades, pesquisas,
-                apresentações e produções desenvolvidas pela
-                nossa escola no projeto
-                <strong>Escravo, Nem Pensar!</strong>
-            </p>
-
-            <button class="primary-button"
-                    onclick="showPage('projeto')">
-
-                Saiba mais sobre o projeto →
-
-            </button>
-
+            <h2>Conhecer é o primeiro passo para combater o trabalho escravo.</h2>
+            <p>Este espaço reúne as atividades, pesquisas, apresentações e produções desenvolvidas pela nossa escola no projeto <strong>Escravo, Nem Pensar!</strong></p>
+            <button class="primary-button" onclick="showPage('projeto')">Saiba mais sobre o projeto →</button>
         </div>
-
     </div>
-
 
     <div class="section-header">
-
         <h2>★ Atividades do projeto</h2>
-
         <div class="section-line"></div>
-
-        <button class="see-all"
-                onclick="showPage('atividades')">
-
-            Ver todas →
-
-        </button>
-
+        <button class="see-all" onclick="showPage('atividades')">Ver todas →</button>
     </div>
-
 
     <div class="cards-grid" id="homeCards"></div>
 
-
     <div class="stats">
-
         <div class="stat">
-
-            <strong id="statActivities">
-                0
-            </strong>
-
-            <span>
-                Atividades realizadas
-            </span>
-
+            <strong id="statActivities">0</strong>
+            <span>Atividades realizadas</span>
         </div>
-
-
         <div class="stat">
-
-            <strong>
-                200+
-            </strong>
-
-            <span>
-                Alunos envolvidos
-            </span>
-
+            <strong>200+</strong>
+            <span>Alunos envolvidos</span>
         </div>
-
-
         <div class="stat">
-
-            <strong>
-                1
-            </strong>
-
-            <span>
-                Objetivo: transformar
-            </span>
-
+            <strong>1</strong>
+            <span>Objetivo: transformar</span>
         </div>
-
     </div>
-
 </section>
-
-
-<!-- =====================================================
-     SOBRE O PROJETO
-===================================================== -->
 
 <section id="projeto" class="page">
-
-    <h2 class="page-title">
-        Sobre o projeto
-    </h2>
-
-    <p class="page-subtitle">
-        Conheça a proposta e a importância do projeto.
-    </p>
-
-
+    <h2 class="page-title">Sobre o projeto</h2>
+    <p class="page-subtitle">Conheça a proposta e a importância do projeto.</p>
     <div class="detail">
-
-        <div class="detail-cover">
-            📚
-        </div>
-
-
-        <h2>
-            Escravo, Nem Pensar!
-        </h2>
-
-
-        <p>
-            O projeto busca promover informação, reflexão e
-            conscientização sobre o trabalho escravo contemporâneo,
-            incentivando os estudantes a conhecerem essa realidade
-            e compreenderem a importância da prevenção e do combate
-            à exploração do trabalho.
-        </p>
-
-
-        <p>
-            Por meio de pesquisas, apresentações, produções culturais,
-            debates e outras atividades, os estudantes são convidados
-            a transformar conhecimento em conscientização.
-        </p>
-
-
+        <div class="detail-cover">📚</div>
+        <h2>Escravo, Nem Pensar!</h2>
+        <p>O projeto busca promover informação, reflexão e conscientização sobre o trabalho escravo contemporâneo, incentivando os estudantes a conhecerem essa realidade e compreenderem a importância da prevenção e do combate à exploração do trabalho.</p>
+        <p>Por meio de pesquisas, apresentações, produções culturais, debates e outras atividades, os estudantes são convidados a transformar conhecimento em conscientização.</p>
         <div class="detail-meta">
-
-            <span class="badge">
-                Educação
-            </span>
-
-            <span class="badge">
-                Conscientização
-            </span>
-
-            <span class="badge">
-                Direitos
-            </span>
-
-            <span class="badge">
-                Cultura
-            </span>
-
+            <span class="badge">Educação</span>
+            <span class="badge">Conscientização</span>
+            <span class="badge">Direitos</span>
+            <span class="badge">Cultura</span>
         </div>
-
     </div>
-
 </section>
-
-
-<!-- =====================================================
-     ATIVIDADES
-===================================================== -->
 
 <section id="atividades" class="page">
-
-    <h2 class="page-title">
-        Atividades
-    </h2>
-
-    <p class="page-subtitle">
-        Conheça tudo o que foi realizado pela escola e pela turma.
-    </p>
-
-
-    <div class="cards-grid"
-         id="activitiesGrid">
-
+    <div id="activitiesListContainer">
+        <h2 class="page-title">Atividades</h2>
+        <p class="page-subtitle">Conheça tudo o que foi realizado pela escola e pela turma.</p>
+        <div class="cards-grid" id="activitiesGrid"></div>
     </div>
-
+    <div id="activityDetailContainer" style="display:none;"></div>
 </section>
-
-
-<!-- =====================================================
-     GALERIA
-===================================================== -->
 
 <section id="galeria" class="page">
-
-    <h2 class="page-title">
-        Galeria
-    </h2>
-
-    <p class="page-subtitle">
-        Registros dos momentos do projeto.
-    </p>
-
-
-    <div class="gallery"
-         id="galleryGrid">
-
-        <div class="gallery-item">
-            📸
-        </div>
-
-        <div class="gallery-item">
-            🎭
-        </div>
-
-        <div class="gallery-item">
-            📚
-        </div>
-
-        <div class="gallery-item">
-            🎤
-        </div>
-
-        <div class="gallery-item">
-            📝
-        </div>
-
-        <div class="gallery-item">
-            🎬
-        </div>
-
-    </div>
-
+    <h2 class="page-title">Galeria de Fotos</h2>
+    <p class="page-subtitle">Registros visuais de todas as ações e atividades da turma.</p>
+    <div class="gallery" id="globalGalleryGrid"></div>
 </section>
-
-
-<!-- =====================================================
-     MATERIAIS
-===================================================== -->
 
 <section id="materiais" class="page">
-
-    <h2 class="page-title">
-        Materiais
-    </h2>
-
-    <p class="page-subtitle">
-        Materiais educativos produzidos ou utilizados pela turma.
-    </p>
-
-
+    <h2 class="page-title">Materiais</h2>
+    <p class="page-subtitle">Materiais educativos produzidos ou utilizados pela turma.</p>
     <div class="detail">
-
-        <h2>
-            📄 Materiais educativos
-        </h2>
-
-        <p>
-            Nesta área poderão ser disponibilizados textos,
-            pesquisas, apresentações, livros, cartazes,
-            vídeos e outros materiais produzidos durante
-            o projeto.
-        </p>
-
-
-        <button class="primary-button">
-            Área de materiais →
-        </button>
-
+        <h2>📄 Materiais educativos</h2>
+        <p>Nesta área são disponibilizados textos, pesquisas, apresentações, livros, cartazes, vídeos e outros materiais produzidos durante o projeto.</p>
     </div>
-
 </section>
-
-
-<!-- =====================================================
-     SOBRE A TURMA
-===================================================== -->
 
 <section id="sobre" class="page">
-
-    <h2 class="page-title">
-        Sobre a turma
-    </h2>
-
-    <p class="page-subtitle">
-        Conheça os estudantes responsáveis pelo projeto.
-    </p>
-
-
+    <h2 class="page-title">Sobre a turma</h2>
+    <p class="page-subtitle">Conheça os estudantes responsáveis pelo projeto.</p>
     <div class="detail">
-
-        <div class="detail-cover">
-            👥
-        </div>
-
-
-        <h2>
-            CETI José Marques
-        </h2>
-
-
-        <p>
-            Este espaço apresenta a participação dos estudantes
-            no desenvolvimento das ações relacionadas ao projeto
-            “Escravo, Nem Pensar!”.
-        </p>
-
-
-        <p>
-            Aqui também poderão ser adicionados posteriormente
-            os nomes dos integrantes, professores responsáveis,
-            funções e informações sobre a turma.
-        </p>
-
+        <div class="detail-cover">👥</div>
+        <h2>CETI José Marques</h2>
+        <p>Este espaço apresenta a participação dos estudantes no desenvolvimento das ações relacionadas ao projeto “Escravo, Nem Pensar!”.</p>
     </div>
-
 </section>
-
-
-<!-- =====================================================
-     LOGIN ADMINISTRADOR
-===================================================== -->
 
 <section id="login" class="page">
-
     <div class="login-box">
-
-        <div class="login-icon">
-            🔐
-        </div>
-
-
-        <h2>
-            Área restrita
-        </h2>
-
-
-        <p>
-            Somente administradores autorizados podem
-            modificar os conteúdos do site.
-        </p>
-
-
+        <div class="login-icon">🔐</div>
+        <h2>Área restrita</h2>
+        <p>Somente administradores autorizados podem modificar os conteúdos do site.</p>
         <div class="form-group">
-
-            <label>
-                Senha administrativa
-            </label>
-
-
-            <input
-                type="password"
-                id="adminPassword"
-                placeholder="Digite a senha"
-                onkeydown="if(event.key==='Enter') login()"
-            >
-
+            <label>Senha administrativa</label>
+            <input type="password" id="adminPassword" placeholder="Digite a senha" onkeydown="if(event.key==='Enter') login()">
         </div>
-
-
-        <button class="primary-button"
-                onclick="login()">
-
-            Entrar
-
-        </button>
-
-
-        <div class="error"
-             id="loginError">
-
-            Senha incorreta.
-
-        </div>
-
+        <button class="primary-button" onclick="login()">Entrar</button>
+        <div class="error" id="loginError">Senha incorreta.</div>
     </div>
-
 </section>
-
-
-<!-- =====================================================
-     PAINEL ADMINISTRATIVO
-===================================================== -->
 
 <section id="admin" class="page">
-
     <div class="admin-top">
-
         <div>
-
-            <h2 class="page-title">
-                Painel administrativo
-            </h2>
-
-            <p class="page-subtitle">
-                Gerencie as atividades publicadas no site.
-            </p>
-
+            <h2 class="page-title">Painel administrativo</h2>
+            <p class="page-subtitle">Gerencie as atividades publicadas no site.</p>
         </div>
-
-
-        <button class="primary-button"
-                onclick="openActivityModal()">
-
-            + Nova atividade
-
-        </button>
-
+        <button class="primary-button" onclick="openActivityModal()">+ Nova atividade</button>
     </div>
-
-
     <div class="admin-panel">
-
-        <div class="admin-list"
-             id="adminList">
-
-        </div>
-
+        <div class="admin-list" id="adminList"></div>
     </div>
-
 </section>
-
 
 </div>
 
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
 <footer>
-
-    © 2026 — Escravo, Nem Pensar!
-    · CETI José Marques
-
+    © 2026 — Escravo, Nem Pensar! · CETI José Marques
 </footer>
 
 </main>
 
-
-<!-- =====================================================
-     MODAL DE ATIVIDADE
-===================================================== -->
-
-<div class="modal"
-     id="activityModal">
-
+<div class="modal" id="activityModal">
     <div class="modal-box">
-
-
         <div class="modal-header">
-
-            <h2 id="modalTitle">
-                Nova atividade
-            </h2>
-
-
-            <button class="close"
-                    onclick="closeModal()">
-
-                ×
-
-            </button>
-
+            <h2 id="modalTitle">Nova atividade</h2>
+            <button class="close" onclick="closeModal()">×</button>
         </div>
-
-
-        <!-- ID usado para edição -->
-
-        <input type="hidden"
-               id="editId">
-
-
-        <!-- TÍTULO -->
-
+        <input type="hidden" id="editId">
         <div class="form-group">
-
-            <label>
-                Título
-            </label>
-
-
-            <input
-                type="text"
-                id="activityTitle"
-                placeholder="Ex.: Culminância"
-            >
-
+            <label>Título</label>
+            <input type="text" id="activityTitle" placeholder="Ex.: Culminância">
         </div>
-
-
-        <!-- ÍCONE -->
-
         <div class="form-group">
-
-            <label>
-                Ícone
-            </label>
-
-
-            <input
-                type="text"
-                id="activityIcon"
-                placeholder="Ex.: 🎭"
-                maxlength="3"
-            >
-
+            <label>Ícone</label>
+            <input type="text" id="activityIcon" placeholder="Ex.: 📚, 🎭, 🎬, 📷">
         </div>
-
-
-        <!-- DESCRIÇÃO -->
-
         <div class="form-group">
-
-            <label>
-                Descrição
-            </label>
-
-
-            <textarea
-                id="activityDescription"
-                placeholder="Descreva a atividade..."
-            ></textarea>
-
+            <label>Tags (separadas por vírgula)</label>
+            <input type="text" id="activityTags" placeholder="Ex.: Cultura, Teatro, Apresentação">
         </div>
-
-
-        <!-- DATA -->
-
         <div class="form-group">
-
-            <label>
-                Data
-            </label>
-
-
-            <input
-                type="date"
-                id="activityDate"
-            >
-
+            <label>Resumo</label>
+            <textarea id="activitySummary" placeholder="Resumo curto para os cartões..."></textarea>
         </div>
-
-
-        <!-- LOCAL -->
-
         <div class="form-group">
-
-            <label>
-                Local
-            </label>
-
-
-            <input
-                type="text"
-                id="activityLocation"
-                placeholder="Ex.: CETI José Marques"
-            >
-
+            <label>Descrição Completa</label>
+            <textarea id="activityContent" placeholder="Descrição detalhada da atividade..."></textarea>
         </div>
-
-
-        <!-- IMAGEM -->
-
         <div class="form-group">
-
-            <label>
-                Link da imagem
-            </label>
-
-
-            <input
-                type="url"
-                id="activityImage"
-                placeholder="https://..."
-            >
-
+            <label>URL da Imagem Principal (Capa)</label>
+            <input type="url" id="activityImage" placeholder="https://exemplo.com/imagem.jpg">
         </div>
-
-
+        <div class="form-group">
+            <label>URLs das Imagens da Galeria (uma por linha)</label>
+            <textarea id="activityGallery" placeholder="https://exemplo.com/foto1.jpg&#10;https://exemplo.com/foto2.jpg"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Link de Vídeo do YouTube (Embed ou URL)</label>
+            <input type="text" id="activityVideo" placeholder="https://www.youtube.com/watch?v=ID_DO_VIDEO">
+        </div>
         <div class="form-actions">
-
-            <button class="cancel-button"
-                    onclick="closeModal()">
-
-                Cancelar
-
-            </button>
-
-
-            <button class="primary-button"
-                    onclick="saveActivity()">
-
-                Salvar atividade
-
-            </button>
-
+            <button class="cancel-button" onclick="closeModal()">Cancelar</button>
+            <button class="primary-button" onclick="saveActivity()">Salvar</button>
         </div>
-
     </div>
-
 </div>
 
-
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-
 <script>
-
-/* =========================================================
-   CONFIGURAÇÃO
-========================================================= */
-
-/*
-   SENHA DO ADMINISTRADOR
-
-   Para alterar a senha, troque o conteúdo entre aspas.
-*/
-
-const ADMIN_PASSWORD = "1234";
-
-
-/* =========================================================
-   ATIVIDADES INICIAIS
-========================================================= */
-
-const defaultActivities = [
-
+// Dados Iniciais / Armazenamento Local
+const initialActivities = [
     {
-        id: 1,
-
-        title: "Culminância",
-
+        id: "1",
+        title: "Apresentação Teatral",
         icon: "🎭",
-
-        description:
-        "Confira como foi a culminância do projeto, com apresentações, comidas, brincadeiras e participação dos estudantes.",
-
-        date: "",
-
-        location:
-        "CETI José Marques",
-
-        image: ""
+        tags: ["Teatro", "Cultura", "Conscientização"],
+        summary: "Peça de teatro organizada pelos estudantes retratando realidades do trabalho análogo à escravidão.",
+        content: "Os estudantes prepararam uma peça teatral impactante demonstrando como o trabalho escravo contemporâneo afeta diversas famílias no país, ressaltando a importância do resgate da dignidade e dos direitos humanos.",
+        image: "",
+        gallery: [],
+        video: ""
     },
-
-
     {
-        id: 2,
-
-        title: "Teatro",
-
-        icon: "🎬",
-
-        description:
-        "Apresentação teatral produzida pelos alunos para abordar o tema do trabalho escravo contemporâneo.",
-
-        date: "",
-
-        location:
-        "CETI José Marques",
-
-        image: ""
-    },
-
-
-    {
-        id: 3,
-
-        title: "Projeto de pesquisa",
-
-        icon: "🔎",
-
-        description:
-        "Pesquisas desenvolvidas pela turma sobre trabalho escravo contemporâneo.",
-
-        date: "",
-
-        location:
-        "CETI José Marques",
-
-        image: ""
-    },
-
-
-    {
-        id: 4,
-
-        title: "Livro publicado",
-
+        id: "2",
+        title: "Pesquisa e Debates",
         icon: "📚",
-
-        description:
-        "Livros e produções escritas desenvolvidos pelos estudantes durante o projeto.",
-
-        date: "",
-
-        location:
-        "CETI José Marques",
-
-        image: ""
-    },
-
-
-    {
-        id: 5,
-
-        title: "Palestras",
-
-        icon: "🎤",
-
-        description:
-        "Palestras, rodas de conversa e momentos de diálogo realizados durante o projeto.",
-
-        date: "",
-
-        location:
-        "CETI José Marques",
-
-        image: ""
-    },
-
-
-    {
-        id: 6,
-
-        title: "Exposições",
-
-        icon: "🖼️",
-
-        description:
-        "Exposição de cartazes, pesquisas, trabalhos e produções dos estudantes.",
-
-        date: "",
-
-        location:
-        "CETI José Marques",
-
-        image: ""
+        tags: ["Pesquisa", "Educação", "Direitos"],
+        summary: "Levantamento de dados estatísticos e debates reflexivos em sala de aula.",
+        content: "Atividade focada na análise de gráficos, dados históricos e relatos reais sobre o combate ao trabalho escravo no Brasil, promovendo um debate crítico entre as turmas.",
+        image: "",
+        gallery: [],
+        video: ""
     }
-
 ];
 
+let activities = JSON.parse(localStorage.getItem('enp_activities')) || initialActivities;
 
-/* =========================================================
-   BANCO DE DADOS LOCAL
-========================================================= */
-
-let activities =
-    JSON.parse(
-        localStorage.getItem(
-            "escravoNemPensarActivities"
-        )
-    ) || defaultActivities;
-
-
-let adminLogged = false;
-
-
-/* =========================================================
-   SALVAR DADOS
-========================================================= */
-
-function saveDatabase() {
-
-    localStorage.setItem(
-        "escravoNemPensarActivities",
-
-        JSON.stringify(activities)
-    );
-
+function saveToLocalStorage() {
+    localStorage.setItem('enp_activities', JSON.stringify(activities));
 }
 
-
-/* =========================================================
-   RENDERIZAR ATIVIDADES
-========================================================= */
-
-function renderActivities() {
-
-    const grid =
-        document.getElementById(
-            "activitiesGrid"
-        );
-
-
-    const home =
-        document.getElementById(
-            "homeCards"
-        );
-
-
-    if (!grid || !home) return;
-
-
-    grid.innerHTML = "";
-
-    home.innerHTML = "";
-
-
-    /*
-       Todos os cards
-    */
-
-    activities.forEach(activity => {
-
-        const card =
-            createCard(activity);
-
-        grid.appendChild(card);
-
-    });
-
-
-    /*
-       Apenas os quatro primeiros
-       na página inicial
-    */
-
-    activities
-        .slice(0, 4)
-        .forEach(activity => {
-
-            const card =
-                createCard(activity);
-
-            home.appendChild(card);
-
-        });
-
-
-    /*
-       Atualiza contador
-    */
-
-    const counter =
-        document.getElementById(
-            "statActivities"
-        );
-
-
-    if (counter) {
-
-        counter.textContent =
-            activities.length;
-
-    }
-
-
-    renderAdmin();
-
-}
-
-
-/* =========================================================
-   CRIAR CARD
-========================================================= */
-
-function createCard(activity) {
-
-    const article =
-        document.createElement("article");
-
-
-    article.className =
-        "card";
-
-
-    const imageStyle =
-        activity.image
-        ? `
-            background-image:
-            url('${activity.image}');
-            background-size: cover;
-            background-position: center;
-          `
-        : "";
-
-
-    article.innerHTML = `
-
-        <div class="card-image"
-             style="${imageStyle}">
-
-            ${
-                activity.image
-                ? ""
-                : escapeHTML(
-                    activity.icon || "📚"
-                  )
-            }
-
-        </div>
-
-
-        <div class="card-body">
-
-            <h3>
-                ${escapeHTML(activity.title)}
-            </h3>
-
-
-            <p>
-                ${escapeHTML(activity.description)}
-            </p>
-
-
-            <span class="card-link">
-
-                Ver atividade →
-
-            </span>
-
-        </div>
-
-    `;
-
-
-    article.onclick = function() {
-
-        openActivity(activity.id);
-
-    };
-
-
-    return article;
-
-}
-
-
-/* =========================================================
-   ABRIR ATIVIDADE
-========================================================= */
-
-function openActivity(id) {
-
-    const activity =
-        activities.find(
-            activity =>
-            activity.id === id
-        );
-
-
-    if (!activity) return;
-
-
-    const page =
-        document.getElementById(
-            "atividades"
-        );
-
-
-    page.innerHTML = `
-
-        <button
-            class="primary-button"
-            onclick="restoreActivitiesPage()"
-            style="margin-bottom:20px">
-
-            ← Voltar para atividades
-
-        </button>
-
-
-        <div class="detail">
-
-
-            <div
-                class="detail-cover"
-
-                ${
-                    activity.image
-
-                    ? `
-                    style="
-                    background-image:
-                    url('${activity.image}');
-                    background-size:cover;
-                    background-position:center;
-                    "
-                    `
-
-                    : ""
-                }
-            >
-
-                ${
-                    activity.image
-                    ? ""
-                    : escapeHTML(
-                        activity.icon || "📚"
-                      )
-                }
-
-            </div>
-
-
-            <h2>
-
-                ${escapeHTML(activity.title)}
-
-            </h2>
-
-
-            <div class="detail-meta">
-
-
-                ${
-                    activity.date
-
-                    ? `
-                    <span class="badge">
-
-                        📅
-                        ${escapeHTML(activity.date)}
-
-                    </span>
-                    `
-
-                    : ""
-                }
-
-
-                ${
-                    activity.location
-
-                    ? `
-                    <span class="badge">
-
-                        📍
-                        ${escapeHTML(activity.location)}
-
-                    </span>
-                    `
-
-                    : ""
-                }
-
-
-            </div>
-
-
-            <p>
-
-                ${escapeHTML(
-                    activity.description
-                )}
-
-            </p>
-
-
-            <h2
-                style="margin-top:30px">
-
-                📸 Registros da atividade
-
-            </h2>
-
-
-            <p>
-
-                Nesta área poderão ser
-                adicionadas fotos, vídeos,
-                documentos e outros registros
-                desta atividade.
-
-            </p>
-
-
-            <div class="gallery">
-
-                ${
-                    activity.image
-
-                    ? `
-                    <div
-                        class="gallery-item"
-                        style="
-                        background-image:
-                        url('${activity.image}');
-                        background-size:cover;
-                        background-position:center;
-                        "
-                    ></div>
-                    `
-
-                    : `
-                    <div class="gallery-item">
-                        📸
-                    </div>
-
-                    <div class="gallery-item">
-                        🎭
-                    </div>
-
-                    <div class="gallery-item">
-                        📝
-                    </div>
-                    `
-                }
-
-            </div>
-
-
-        </div>
-
-    `;
-
-
-    showPage("atividades");
-
-}
-
-
-/* =========================================================
-   RESTAURAR ATIVIDADES
-========================================================= */
-
-function restoreActivitiesPage() {
-
-    location.reload();
-
-}
-
-
-/* =========================================================
-   NAVEGAÇÃO ENTRE PÁGINAS
-========================================================= */
-
-function showPage(
-    pageId,
-    button = null
-) {
-
-
-    document
-        .querySelectorAll(".page")
-                .forEach(page => {
-
-            page.classList.remove(
-                "active"
-            );
-
-        });
-
-
-    const page =
-        document.getElementById(
-            pageId
-        );
-
-
-    if (page) {
-
-        page.classList.add(
-            "active"
-        );
-
-    }
-
-
-    /*
-       Atualiza o botão ativo
-       do menu lateral
-    */
-
-    document
-        .querySelectorAll(
-            ".menu button"
-        )
-        .forEach(btn => {
-
-            btn.classList.remove(
-                "active"
-            );
-
-        });
-
-
-    if (button) {
-
-        button.classList.add(
-            "active"
-        );
-
-    }
-
-
-    /*
-       Fecha o menu lateral
-       automaticamente no celular
-    */
-
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-
-    if (sidebar) {
-
-        sidebar.classList.remove(
-            "open"
-        );
-
-    }
-
-
-    /*
-       Volta para o topo
-    */
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
-}
-
-
-/* =========================================================
-   MENU MOBILE
-========================================================= */
-
-function toggleSidebar() {
-
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
-
-
-    if (sidebar) {
-
-        sidebar.classList.toggle(
-            "open"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   MODO ESCURO
-========================================================= */
-
+// Alternar Tema (Claro / Escuro)
 function toggleTheme() {
-
-    const currentTheme =
-        document.documentElement
-        .getAttribute(
-            "data-theme"
-        );
-
-
-    const newTheme =
-        currentTheme === "dark"
-        ? "light"
-        : "dark";
-
-
-    document.documentElement
-        .setAttribute(
-            "data-theme",
-            newTheme
-        );
-
-
-    localStorage.setItem(
-        "escravoTheme",
-        newTheme
-    );
-
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    
+    const btn = document.querySelector('.theme-button');
+    if (newTheme === 'dark') {
+        btn.textContent = '☀️ Modo claro';
+    } else {
+        btn.textContent = '🌙 Modo escuro';
+    }
 }
 
+// Controle da Sidebar Mobile
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+}
 
-/* =========================================================
-   CARREGAR TEMA SALVO
-========================================================= */
-
-function loadTheme() {
-
-    const savedTheme =
-        localStorage.getItem(
-            "escravoTheme"
-        );
-
-
-    if (savedTheme) {
-
-        document.documentElement
-            .setAttribute(
-                "data-theme",
-                savedTheme
-            );
-
+// Navegação entre Páginas
+function showPage(pageId, btnElement) {
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
     }
 
+    if (btnElement) {
+        document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+    }
+
+    // Fecha o menu mobile se estiver aberto
+    document.getElementById('sidebar').classList.remove('open');
+
+    // Volta a exibir a lista de atividades caso estivesse vendo detalhes
+    if (pageId === 'atividades') {
+        document.getElementById('activitiesListContainer').style.display = 'block';
+        document.getElementById('activityDetailContainer').style.display = 'none';
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    renderAll();
 }
 
+// Formatar URL do YouTube para Embed
+function getYouTubeEmbedUrl(url) {
+    if (!url) return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
+}
 
-/* =========================================================
-   ABRIR LOGIN
-========================================================= */
+// Renderização Geral
+function renderAll() {
+    renderHomeCards();
+    renderActivitiesGrid();
+    renderGlobalGallery();
+    renderAdminList();
+    document.getElementById('statActivities').textContent = activities.length;
+}
 
+function renderHomeCards() {
+    const container = document.getElementById('homeCards');
+    container.innerHTML = '';
+    
+    // Exibe até 3 atividades na página inicial
+    activities.slice(0, 3).forEach(act => {
+        container.appendChild(createCardElement(act));
+    });
+}
+
+function renderActivitiesGrid() {
+    const container = document.getElementById('activitiesGrid');
+    container.innerHTML = '';
+    
+    activities.forEach(act => {
+        container.appendChild(createCardElement(act));
+    });
+}
+
+function createCardElement(act) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => openActivityDetail(act.id);
+
+    const bgImageStyle = act.image ? `style="background-image: url('${act.image}')"` : '';
+    const iconOrContent = act.image ? '' : (act.icon || '📌');
+
+    card.innerHTML = `
+        <div class="card-image" ${bgImageStyle}>${iconOrContent}</div>
+        <div class="card-body">
+            <h3>${act.title}</h3>
+            <p>${act.summary}</p>
+            <div class="card-link">Ver detalhes →</div>
+        </div>
+    `;
+    return card;
+}
+
+// Detalhes da Atividade
+function openActivityDetail(id) {
+    const act = activities.find(a => a.id === id);
+    if (!act) return;
+
+    const container = document.getElementById('activityDetailContainer');
+    const listContainer = document.getElementById('activitiesListContainer');
+
+    const bgStyle = act.image ? `style="background-image: url('${act.image}')"` : '';
+    const coverContent = act.image ? '' : (act.icon || '📌');
+
+    const tagsHTML = act.tags ? act.tags.map(t => `<span class="badge">${t.trim()}</span>`).join(' ') : '';
+
+    let galleryHTML = '';
+    if (act.gallery && act.gallery.length > 0) {
+        galleryHTML = `
+            <h3>Galeria da atividade</h3>
+            <div class="gallery">
+                ${act.gallery.map(img => `<div class="gallery-item" style="background-image: url('${img}')"></div>`).join('')}
+            </div>
+        `;
+    }
+
+    let videoHTML = '';
+    if (act.video) {
+        const embedUrl = getYouTubeEmbedUrl(act.video);
+        videoHTML = `
+            <h3 style="margin-top: 25px;">Vídeo</h3>
+            <div class="video-wrapper">
+                <iframe src="${embedUrl}" allowfullscreen></iframe>
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <button class="primary-button" onclick="closeActivityDetail()" style="margin-bottom: 20px;">← Voltar para Atividades</button>
+        <div class="detail">
+            <div class="detail-cover" ${bgStyle}>${coverContent}</div>
+            <h2>${act.title}</h2>
+            <div class="detail-meta">${tagsHTML}</div>
+            <p>${act.content.replace(/\n/g, '<br>')}</p>
+            ${galleryHTML}
+            ${videoHTML}
+        </div>
+    `;
+
+    listContainer.style.display = 'none';
+    container.style.display = 'block';
+    
+    // Garante que a página de atividades esteja visível
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('atividades').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeActivityDetail() {
+    document.getElementById('activityDetailContainer').style.display = 'none';
+    document.getElementById('activitiesListContainer').style.display = 'block';
+}
+
+// Galeria Global
+function renderGlobalGallery() {
+    const container = document.getElementById('globalGalleryGrid');
+    container.innerHTML = '';
+
+    let allImages = [];
+    activities.forEach(act => {
+        if (act.image) allImages.push(act.image);
+        if (act.gallery) allImages = allImages.concat(act.gallery);
+    });
+
+    if (allImages.length === 0) {
+        container.innerHTML = '<p class="page-subtitle">Nenhuma foto cadastrada na galeria ainda.</p>';
+        return;
+    }
+
+    allImages.forEach(imgUrl => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.style.backgroundImage = `url('${imgUrl}')`;
+        container.appendChild(item);
+    });
+}
+
+// Autenticação ADM
 function showLogin() {
-
-    showPage("login");
-
-
-    const password =
-        document.getElementById(
-            "adminPassword"
-        );
-
-
-    const error =
-        document.getElementById(
-            "loginError"
-        );
-
-
-    if (password) {
-
-        password.value = "";
-
-        setTimeout(() => {
-
-            password.focus();
-
-        }, 300);
-
-    }
-
-
-    if (error) {
-
-        error.style.display =
-            "none";
-
-    }
-
+    showPage('login');
 }
-
-
-/* =========================================================
-   LOGIN DO ADMINISTRADOR
-========================================================= */
 
 function login() {
-
-    const password =
-        document.getElementById(
-            "adminPassword"
-        );
-
-
-    const error =
-        document.getElementById(
-            "loginError"
-        );
-
-
-    if (!password) return;
-
-
-    if (
-        password.value ===
-        ADMIN_PASSWORD
-    ) {
-
-        adminLogged = true;
-
-
-        if (error) {
-
-            error.style.display =
-                "none";
-
-        }
-
-
-        renderAdmin();
-
-
-        showPage("admin");
-
+    const pass = document.getElementById('adminPassword').value;
+    const errorEl = document.getElementById('loginError');
+    
+    // Senha padrão configurada como "1234"
+    if (pass === '1234') {
+        errorEl.style.display = 'none';
+        document.getElementById('adminPassword').value = '';
+        showPage('admin');
+    } else {
+        errorEl.style.display = 'block';
     }
-
-    else {
-
-        if (error) {
-
-            error.style.display =
-                "block";
-
-        }
-
-
-        password.focus();
-
-    }
-
 }
 
+// Painel Administrativo
+function renderAdminList() {
+    const container = document.getElementById('adminList');
+    container.innerHTML = '';
 
-/* =========================================================
-   RENDERIZAR PAINEL ADMIN
-========================================================= */
+    if (activities.length === 0) {
+        container.innerHTML = '<p>Nenhuma atividade cadastrada.</p>';
+        return;
+    }
 
-function renderAdmin() {
-
-    const list =
-        document.getElementById(
-            "adminList"
-        );
-
-
-    if (!list) return;
-
-
-    list.innerHTML = "";
-
-
-    if (
-        activities.length === 0
-    ) {
-
-        list.innerHTML = `
-
-            <div style="
-                padding:30px;
-                text-align:center;
-                color:var(--text-soft);
-            ">
-
-                <div style="
-                    font-size:50px;
-                    margin-bottom:10px;
-                ">
-                    📭
-                </div>
-
-                <h3>
-                    Nenhuma atividade cadastrada
-                </h3>
-
-                <p>
-                    Clique em "Nova atividade"
-                    para adicionar o primeiro conteúdo.
-                </p>
-
+    activities.forEach(act => {
+        const item = document.createElement('div');
+        item.className = 'admin-item';
+        item.innerHTML = `
+            <div>
+                <h3>${act.icon || '📌'} ${act.title}</h3>
+                <p style="font-size: 13px; color: var(--text-soft);">${act.summary}</p>
             </div>
-
+            <div class="admin-actions">
+                <button class="small-button edit-button" onclick="openActivityModal('${act.id}')">Editar</button>
+                <button class="small-button delete-button" onclick="deleteActivity('${act.id}')">Excluir</button>
+            </div>
         `;
-
-        return;
-
-    }
-
-
-    activities.forEach(
-        activity => {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "admin-item";
-
-
-            item.innerHTML = `
-
-                <div style="
-                    flex:1;
-                    min-width:0;
-                ">
-
-                    <h3>
-
-                        ${escapeHTML(
-                            activity.icon ||
-                            "📚"
-                        )}
-
-                        ${escapeHTML(
-                            activity.title
-                        )}
-
-                    </h3>
-
-
-                    <p style="
-                        color:var(--text-soft);
-                        margin-top:5px;
-                        line-height:1.4;
-                        font-size:13px;
-                    ">
-
-                        ${escapeHTML(
-                            activity.description
-                        )}
-
-                    </p>
-
-                </div>
-
-
-                <div class="admin-actions">
-
-
-                    <button
-                        class="small-button edit-button"
-                        onclick="
-                            editActivity(
-                                ${activity.id}
-                            )
-                        "
-                    >
-
-                        ✏️ Editar
-
-                    </button>
-
-
-                    <button
-                        class="small-button delete-button"
-                        onclick="
-                            deleteActivity(
-                                ${activity.id}
-                            )
-                        "
-                    >
-
-                        🗑️ Excluir
-
-                    </button>
-
-
-                </div>
-
-            `;
-
-
-            list.appendChild(
-                item
-            );
-
-        }
-    );
-
+        container.appendChild(item);
+    });
 }
 
-
-/* =========================================================
-   ABRIR MODAL — NOVA ATIVIDADE
-========================================================= */
-
-function openActivityModal() {
-
-    if (!adminLogged) {
-
-        showLogin();
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "Nova atividade";
-
-
-    document.getElementById(
-        "editId"
-    ).value = "";
-
-
-    document.getElementById(
-        "activityTitle"
-    ).value = "";
-
-
-    document.getElementById(
-        "activityIcon"
-    ).value = "📚";
-
-
-    document.getElementById(
-        "activityDescription"
-    ).value = "";
-
-
-    document.getElementById(
-        "activityDate"
-    ).value = "";
-
-
-    document.getElementById(
-        "activityLocation"
-    ).value =
-        "CETI José Marques";
-
-
-    document.getElementById(
-        "activityImage"
-    ).value = "";
-
-
-    document.getElementById(
-        "activityModal"
-    ).classList.add(
-        "show"
-    );
-
-}
-
-
-/* =========================================================
-   EDITAR ATIVIDADE
-========================================================= */
-
-function editActivity(id) {
-
-    if (!adminLogged) {
-
-        showLogin();
-
-        return;
-
-    }
-
-
-    const activity =
-        activities.find(
-            item =>
-            item.id === id
-        );
-
-
-    if (!activity) return;
-
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "Editar atividade";
-
-
-    document.getElementById(
-        "editId"
-    ).value =
-        activity.id;
-
-
-    document.getElementById(
-        "activityTitle"
-    ).value =
-        activity.title || "";
-
-
-    document.getElementById(
-        "activityIcon"
-    ).value =
-        activity.icon || "📚";
-
-
-    document.getElementById(
-        "activityDescription"
-    ).value =
-        activity.description || "";
-
-
-    document.getElementById(
-        "activityDate"
-    ).value =
-        activity.date || "";
-
-
-    document.getElementById(
-        "activityLocation"
-    ).value =
-        activity.location || "";
-
-
-    document.getElementById(
-        "activityImage"
-    ).value =
-        activity.image || "";
-
-
-    document.getElementById(
-        "activityModal"
-    ).classList.add(
-        "show"
-    );
-
-}
-
-
-/* =========================================================
-   SALVAR ATIVIDADE
-========================================================= */
-
-function saveActivity() {
-
-    if (!adminLogged) {
-
-        alert(
-            "Você precisa estar logado como administrador."
-        );
-
-        return;
-
-    }
-
-
-    const id =
-        document.getElementById(
-            "editId"
-        ).value;
-
-
-    const title =
-        document.getElementById(
-            "activityTitle"
-        ).value.trim();
-
-
-    const icon =
-        document.getElementById(
-            "activityIcon"
-        ).value.trim();
-
-
-    const description =
-        document.getElementById(
-            "activityDescription"
-        ).value.trim();
-
-
-    const date =
-        document.getElementById(
-            "activityDate"
-        ).value;
-
-
-    const location =
-        document.getElementById(
-            "activityLocation"
-        ).value.trim();
-
-
-    const image =
-        document.getElementById(
-            "activityImage"
-        ).value.trim();
-
-
-    /*
-       Validação
-    */
-
-    if (!title) {
-
-        alert(
-            "Digite o título da atividade."
-        );
-
-        return;
-
-    }
-
-
-    if (!description) {
-
-        alert(
-            "Digite uma descrição para a atividade."
-        );
-
-        return;
-
-    }
-
-
-    /*
-       EDITANDO
-    */
-
+// Modal de Atividades (Criar / Editar)
+function openActivityModal(id = null) {
+    const modal = document.getElementById('activityModal');
+    const modalTitle = document.getElementById('modalTitle');
+    
     if (id) {
-
-        const index =
-            activities.findIndex(
-                item =>
-                item.id == id
-            );
-
-
-        if (index !== -1) {
-
-            activities[index] = {
-
-                id:
-                    activities[index].id,
-
-                title:
-                    title,
-
-                icon:
-                    icon || "📚",
-
-                description:
-                    description,
-
-                date:
-                    date,
-
-                location:
-                    location,
-
-                image:
-                    image
-
-            };
-
-        }
-
+        const act = activities.find(a => a.id === id);
+        if (!act) return;
+        
+        modalTitle.textContent = 'Editar Atividade';
+        document.getElementById('editId').value = act.id;
+        document.getElementById('activityTitle').value = act.title;
+        document.getElementById('activityIcon').value = act.icon || '';
+        document.getElementById('activityTags').value = act.tags ? act.tags.join(', ') : '';
+        document.getElementById('activitySummary').value = act.summary;
+        document.getElementById('activityContent').value = act.content;
+        document.getElementById('activityImage').value = act.image || '';
+        document.getElementById('activityGallery').value = act.gallery ? act.gallery.join('\n') : '';
+        document.getElementById('activityVideo').value = act.video || '';
+    } else {
+        modalTitle.textContent = 'Nova Atividade';
+        document.getElementById('editId').value = '';
+        document.getElementById('activityTitle').value = '';
+        document.getElementById('activityIcon').value = '📌';
+        document.getElementById('activityTags').value = '';
+        document.getElementById('activitySummary').value = '';
+        document.getElementById('activityContent').value = '';
+        document.getElementById('activityImage').value = '';
+        document.getElementById('activityGallery').value = '';
+        document.getElementById('activityVideo').value = '';
     }
 
-
-    /*
-       CRIANDO NOVA
-    */
-
-    else {
-
-        const newActivity = {
-
-            id:
-                Date.now(),
-
-            title:
-                title,
-
-            icon:
-                icon || "📚",
-
-            description:
-                description,
-
-            date:
-                date,
-
-            location:
-                location,
-
-            image:
-                image
-
-        };
-
-
-        activities.push(
-            newActivity
-        );
-
-    }
-
-
-    saveDatabase();
-
-    renderActivities();
-
-    closeModal();
-
-
-    alert(
-        "Atividade salva com sucesso!"
-    );
-
+    modal.classList.add('show');
 }
-
-
-/* =========================================================
-   EXCLUIR ATIVIDADE
-========================================================= */
-
-function deleteActivity(id) {
-
-    if (!adminLogged) {
-
-        showLogin();
-
-        return;
-
-    }
-
-
-    const activity =
-        activities.find(
-            item =>
-            item.id === id
-        );
-
-
-    if (!activity) return;
-
-
-    const confirmation =
-        confirm(
-            `Deseja realmente excluir "${activity.title}"?`
-        );
-
-
-    if (!confirmation) {
-
-        return;
-
-    }
-
-
-    activities =
-        activities.filter(
-            item =>
-            item.id !== id
-        );
-
-
-    saveDatabase();
-
-    renderActivities();
-
-
-    alert(
-        "Atividade excluída com sucesso!"
-    );
-
-}
-
-
-/* =========================================================
-   FECHAR MODAL
-========================================================= */
 
 function closeModal() {
+    document.getElementById('activityModal').classList.remove('show');
+}
 
-    const modal =
-        document.getElementById(
-            "activityModal"
-        );
+function saveActivity() {
+    const id = document.getElementById('editId').value;
+    const title = document.getElementById('activityTitle').value.trim();
+    const icon = document.getElementById('activityIcon').value.trim();
+    const tagsRaw = document.getElementById('activityTags').value;
+    const summary = document.getElementById('activitySummary').value.trim();
+    const content = document.getElementById('activityContent').value.trim();
+    const image = document.getElementById('activityImage').value.trim();
+    const galleryRaw = document.getElementById('activityGallery').value;
+    const video = document.getElementById('activityVideo').value.trim();
 
-
-    if (modal) {
-
-        modal.classList.remove(
-            "show"
-        );
-
+    if (!title || !summary) {
+        alert('Por favor, preencha pelo menos o título e o resumo da atividade.');
+        return;
     }
 
-}
+    const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(t => t.length > 0) : [];
+    const gallery = galleryRaw ? galleryRaw.split('\n').map(g => g.trim()).filter(g => g.length > 0) : [];
 
-
-/* =========================================================
-   FECHAR MODAL CLICANDO FORA
-========================================================= */
-
-const activityModal =
-    document.getElementById(
-        "activityModal"
-    );
-
-
-if (activityModal) {
-
-    activityModal.addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target ===
-                activityModal
-            ) {
-
-                closeModal();
-
-            }
-
+    if (id) {
+        // Atualiza existente
+        const index = activities.findIndex(a => a.id === id);
+        if (index !== -1) {
+            activities[index] = { id, title, icon, tags, summary, content, image, gallery, video };
         }
-    );
-
-}
-
-
-/* =========================================================
-   TECLA ESC
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key ===
-            "Escape"
-        ) {
-
-            closeModal();
-
-        }
-
+    } else {
+        // Cria nova atividade
+        const newActivity = {
+            id: Date.now().toString(),
+            title,
+            icon,
+            tags,
+            summary,
+            content,
+            image,
+            gallery,
+            video
+        };
+        activities.unshift(newActivity);
     }
-);
 
-
-/* =========================================================
-   PROTEÇÃO CONTRA HTML
-========================================================= */
-
-function escapeHTML(text) {
-
-    return String(
-        text || ""
-    )
-
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
-    )
-
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
+    saveToLocalStorage();
+    renderAll();
+    closeModal();
 }
 
+function deleteActivity(id) {
+    if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+        activities = activities.filter(a => a.id !== id);
+        saveToLocalStorage();
+        renderAll();
+    }
+}
 
-/* =========================================================
-   INICIALIZAÇÃO
-========================================================= */
-
-loadTheme();
-
-renderActivities();
-
+// Inicialização ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    renderAll();
+});
 </script>
 
 </body>
