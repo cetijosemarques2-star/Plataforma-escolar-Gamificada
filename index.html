@@ -61,235 +61,227 @@ body {
     background-image: radial-gradient(rgba(180,78,42,.055) 1px, transparent 1px);
     background-size: 18px 18px;
     transition: background .3s, color .3s;
+    overflow-x: hidden;
 }
 
 button, input, textarea, select { font-family: inherit; }
 
 .header {
-    height: 115px;
+    height: 100px;
     background: var(--header);
     color: var(--cream);
     display: flex;
     align-items: center;
-    padding: 18px 35px;
+    padding: 15px 30px;
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 1000;
     box-shadow: 0 5px 20px rgba(0,0,0,.12);
-    overflow: hidden;
-}
-
-.header::after {
-    content: "";
-    position: absolute;
-    right: 30px; top: -80px;
-    width: 260px; height: 260px;
-    border-radius: 50%;
-    border: 30px solid rgba(255,244,217,.08);
 }
 
 .logo {
-    width: 75px; height: 75px;
+    width: 60px; height: 60px;
     background: var(--cream);
     color: var(--sidebar);
-    border-radius: 18px;
+    border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
-    margin-right: 25px;
-    font-size: 35px;
+    margin-right: 20px;
+    font-size: 30px;
     box-shadow: 0 5px 15px rgba(0,0,0,.15);
-    z-index: 2;
+    flex-shrink: 0;
 }
 
-.header-content { z-index: 2; }
-.header h1 { font-family: "Oswald", sans-serif; font-size: clamp(2rem, 4vw, 3.3rem); letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
-.header p { margin-top: 8px; font-size: 14px; font-weight: 600; letter-spacing: .5px; }
+.header-content h1 { font-family: "Oswald", sans-serif; font-size: clamp(1.8rem, 3vw, 2.5rem); letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
+.header-content p { margin-top: 5px; font-size: 13px; font-weight: 600; letter-spacing: .5px; }
 
 .theme-button {
-    margin-left: auto; z-index: 3;
+    margin-left: auto;
     background: rgba(20,41,58,.8); color: var(--cream);
     border: none; padding: 12px 18px; border-radius: 30px;
-    cursor: pointer; font-weight: 700; transition: .2s;
+    cursor: pointer; font-weight: 700; transition: .2s; min-height: 44px;
 }
-.theme-button:hover { transform: translateY(-2px); }
 
 .sidebar {
-    position: fixed; left: 0; top: 115px; bottom: 0;
+    position: fixed; left: 0; top: 100px; bottom: 0;
     width: var(--sidebar-width); background: var(--sidebar);
     color: white; padding: 25px 16px; overflow-y: auto;
-    z-index: 900; transition: transform .3s;
+    z-index: 900; transition: transform .3s ease;
 }
 
-.menu-title { color: #D38C35; font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 13px; letter-spacing: 1.5px; margin: 0 12px 15px; }
+.menu-title { color: var(--ocre); font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 13px; letter-spacing: 1.5px; margin: 0 12px 15px; }
 .menu { list-style: none; }
 .menu li { margin-bottom: 7px; }
 .menu button {
     width: 100%; border: none; background: transparent; color: #FFF4D9;
-    text-align: left; padding: 13px 15px; border-radius: 13px;
+    text-align: left; padding: 14px 15px; border-radius: 13px;
     cursor: pointer; font-size: 15px; font-weight: 600; transition: .2s;
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 12px; min-height: 48px;
 }
 .menu button:hover, .menu button.active { background: var(--sidebar-hover); transform: translateX(3px); }
 .menu-icon { width: 25px; text-align: center; font-size: 19px; }
 
-.admin-menu { position: absolute; bottom: 20px; left: 16px; right: 16px; }
+.admin-menu { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
 .admin-menu button { background: var(--cream); color: var(--sidebar); justify-content: center; }
 
 .mobile-menu {
-    display: none; position: fixed; top: 135px; left: 15px; z-index: 1100;
+    display: none; position: fixed; top: 110px; left: 15px; z-index: 1100;
     background: var(--sidebar); color: white; border: none;
     width: 48px; height: 48px; border-radius: 13px; font-size: 24px;
     cursor: pointer; box-shadow: var(--shadow);
 }
 
-.main { margin-left: var(--sidebar-width); padding-top: 115px; min-height: 100vh; }
+.main { margin-left: var(--sidebar-width); padding-top: 100px; min-height: 100vh; }
 .content { padding: 35px; max-width: 1200px; margin: 0 auto; width: 100%; }
 
 .hero {
-    min-height: 310px; background: var(--bg-soft); border-radius: 24px;
-    padding: 40px; display: flex; align-items: center; justify-content: space-between;
-    gap: 30px; overflow: hidden; position: relative; box-shadow: var(--shadow);
+    min-height: 250px; background: var(--bg-soft); border-radius: 24px;
+    padding: 35px; display: flex; align-items: center; justify-content: space-between;
+    gap: 30px; position: relative; box-shadow: var(--shadow); margin-bottom: 35px;
 }
-.hero::after { content: "✊"; position: absolute; right: 45px; bottom: -35px; font-size: 210px; opacity: .08; transform: rotate(-8deg); }
-.hero-text { max-width: 620px; z-index: 2; }
-.hero h2 { font-family: "Oswald", sans-serif; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; text-transform: uppercase; margin-bottom: 18px; }
-.hero p { color: var(--text-soft); font-size: 17px; line-height: 1.7; margin-bottom: 25px; }
+.hero-text { max-width: 650px; z-index: 2; }
+.hero h2 { font-family: "Oswald", sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); line-height: 1.1; text-transform: uppercase; margin-bottom: 15px; }
+.hero p { color: var(--text-soft); font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
 
 .primary-button {
     border: none; background: var(--header); color: var(--cream);
-    padding: 13px 20px; border-radius: 10px; cursor: pointer;
-    font-weight: 700; transition: .2s; display: inline-block;
+    padding: 14px 22px; border-radius: 10px; cursor: pointer;
+    font-weight: 700; transition: .2s; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; justify-content: center;
 }
 .primary-button:hover { background: var(--header-dark); transform: translateY(-2px); }
 
-.section-header { display: flex; align-items: center; gap: 15px; margin: 40px 0 20px; }
-.section-header h2 { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 27px; }
-.section-line { height: 2px; background: var(--header); flex: 1; opacity: .4; }
-.see-all { background: none; border: none; color: var(--header); font-weight: 700; cursor: pointer; }
+.section-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 30px 0 20px; }
+.section-header h2 { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 26px; }
+.see-all { background: none; border: none; color: var(--header); font-weight: 700; cursor: pointer; font-size: 15px; }
 
-.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+/* Grid Centralizado para Cards de Atividades */
+.cards-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(290px, 350px)); 
+    gap: 25px; 
+    justify-content: center;
+    width: 100%;
+}
+
 .card {
     background: var(--card); border-radius: var(--radius); overflow: hidden;
     border: 1px solid rgba(180,78,42,.15); box-shadow: var(--shadow);
     cursor: pointer; transition: .3s; position: relative;
-    display: flex; flex-direction: column;
+    display: flex; flex-direction: column; width: 100%;
 }
 .card:hover { transform: translateY(-7px); background: var(--card-hover); }
 .card-image {
-    height: 180px; background: linear-gradient(135deg, var(--header), var(--orange));
+    height: 190px; background: linear-gradient(135deg, var(--header), var(--orange));
     display: flex; align-items: center; justify-content: center;
     font-size: 65px; color: var(--cream); position: relative; overflow: hidden;
     background-size: cover; background-position: center;
 }
 .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
-.card-body h3 { font-family: "Oswald", sans-serif; font-size: 23px; text-transform: uppercase; margin-bottom: 8px; }
+.card-body h3 { font-family: "Oswald", sans-serif; font-size: 22px; text-transform: uppercase; margin-bottom: 8px; }
 .card-body p { color: var(--text-soft); line-height: 1.5; font-size: 14px; flex: 1; }
 .card-link { margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; color: var(--header); font-weight: 800; font-size: 14px; }
 
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
-.stat { background: var(--sidebar); color: var(--cream); padding: 25px; border-radius: 18px; text-align: center; }
-.stat strong { display: block; font-family: "Oswald", sans-serif; font-size: 38px; color: #D38C35; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 35px; }
+.stat { background: var(--sidebar); color: var(--cream); padding: 20px; border-radius: 18px; text-align: center; }
+.stat strong { display: block; font-family: "Oswald", sans-serif; font-size: 36px; color: var(--ocre); }
 .stat span { font-size: 14px; font-weight: 600; }
 
 .page { display: none; }
 .page.active { display: block; animation: fade .3s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-.page-title { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 42px; margin-bottom: 10px; }
-.page-subtitle { color: var(--text-soft); margin-bottom: 30px; }
+.page-title { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 38px; margin-bottom: 8px; }
+.page-subtitle { color: var(--text-soft); margin-bottom: 25px; }
 
 .detail { background: var(--card); border-radius: 22px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 20px; }
 .detail-cover {
-    height: 320px; background: var(--header); border-radius: 18px;
+    height: 300px; background: var(--header); border-radius: 18px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 100px; margin-bottom: 30px; background-size: cover; background-position: center;
+    font-size: 90px; margin-bottom: 25px; background-size: cover; background-position: center;
 }
-.detail h2 { font-family: "Oswald", sans-serif; font-size: 38px; text-transform: uppercase; margin-bottom: 15px; }
-.detail p { color: var(--text-soft); line-height: 1.8; margin-bottom: 20px; }
-.detail-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
-.badge { background: var(--header); color: var(--cream); padding: 8px 13px; border-radius: 30px; font-size: 13px; font-weight: 700; }
+.detail h2 { font-family: "Oswald", sans-serif; font-size: 32px; text-transform: uppercase; margin-bottom: 15px; }
+.detail p { color: var(--text-soft); line-height: 1.8; margin-bottom: 20px; font-size: 15px; }
 
-.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
 .gallery-item {
-    height: 220px; border-radius: 15px; background: var(--bg-soft);
+    height: 200px; border-radius: 15px; background: var(--bg-soft);
     display: flex; align-items: center; justify-content: center;
-    font-size: 40px; overflow: hidden; background-size: cover; background-position: center;
+    overflow: hidden; background-size: cover; background-position: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.video-wrapper {
-    position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
-    border-radius: 18px; margin-top: 20px; box-shadow: var(--shadow);
+/* Lista de Materiais */
+.materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.material-card {
+    background: var(--bg-soft); border-radius: 15px; padding: 20px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);
 }
-.video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+.material-type { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--header); margin-bottom: 8px; }
+.material-card h3 { font-family: "Oswald", sans-serif; font-size: 20px; margin-bottom: 10px; }
+.material-card p { font-size: 14px; color: var(--text-soft); margin-bottom: 15px; flex: 1; }
+.material-btn {
+    background: var(--sidebar); color: var(--cream); text-decoration: none;
+    padding: 10px 15px; border-radius: 8px; font-size: 13px; font-weight: 700;
+    text-align: center; display: block;
+}
 
-.admin-panel { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: var(--shadow); }
-.admin-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 25px; }
+/* Equipes / Sobre a Turma */
+.teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+.team-card { background: var(--bg-soft); border-radius: 18px; padding: 22px; box-shadow: var(--shadow); }
+.team-card h3 { font-family: "Oswald", sans-serif; color: var(--header); font-size: 22px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.team-members { list-style: none; margin-top: 10px; }
+.team-members li { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 14px; font-weight: 500; }
+
+/* Dashboard Administrativo */
+.admin-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.admin-tab { background: var(--bg-soft); border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; color: var(--text); }
+.admin-tab.active { background: var(--header); color: var(--cream); }
+
+.admin-panel { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); }
 .admin-list { display: grid; gap: 12px; }
-.admin-item { background: var(--bg); padding: 17px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-.admin-item h3 { font-family: "Oswald", sans-serif; text-transform: uppercase; }
-.admin-actions { display: flex; gap: 7px; }
+.admin-item { background: var(--bg); padding: 15px 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
 
-.small-button { border: none; padding: 9px 13px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+.small-button { border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; min-height: 40px; }
 .edit-button { background: var(--ocre); color: #fff; }
 .delete-button { background: var(--red); color: white; }
 
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,.65); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 3000; }
+/* Modal */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.65); display: none; align-items: center; justify-content: center; padding: 15px; z-index: 3000; }
 .modal.show { display: flex; }
-.modal-box { width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; background: var(--bg); border-radius: 20px; padding: 30px; box-shadow: 0 20px 70px rgba(0,0,0,.4); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.modal-box { width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; background: var(--bg); border-radius: 20px; padding: 25px; box-shadow: 0 20px 70px rgba(0,0,0,.4); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .modal-header h2 { font-family: "Oswald", sans-serif; text-transform: uppercase; }
 .close { border: none; background: transparent; font-size: 28px; cursor: pointer; color: var(--text); }
 
-.form-group { margin-bottom: 17px; }
-.form-group label { display: block; font-size: 13px; font-weight: 800; margin-bottom: 7px; text-transform: uppercase; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; }
 .form-group input, .form-group textarea, .form-group select {
     width: 100%; padding: 12px 14px; border: 1px solid rgba(20,41,58,.2);
-    border-radius: 10px; background: var(--white); color: #222; outline: none;
+    border-radius: 10px; background: var(--white); color: #222; outline: none; min-height: 48px;
 }
-.form-group textarea { min-height: 110px; resize: vertical; }
-.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
-.cancel-button { border: none; background: #777; color: white; padding: 12px 18px; border-radius: 9px; cursor: pointer; }
+.form-group textarea { min-height: 100px; resize: vertical; }
+.img-preview { max-width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; }
 
-.login-box { max-width: 450px; margin: 80px auto; background: var(--card); padding: 35px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; }
-.login-icon { font-size: 55px; margin-bottom: 15px; }
-.login-box h2 { font-family: "Oswald", sans-serif; font-size: 34px; text-transform: uppercase; margin-bottom: 10px; }
-.login-box p { color: var(--text-soft); margin-bottom: 25px; }
-.error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+.login-box { max-width: 400px; margin: 40px auto; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; }
+.login-box h2 { font-family: "Oswald", sans-serif; font-size: 30px; text-transform: uppercase; margin-bottom: 10px; }
 
 footer { margin-top: 50px; background: var(--sidebar); color: var(--cream); padding: 25px; text-align: center; font-size: 13px; }
 
-@media (max-width: 1150px) {
-    .cards-grid { grid-template-columns: repeat(2, 1fr); }
-    .gallery { grid-template-columns: repeat(2, 1fr); }
-}
-
+/* Otimizações Responsivas / Mobile */
 @media (max-width: 850px) {
-    .header { height: 90px; padding: 12px 18px; }
-    .logo { width: 55px; height: 55px; font-size: 25px; margin-right: 14px; }
-    .header h1 { font-size: 1.8rem; }
-    .header p { display: none; }
-    .theme-button { font-size: 0; width: 45px; height: 45px; padding: 0; }
-    .theme-button::before { content: "🌙"; font-size: 18px; }
-    .sidebar { top: 90px; transform: translateX(-100%); }
+    .header { height: 80px; padding: 10px 15px; }
+    .logo { width: 45px; height: 45px; font-size: 22px; margin-right: 12px; }
+    .header-content h1 { font-size: 1.4rem; }
+    .header-content p { display: none; }
+    .theme-button { padding: 8px 12px; font-size: 12px; }
+    .sidebar { top: 80px; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
-    .mobile-menu { display: block; top: 105px; }
-    .main { margin-left: 0; padding-top: 90px; }
-    .content { padding: 25px 18px; }
-    .hero { padding: 28px; min-height: 300px; }
+    .mobile-menu { display: block; top: 95px; }
+    .main { margin-left: 0; padding-top: 80px; }
+    .content { padding: 20px 15px; }
+    .hero { padding: 22px; min-height: auto; }
     .cards-grid { grid-template-columns: 1fr; }
-    .gallery { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 560px) {
-    .header h1 { font-size: 1.35rem; }
-    .logo { width: 48px; height: 48px; font-size: 21px; }
-    .hero { padding: 23px; border-radius: 17px; }
-    .hero h2 { font-size: 2rem; }
-    .hero p { font-size: 14px; }
-    .stats { grid-template-columns: 1fr; }
-    .gallery { grid-template-columns: 1fr; }
-    .admin-top, .admin-item { align-items: flex-start; flex-direction: column; }
-    .page-title { font-size: 34px; }
+    .admin-item { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
@@ -298,8 +290,8 @@ footer { margin-top: 50px; background: var(--sidebar); color: var(--cream); padd
 <header class="header">
     <div class="logo">⛓️</div>
     <div class="header-content">
-        <h1>Escravo, Nem Pensar!</h1>
-        <p>INFORMAR PARA COMBATER. CONHECER PARA TRANSFORMAR.</p>
+        <h1 id="siteTitleHeader">Escravo, Nem Pensar!</h1>
+        <p id="siteSubtitleHeader">INFORMAR PARA COMBATER. CONHECER PARA TRANSFORMAR.</p>
     </div>
     <button class="theme-button" onclick="toggleTheme()">🌙 Modo escuro</button>
 </header>
@@ -317,25 +309,25 @@ footer { margin-top: 50px; background: var(--sidebar); color: var(--cream); padd
         <li><button onclick="showPage('sobre', this)"><span class="menu-icon">👥</span>Sobre a turma</button></li>
     </ul>
     <div class="admin-menu">
-        <button onclick="showLogin()">🔐 Área restrita (ADM)</button>
+        <button onclick="showLogin()"><span class="menu-icon">🔐</span>Área Restrita (ADM)</button>
     </div>
 </aside>
 
 <main class="main">
 <div class="content">
 
+<!-- INÍCIO -->
 <section id="inicio" class="page active">
     <div class="hero">
         <div class="hero-text">
             <h2>Conhecer é o primeiro passo para combater o trabalho escravo.</h2>
-            <p>Este espaço reúne as atividades, pesquisas, apresentações e produções desenvolvidas pela nossa escola no projeto <strong>Escravo, Nem Pensar!</strong></p>
+            <p>Espaço oficial de divulgação das ações, produções e pesquisas desenvolvidas pelos estudantes no projeto <strong>Escravo, Nem Pensar!</strong></p>
             <button class="primary-button" onclick="showPage('projeto')">Saiba mais sobre o projeto →</button>
         </div>
     </div>
 
     <div class="section-header">
-        <h2>★ Atividades do projeto</h2>
-        <div class="section-line"></div>
+        <h2>★ Atividades em Destaque</h2>
         <button class="see-all" onclick="showPage('atividades')">Ver todas →</button>
     </div>
 
@@ -347,335 +339,403 @@ footer { margin-top: 50px; background: var(--sidebar); color: var(--cream); padd
             <span>Atividades realizadas</span>
         </div>
         <div class="stat">
-            <strong>200+</strong>
-            <span>Alunos envolvidos</span>
+            <strong id="statPhotos">0</strong>
+            <span>Fotos na galeria</span>
         </div>
         <div class="stat">
-            <strong>1</strong>
-            <span>Objetivo: transformar</span>
+            <strong id="statMaterials">0</strong>
+            <span>Materiais disponíveis</span>
         </div>
     </div>
 </section>
 
+<!-- SOBRE O PROJETO -->
 <section id="projeto" class="page">
     <h2 class="page-title">Sobre o projeto</h2>
-    <p class="page-subtitle">Conheça a proposta e a importância do projeto.</p>
+    <p class="page-subtitle">Conheça a proposta e a importância da conscientização.</p>
     <div class="detail">
         <div class="detail-cover">📚</div>
         <h2>Escravo, Nem Pensar!</h2>
-        <p>O projeto busca promover informação, reflexão e conscientização sobre o trabalho escravo contemporâneo, incentivando os estudantes a conhecerem essa realidade e compreenderem a importância da prevenção e do combate à exploração do trabalho.</p>
-        <p>Por meio de pesquisas, apresentações, produções culturais, debates e outras atividades, os estudantes são convidados a transformar conhecimento em conscientização.</p>
-        <div class="detail-meta">
-            <span class="badge">Educação</span>
-            <span class="badge">Conscientização</span>
-            <span class="badge">Direitos</span>
-            <span class="badge">Cultura</span>
-        </div>
+        <p>O projeto visa promover reflexão crítica sobre o trabalho escravo contemporâneo, incentivando os alunos a agirem como agentes de transformação em suas comunidades.</p>
+        <p>Através de teatro, pesquisas de campo, produções audiovisuais e palestras, buscamos resgatar a dignidade e os direitos humanos fundamentais.</p>
     </div>
 </section>
 
+<!-- ATIVIDADES -->
 <section id="atividades" class="page">
     <div id="activitiesListContainer">
         <h2 class="page-title">Atividades</h2>
-        <p class="page-subtitle">Conheça tudo o que foi realizado pela escola e pela turma.</p>
+        <p class="page-subtitle">Confira todas as ações realizadas na escola.</p>
         <div class="cards-grid" id="activitiesGrid"></div>
     </div>
     <div id="activityDetailContainer" style="display:none;"></div>
 </section>
 
+<!-- GALERIA -->
 <section id="galeria" class="page">
     <h2 class="page-title">Galeria de Fotos</h2>
-    <p class="page-subtitle">Registros visuais de todas as ações e atividades da turma.</p>
+    <p class="page-subtitle">Registros visuais de todas as etapas e apresentações.</p>
     <div class="gallery" id="globalGalleryGrid"></div>
 </section>
 
+<!-- MATERIAIS -->
 <section id="materiais" class="page">
-    <h2 class="page-title">Materiais</h2>
-    <p class="page-subtitle">Materiais educativos produzidos ou utilizados pela turma.</p>
-    <div class="detail">
-        <h2>📄 Materiais educativos</h2>
-        <p>Nesta área são disponibilizados textos, pesquisas, apresentações, livros, cartazes, vídeos e outros materiais produzidos durante o projeto.</p>
-    </div>
+    <h2 class="page-title">Biblioteca de Materiais</h2>
+    <p class="page-subtitle">Pesquisas, livros, apresentações, cartazes e arquivos em PDF.</p>
+    <div class="materials-grid" id="materialsGrid"></div>
 </section>
 
+<!-- SOBRE A TURMA -->
 <section id="sobre" class="page">
-    <h2 class="page-title">Sobre a turma</h2>
-    <p class="page-subtitle">Conheça os estudantes responsáveis pelo projeto.</p>
-    <div class="detail">
-        <div class="detail-cover">👥</div>
+    <h2 class="page-title">Sobre a Turma & Equipes</h2>
+    <p class="page-subtitle">Conheça os estudantes e educadores por trás das ações.</p>
+    <div class="detail" style="margin-bottom: 25px;">
         <h2>CETI José Marques</h2>
-        <p>Este espaço apresenta a participação dos estudantes no desenvolvimento das ações relacionadas ao projeto “Escravo, Nem Pensar!”.</p>
+        <p>Alunos engajados na construção de um ambiente de aprendizado reflexivo e participativo.</p>
     </div>
+    <div class="teams-grid" id="teamsGrid"></div>
 </section>
 
+<!-- LOGIN -->
 <section id="login" class="page">
     <div class="login-box">
-        <div class="login-icon">🔐</div>
-        <h2>Área restrita</h2>
-        <p>Somente administradores autorizados podem modificar os conteúdos do site.</p>
+        <div style="font-size: 50px; margin-bottom: 10px;">🔐</div>
+        <h2>Painel ADM</h2>
+        <p style="color: var(--text-soft); margin-bottom: 20px; font-size: 14px;">Acesso exclusivo para gerenciamento.</p>
         <div class="form-group">
-            <label>Senha administrativa</label>
+            <label>Senha de Acesso</label>
             <input type="password" id="adminPassword" placeholder="Digite a senha" onkeydown="if(event.key==='Enter') login()">
         </div>
-        <button class="primary-button" onclick="login()">Entrar</button>
-        <div class="error" id="loginError">Senha incorreta.</div>
+        <button class="primary-button" style="width: 100%;" onclick="login()">Entrar</button>
+        <p id="loginError" style="color: var(--red); font-size: 13px; margin-top: 10px; display: none;">Senha incorreta.</p>
     </div>
 </section>
 
+<!-- PAINEL ADMINISTRATIVO -->
 <section id="admin" class="page">
-    <div class="admin-top">
-        <div>
-            <h2 class="page-title">Painel administrativo</h2>
-            <p class="page-subtitle">Gerencie as atividades publicadas no site.</p>
-        </div>
-        <button class="primary-button" onclick="openActivityModal()">+ Nova atividade</button>
+    <h2 class="page-title">Gestão do Site</h2>
+    <p class="page-subtitle">Administre conteúdos, imagens, materiais e informações.</p>
+
+    <div class="admin-nav">
+        <button class="admin-tab active" onclick="switchAdminTab('act')">📚 Atividades</button>
+        <button class="admin-tab" onclick="switchAdminTab('mat')">📄 Materiais</button>
+        <button class="admin-tab" onclick="switchAdminTab('team')">👥 Equipes</button>
+        <button class="admin-tab" onclick="switchAdminTab('cfg')">⚙️ Configurações</button>
     </div>
-    <div class="admin-panel">
-        <div class="admin-list" id="adminList"></div>
+
+    <!-- TAB ATIVIDADES -->
+    <div id="tabAct" class="admin-tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3>Atividades Cadastradas</h3>
+            <button class="primary-button" onclick="openActivityModal()">+ Nova Atividade</button>
+        </div>
+        <div class="admin-panel"><div class="admin-list" id="adminListAct"></div></div>
+    </div>
+
+    <!-- TAB MATERIAIS -->
+    <div id="tabMat" class="admin-tab-content" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3>Biblioteca de Materiais</h3>
+            <button class="primary-button" onclick="openMaterialModal()">+ Novo Material</button>
+        </div>
+        <div class="admin-panel"><div class="admin-list" id="adminListMat"></div></div>
+    </div>
+
+    <!-- TAB EQUIPES -->
+    <div id="tabTeam" class="admin-tab-content" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3>Equipes de Trabalho</h3>
+            <button class="primary-button" onclick="openTeamModal()">+ Nova Equipe</button>
+        </div>
+        <div class="admin-panel"><div class="admin-list" id="adminListTeam"></div></div>
+    </div>
+
+    <!-- TAB CONFIGURAÇÕES -->
+    <div id="tabCfg" class="admin-tab-content" style="display:none;">
+        <div class="admin-panel">
+            <h3>Informações Gerais</h3>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Título do Site</label>
+                <input type="text" id="cfgTitle" value="Escravo, Nem Pensar!">
+            </div>
+            <div class="form-group">
+                <label>Slogan / Subtítulo</label>
+                <input type="text" id="cfgSubtitle" value="INFORMAR PARA COMBATER. CONHECER PARA TRANSFORMAR.">
+            </div>
+            <button class="primary-button" onclick="saveConfig()">Salvar Configurações</button>
+        </div>
     </div>
 </section>
 
 </div>
 
 <footer>
-    © 2026 — Escravo, Nem Pensar! · CETI José Marques
+    © <span id="year">2026</span> — Escravo, Nem Pensar! · CETI José Marques
 </footer>
 
 </main>
 
+<!-- MODAL ATIVIDADE -->
 <div class="modal" id="activityModal">
     <div class="modal-box">
         <div class="modal-header">
-            <h2 id="modalTitle">Nova atividade</h2>
-            <button class="close" onclick="closeModal()">×</button>
+            <h2 id="modalTitleAct">Atividade</h2>
+            <button class="close" onclick="closeModal('activityModal')">×</button>
         </div>
-        <input type="hidden" id="editId">
+        <input type="hidden" id="editActId">
         <div class="form-group">
             <label>Título</label>
-            <input type="text" id="activityTitle" placeholder="Ex.: Culminância">
+            <input type="text" id="actTitle" placeholder="Ex.: Peça Teatral">
         </div>
         <div class="form-group">
-            <label>Ícone</label>
-            <input type="text" id="activityIcon" placeholder="Ex.: 📚, 🎭, 🎬, 📷">
+            <label>Ícone (Emoji)</label>
+            <input type="text" id="actIcon" placeholder="Ex.: 🎭">
         </div>
         <div class="form-group">
-            <label>Tags (separadas por vírgula)</label>
-            <input type="text" id="activityTags" placeholder="Ex.: Cultura, Teatro, Apresentação">
-        </div>
-        <div class="form-group">
-            <label>Resumo</label>
-            <textarea id="activitySummary" placeholder="Resumo curto para os cartões..."></textarea>
+            <label>Resumo (Cartão)</label>
+            <textarea id="actSummary" placeholder="Descrição curta..."></textarea>
         </div>
         <div class="form-group">
             <label>Descrição Completa</label>
-            <textarea id="activityContent" placeholder="Descrição detalhada da atividade..."></textarea>
+            <textarea id="actContent" placeholder="Texto detalhado..."></textarea>
         </div>
         <div class="form-group">
-            <label>URL da Imagem Principal (Capa)</label>
-            <input type="url" id="activityImage" placeholder="https://exemplo.com/imagem.jpg">
+            <label>Capa - Upload do Dispositivo</label>
+            <input type="file" accept="image/*" onchange="handleImageUpload(event, 'actImage', 'previewActImg')">
+            <input type="hidden" id="actImage">
+            <img id="previewActImg" class="img-preview">
         </div>
         <div class="form-group">
-            <label>URLs das Imagens da Galeria (uma por linha)</label>
-            <textarea id="activityGallery" placeholder="https://exemplo.com/foto1.jpg&#10;https://exemplo.com/foto2.jpg"></textarea>
+            <label>Link de Vídeo (YouTube Embed/URL)</label>
+            <input type="text" id="actVideo" placeholder="https://www.youtube.com/watch?v=...">
         </div>
-        <div class="form-group">
-            <label>Link de Vídeo do YouTube (Embed ou URL)</label>
-            <input type="text" id="activityVideo" placeholder="https://www.youtube.com/watch?v=ID_DO_VIDEO">
-        </div>
-        <div class="form-actions">
-            <button class="cancel-button" onclick="closeModal()">Cancelar</button>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button class="small-button" onclick="closeModal('activityModal')">Cancelar</button>
             <button class="primary-button" onclick="saveActivity()">Salvar</button>
         </div>
     </div>
 </div>
 
+<!-- MODAL MATERIAL -->
+<div class="modal" id="materialModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Material Educativo</h2>
+            <button class="close" onclick="closeModal('materialModal')">×</button>
+        </div>
+        <input type="hidden" id="editMatId">
+        <div class="form-group">
+            <label>Título do Material</label>
+            <input type="text" id="matTitle" placeholder="Ex.: Cartilha sobre Direitos">
+        </div>
+        <div class="form-group">
+            <label>Tipo</label>
+            <select id="matType">
+                <option value="📄 Pesquisa">📄 Pesquisa</option>
+                <option value="📕 Livro">📕 Livro</option>
+                <option value="📊 Apresentação">📊 Apresentação</option>
+                <option value="📰 Cartaz">📰 Cartaz</option>
+                <option value="🎥 Vídeo">🎥 Vídeo</option>
+                <option value="📥 Arquivo PDF">📥 Arquivo PDF</option>
+                <option value="🔗 Link Externo">🔗 Link Externo</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="matDesc" placeholder="Breve resumo do conteúdo..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Link / URL do Arquivo</label>
+            <input type="text" id="matUrl" placeholder="https://drive.google.com/...">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button class="small-button" onclick="closeModal('materialModal')">Cancelar</button>
+            <button class="primary-button" onclick="saveMaterial()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EQUIPE -->
+<div class="modal" id="teamModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Equipe / Grupo</h2>
+            <button class="close" onclick="closeModal('teamModal')">×</button>
+        </div>
+        <input type="hidden" id="editTeamId">
+        <div class="form-group">
+            <label>Nome da Equipe</label>
+            <input type="text" id="teamName" placeholder="Ex.: 🎭 Teatro & Expressão">
+        </div>
+        <div class="form-group">
+            <label>Membros (um por linha)</label>
+            <textarea id="teamMembers" placeholder="Ana Silva&#10;João Pedro&#10;Maria Souza"></textarea>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button class="small-button" onclick="closeModal('teamModal')">Cancelar</button>
+            <button class="primary-button" onclick="saveTeam()">Salvar</button>
+        </div>
+    </div>
+</div>
+
 <script>
-// Dados Iniciais / Armazenamento Local
-const initialActivities = [
+// DADOS INICIAIS
+const defaultActivities = [
     {
         id: "1",
         title: "Apresentação Teatral",
         icon: "🎭",
-        tags: ["Teatro", "Cultura", "Conscientização"],
-        summary: "Peça de teatro organizada pelos estudantes retratando realidades do trabalho análogo à escravidão.",
-        content: "Os estudantes prepararam uma peça teatral impactante demonstrando como o trabalho escravo contemporâneo afeta diversas famílias no país, ressaltando a importância do resgate da dignidade e dos direitos humanos.",
+        summary: "Peça sobre a realidade do trabalho análogo à escravidão.",
+        content: "Os alunos encenaram situações de vulnerabilidade social e resgate de direitos humanos.",
         image: "",
-        gallery: [],
         video: ""
     },
     {
         id: "2",
-        title: "Pesquisa e Debates",
+        title: "Pesquisas e Debates",
         icon: "📚",
-        tags: ["Pesquisa", "Educação", "Direitos"],
-        summary: "Levantamento de dados estatísticos e debates reflexivos em sala de aula.",
-        content: "Atividade focada na análise de gráficos, dados históricos e relatos reais sobre o combate ao trabalho escravo no Brasil, promovendo um debate crítico entre as turmas.",
+        summary: "Levantamento de estatísticas e análise de dados regionais.",
+        content: "Debate focado na identificação do trabalho escravo moderno e formas de denúncia.",
         image: "",
-        gallery: [],
         video: ""
     }
 ];
 
-let activities = JSON.parse(localStorage.getItem('enp_activities')) || initialActivities;
+const defaultMaterials = [
+    { id: "1", title: "Cartilha de Prevenção", type: "📥 Arquivo PDF", desc: "Material informativo completo sobre combate ao trabalho escravo.", url: "#" },
+    { id: "2", title: "Apresentação de Slides", type: "📊 Apresentação", desc: "Slides utilizados nas palestras da escola.", url: "#" }
+];
 
-function saveToLocalStorage() {
-    localStorage.setItem('enp_activities', JSON.stringify(activities));
+const defaultTeams = [
+    { id: "1", name: "🎭 Teatro & Expressão", members: ["Ana Clara", "Lucas Gabriel", "Beatriz Santos"] },
+    { id: "2", name: "📚 Pesquisa & Dados", members: ["Matheus Oliveira", "Sofia Lima"] },
+    { id: "3", name: "💻 Site & Mídia", members: ["Guilherme Costa", "Mariana Alves"] }
+];
+
+// STATE MANAGEMENT
+let activities = JSON.parse(localStorage.getItem('enp_act')) || defaultActivities;
+let materials = JSON.parse(localStorage.getItem('enp_mat')) || defaultMaterials;
+let teams = JSON.parse(localStorage.getItem('enp_teams')) || defaultTeams;
+
+function saveData() {
+    localStorage.setItem('enp_act', JSON.stringify(activities));
+    localStorage.setItem('enp_mat', JSON.stringify(materials));
+    localStorage.setItem('enp_teams', JSON.stringify(teams));
 }
 
-// Alternar Tema (Claro / Escuro)
+// INTERFACE
 function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    
-    const btn = document.querySelector('.theme-button');
-    if (newTheme === 'dark') {
-        btn.textContent = '☀️ Modo claro';
-    } else {
-        btn.textContent = '🌙 Modo escuro';
-    }
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.querySelector('.theme-button').textContent = isDark ? '🌙 Modo escuro' : '☀️ Modo claro';
 }
 
-// Controle da Sidebar Mobile
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
 }
 
-// Navegação entre Páginas
-function showPage(pageId, btnElement) {
-    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-    
-    const targetPage = document.getElementById(pageId);
-    if (targetPage) {
-        targetPage.classList.add('active');
-    }
+function showPage(pageId, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
 
-    if (btnElement) {
+    if (btn) {
         document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
+        btn.classList.add('active');
     }
 
-    // Fecha o menu mobile se estiver aberto
     document.getElementById('sidebar').classList.remove('open');
-
-    // Volta a exibir a lista de atividades caso estivesse vendo detalhes
     if (pageId === 'atividades') {
         document.getElementById('activitiesListContainer').style.display = 'block';
         document.getElementById('activityDetailContainer').style.display = 'none';
     }
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
     renderAll();
 }
 
-// Formatar URL do YouTube para Embed
-function getYouTubeEmbedUrl(url) {
-    if (!url) return '';
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
+// CARREGAMENTO DAS FOTOS DO CELULAR/DISPOSITIVO (Base64)
+function handleImageUpload(e, targetInputId, previewImgId) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            document.getElementById(targetInputId).value = evt.target.result;
+            const preview = document.getElementById(previewImgId);
+            preview.src = evt.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
-// Renderização Geral
+// RENDERIZADORES
 function renderAll() {
     renderHomeCards();
-    renderActivitiesGrid();
-    renderGlobalGallery();
-    renderAdminList();
+    renderActivities();
+    renderGallery();
+    renderMaterials();
+    renderTeams();
+    renderAdminLists();
+
     document.getElementById('statActivities').textContent = activities.length;
+    document.getElementById('statPhotos').textContent = activities.filter(a => a.image).length;
+    document.getElementById('statMaterials').textContent = materials.length;
 }
 
 function renderHomeCards() {
     const container = document.getElementById('homeCards');
     container.innerHTML = '';
-    
-    // Exibe até 3 atividades na página inicial
     activities.slice(0, 3).forEach(act => {
-        container.appendChild(createCardElement(act));
+        container.appendChild(createCard(act));
     });
 }
 
-function renderActivitiesGrid() {
+function renderActivities() {
     const container = document.getElementById('activitiesGrid');
     container.innerHTML = '';
-    
     activities.forEach(act => {
-        container.appendChild(createCardElement(act));
+        container.appendChild(createCard(act));
     });
 }
 
-function createCardElement(act) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.onclick = () => openActivityDetail(act.id);
-
-    const bgImageStyle = act.image ? `style="background-image: url('${act.image}')"` : '';
-    const iconOrContent = act.image ? '' : (act.icon || '📌');
-
-    card.innerHTML = `
-        <div class="card-image" ${bgImageStyle}>${iconOrContent}</div>
+function createCard(act) {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.onclick = () => openActivityDetail(act.id);
+    const bg = act.image ? `style="background-image: url('${act.image}')"` : '';
+    el.innerHTML = `
+        <div class="card-image" ${bg}>${act.image ? '' : (act.icon || '📌')}</div>
         <div class="card-body">
             <h3>${act.title}</h3>
             <p>${act.summary}</p>
-            <div class="card-link">Ver detalhes →</div>
+            <div class="card-link">Acessar conteúdo →</div>
         </div>
     `;
-    return card;
+    return el;
 }
 
-// Detalhes da Atividade
 function openActivityDetail(id) {
     const act = activities.find(a => a.id === id);
     if (!act) return;
 
-    const container = document.getElementById('activityDetailContainer');
-    const listContainer = document.getElementById('activitiesListContainer');
+    const listCont = document.getElementById('activitiesListContainer');
+    const detailCont = document.getElementById('activityDetailContainer');
 
-    const bgStyle = act.image ? `style="background-image: url('${act.image}')"` : '';
-    const coverContent = act.image ? '' : (act.icon || '📌');
+    const bg = act.image ? `style="background-image: url('${act.image}')"` : '';
+    let videoHtml = act.video ? `<div class="video-wrapper" style="margin-top:20px;"><iframe src="${act.video}" style="width:100%; height:300px; border-radius:15px; border:none;"></iframe></div>` : '';
 
-    const tagsHTML = act.tags ? act.tags.map(t => `<span class="badge">${t.trim()}</span>`).join(' ') : '';
-
-    let galleryHTML = '';
-    if (act.gallery && act.gallery.length > 0) {
-        galleryHTML = `
-            <h3>Galeria da atividade</h3>
-            <div class="gallery">
-                ${act.gallery.map(img => `<div class="gallery-item" style="background-image: url('${img}')"></div>`).join('')}
-            </div>
-        `;
-    }
-
-    let videoHTML = '';
-    if (act.video) {
-        const embedUrl = getYouTubeEmbedUrl(act.video);
-        videoHTML = `
-            <h3 style="margin-top: 25px;">Vídeo</h3>
-            <div class="video-wrapper">
-                <iframe src="${embedUrl}" allowfullscreen></iframe>
-            </div>
-        `;
-    }
-
-    container.innerHTML = `
-        <button class="primary-button" onclick="closeActivityDetail()" style="margin-bottom: 20px;">← Voltar para Atividades</button>
+    detailCont.innerHTML = `
+        <button class="primary-button" onclick="closeActivityDetail()" style="margin-bottom:20px;">← Voltar</button>
         <div class="detail">
-            <div class="detail-cover" ${bgStyle}>${coverContent}</div>
+            <div class="detail-cover" ${bg}>${act.image ? '' : (act.icon || '📌')}</div>
             <h2>${act.title}</h2>
-            <div class="detail-meta">${tagsHTML}</div>
-            <p>${act.content.replace(/\n/g, '<br>')}</p>
-            ${galleryHTML}
-            ${videoHTML}
+            <p>${act.content}</p>
+            ${videoHtml}
         </div>
     `;
 
-    listContainer.style.display = 'none';
-    container.style.display = 'block';
-    
-    // Garante que a página de atividades esteja visível
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('atividades').classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    listCont.style.display = 'none';
+    detailCont.style.display = 'block';
+    showPage('atividades');
 }
 
 function closeActivityDetail() {
@@ -683,174 +743,319 @@ function closeActivityDetail() {
     document.getElementById('activitiesListContainer').style.display = 'block';
 }
 
-// Galeria Global
-function renderGlobalGallery() {
+function renderGallery() {
     const container = document.getElementById('globalGalleryGrid');
     container.innerHTML = '';
+    const imgs = activities.filter(a => a.image).map(a => a.image);
 
-    let allImages = [];
-    activities.forEach(act => {
-        if (act.image) allImages.push(act.image);
-        if (act.gallery) allImages = allImages.concat(act.gallery);
-    });
-
-    if (allImages.length === 0) {
-        container.innerHTML = '<p class="page-subtitle">Nenhuma foto cadastrada na galeria ainda.</p>';
+    if (imgs.length === 0) {
+        container.innerHTML = '<p class="page-subtitle">Nenhuma foto cadastrada ainda.</p>';
         return;
     }
 
-    allImages.forEach(imgUrl => {
+    imgs.forEach(url => {
         const item = document.createElement('div');
         item.className = 'gallery-item';
-        item.style.backgroundImage = `url('${imgUrl}')`;
+        item.style.backgroundImage = `url('${url}')`;
         container.appendChild(item);
     });
 }
 
-// Autenticação ADM
-function showLogin() {
-    showPage('login');
+function renderMaterials() {
+    const container = document.getElementById('materialsGrid');
+    container.innerHTML = '';
+    materials.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'material-card';
+        card.innerHTML = `
+            <div>
+                <div class="material-type">${m.type}</div>
+                <h3>${m.title}</h3>
+                <p>${m.desc}</p>
+            </div>
+            <a href="${m.url}" target="_blank" class="material-btn">Acessar Material</a>
+        `;
+        container.appendChild(card);
+    });
 }
+
+function renderTeams() {
+    const container = document.getElementById('teamsGrid');
+    container.innerHTML = '';
+    teams.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'team-card';
+        const membersList = t.members.map(m => `<li>${m}</li>`).join('');
+        card.innerHTML = `
+            <h3>${t.name}</h3>
+            <ul class="team-members">${membersList}</ul>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ADMINISTRAÇÃO
+function showLogin() { showPage('login'); }
 
 function login() {
     const pass = document.getElementById('adminPassword').value;
-    const errorEl = document.getElementById('loginError');
-    
-    // Senha padrão configurada como "1234"
     if (pass === '1234') {
-        errorEl.style.display = 'none';
-        document.getElementById('adminPassword').value = '';
+        document.getElementById('loginError').style.display = 'none';
         showPage('admin');
     } else {
-        errorEl.style.display = 'block';
+        document.getElementById('loginError').style.display = 'block';
     }
 }
 
-// Painel Administrativo
-function renderAdminList() {
-    const container = document.getElementById('adminList');
-    container.innerHTML = '';
+function switchAdminTab(tabKey) {
+    document.querySelectorAll('.admin-tab-content').forEach(c => c.style.display = 'none');
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
 
-    if (activities.length === 0) {
-        container.innerHTML = '<p>Nenhuma atividade cadastrada.</p>';
-        return;
+    if (tabKey === 'act') {
+        document.getElementById('tabAct').style.display = 'block';
+    } else if (tabKey === 'mat') {
+        document.getElementById('tabMat').style.display = 'block';
+    } else if (tabKey === 'team') {
+        document.getElementById('tabTeam').style.display = 'block';
+    } else if (tabKey === 'cfg') {
+        document.getElementById('tabCfg').style.display = 'block';
     }
+    event.target.classList.add('active');
+}
 
-    activities.forEach(act => {
-        const item = document.createElement('div');
-        item.className = 'admin-item';
-        item.innerHTML = `
-            <div>
-                <h3>${act.icon || '📌'} ${act.title}</h3>
-                <p style="font-size: 13px; color: var(--text-soft);">${act.summary}</p>
-            </div>
-            <div class="admin-actions">
-                <button class="small-button edit-button" onclick="openActivityModal('${act.id}')">Editar</button>
-                <button class="small-button delete-button" onclick="deleteActivity('${act.id}')">Excluir</button>
+function renderAdminLists() {
+    // Lista Atividades
+    const listAct = document.getElementById('adminListAct');
+    listAct.innerHTML = '';
+    activities.forEach(a => {
+        listAct.innerHTML += `
+            <div class="admin-item">
+                <div><strong>${a.icon || '📌'} ${a.title}</strong></div>
+                <div>
+                    <button class="small-button edit-button" onclick="openActivityModal('${a.id}')">Editar</button>
+                    <button class="small-button delete-button" onclick="deleteActivity('${a.id}')">Excluir</button>
+                </div>
             </div>
         `;
-        container.appendChild(item);
+    });
+
+    // Lista Materiais
+    const listMat = document.getElementById('adminListMat');
+    listMat.innerHTML = '';
+    materials.forEach(m => {
+        listMat.innerHTML += `
+            <div class="admin-item">
+                <div><strong>${m.type}: ${m.title}</strong></div>
+                <div>
+                    <button class="small-button edit-button" onclick="openMaterialModal('${m.id}')">Editar</button>
+                    <button class="small-button delete-button" onclick="deleteMaterial('${m.id}')">Excluir</button>
+                </div>
+            </div>
+        `;
+    });
+
+    // Lista Equipes
+    const listTeam = document.getElementById('adminListTeam');
+    listTeam.innerHTML = '';
+    teams.forEach(t => {
+        listTeam.innerHTML += `
+            <div class="admin-item">
+                <div><strong>${t.name}</strong> (${t.members.length} membros)</div>
+                <div>
+                    <button class="small-button edit-button" onclick="openTeamModal('${t.id}')">Editar</button>
+                    <button class="small-button delete-button" onclick="deleteTeam('${t.id}')">Excluir</button>
+                </div>
+            </div>
+        `;
     });
 }
 
-// Modal de Atividades (Criar / Editar)
+// MODAIS ACCIONAMENTO
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// ATIVIDADES CRUD
 function openActivityModal(id = null) {
-    const modal = document.getElementById('activityModal');
-    const modalTitle = document.getElementById('modalTitle');
-    
     if (id) {
-        const act = activities.find(a => a.id === id);
-        if (!act) return;
-        
-        modalTitle.textContent = 'Editar Atividade';
-        document.getElementById('editId').value = act.id;
-        document.getElementById('activityTitle').value = act.title;
-        document.getElementById('activityIcon').value = act.icon || '';
-        document.getElementById('activityTags').value = act.tags ? act.tags.join(', ') : '';
-        document.getElementById('activitySummary').value = act.summary;
-        document.getElementById('activityContent').value = act.content;
-        document.getElementById('activityImage').value = act.image || '';
-        document.getElementById('activityGallery').value = act.gallery ? act.gallery.join('\n') : '';
-        document.getElementById('activityVideo').value = act.video || '';
+        const a = activities.find(item => item.id === id);
+        document.getElementById('editActId').value = a.id;
+        document.getElementById('actTitle').value = a.title;
+        document.getElementById('actIcon').value = a.icon;
+        document.getElementById('actSummary').value = a.summary;
+        document.getElementById('actContent').value = a.content;
+        document.getElementById('actImage').value = a.image;
+        document.getElementById('actVideo').value = a.video;
+        if (a.image) {
+            const preview = document.getElementById('previewActImg');
+            preview.src = a.image;
+            preview.style.display = 'block';
+        }
     } else {
-        modalTitle.textContent = 'Nova Atividade';
-        document.getElementById('editId').value = '';
-        document.getElementById('activityTitle').value = '';
-        document.getElementById('activityIcon').value = '📌';
-        document.getElementById('activityTags').value = '';
-        document.getElementById('activitySummary').value = '';
-        document.getElementById('activityContent').value = '';
-        document.getElementById('activityImage').value = '';
-        document.getElementById('activityGallery').value = '';
-        document.getElementById('activityVideo').value = '';
+        document.getElementById('editActId').value = '';
+        document.getElementById('actTitle').value = '';
+        document.getElementById('actIcon').value = '📌';
+        document.getElementById('actSummary').value = '';
+        document.getElementById('actContent').value = '';
+        document.getElementById('actImage').value = '';
+        document.getElementById('actVideo').value = '';
+        document.getElementById('previewActImg').style.display = 'none';
     }
-
-    modal.classList.add('show');
-}
-
-function closeModal() {
-    document.getElementById('activityModal').classList.remove('show');
+    openModal('activityModal');
 }
 
 function saveActivity() {
-    const id = document.getElementById('editId').value;
-    const title = document.getElementById('activityTitle').value.trim();
-    const icon = document.getElementById('activityIcon').value.trim();
-    const tagsRaw = document.getElementById('activityTags').value;
-    const summary = document.getElementById('activitySummary').value.trim();
-    const content = document.getElementById('activityContent').value.trim();
-    const image = document.getElementById('activityImage').value.trim();
-    const galleryRaw = document.getElementById('activityGallery').value;
-    const video = document.getElementById('activityVideo').value.trim();
+    const id = document.getElementById('editActId').value;
+    const title = document.getElementById('actTitle').value;
+    const summary = document.getElementById('actSummary').value;
 
-    if (!title || !summary) {
-        alert('Por favor, preencha pelo menos o título e o resumo da atividade.');
-        return;
-    }
+    if (!title || !summary) return alert('Preencha os campos de título e resumo!');
 
-    const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(t => t.length > 0) : [];
-    const gallery = galleryRaw ? galleryRaw.split('\n').map(g => g.trim()).filter(g => g.length > 0) : [];
+    const data = {
+        id: id || Date.now().toString(),
+        title,
+        icon: document.getElementById('actIcon').value,
+        summary,
+        content: document.getElementById('actContent').value,
+        image: document.getElementById('actImage').value,
+        video: document.getElementById('actVideo').value
+    };
 
     if (id) {
-        // Atualiza existente
-        const index = activities.findIndex(a => a.id === id);
-        if (index !== -1) {
-            activities[index] = { id, title, icon, tags, summary, content, image, gallery, video };
-        }
+        const idx = activities.findIndex(a => a.id === id);
+        activities[idx] = data;
     } else {
-        // Cria nova atividade
-        const newActivity = {
-            id: Date.now().toString(),
-            title,
-            icon,
-            tags,
-            summary,
-            content,
-            image,
-            gallery,
-            video
-        };
-        activities.unshift(newActivity);
+        activities.unshift(data);
     }
 
-    saveToLocalStorage();
+    saveData();
     renderAll();
-    closeModal();
+    closeModal('activityModal');
 }
 
 function deleteActivity(id) {
-    if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+    if (confirm('Deseja remover esta atividade?')) {
         activities = activities.filter(a => a.id !== id);
-        saveToLocalStorage();
+        saveData();
         renderAll();
     }
 }
 
-// Inicialização ao carregar a página
+// MATERIAIS CRUD
+function openMaterialModal(id = null) {
+    if (id) {
+        const m = materials.find(item => item.id === id);
+        document.getElementById('editMatId').value = m.id;
+        document.getElementById('matTitle').value = m.title;
+        document.getElementById('matType').value = m.type;
+        document.getElementById('matDesc').value = m.desc;
+        document.getElementById('matUrl').value = m.url;
+    } else {
+        document.getElementById('editMatId').value = '';
+        document.getElementById('matTitle').value = '';
+        document.getElementById('matDesc').value = '';
+        document.getElementById('matUrl').value = '';
+    }
+    openModal('materialModal');
+}
+
+function saveMaterial() {
+    const id = document.getElementById('editMatId').value;
+    const title = document.getElementById('matTitle').value;
+
+    if (!title) return alert('Preencha o título do material!');
+
+    const data = {
+        id: id || Date.now().toString(),
+        title,
+        type: document.getElementById('matType').value,
+        desc: document.getElementById('matDesc').value,
+        url: document.getElementById('matUrl').value || '#'
+    };
+
+    if (id) {
+        const idx = materials.findIndex(m => m.id === id);
+        materials[idx] = data;
+    } else {
+        materials.unshift(data);
+    }
+
+    saveData();
+    renderAll();
+    closeModal('materialModal');
+}
+
+function deleteMaterial(id) {
+    if (confirm('Deseja excluir este material?')) {
+        materials = materials.filter(m => m.id !== id);
+        saveData();
+        renderAll();
+    }
+}
+
+// EQUIPES CRUD
+function openTeamModal(id = null) {
+    if (id) {
+        const t = teams.find(item => item.id === id);
+        document.getElementById('editTeamId').value = t.id;
+        document.getElementById('teamName').value = t.name;
+        document.getElementById('teamMembers').value = t.members.join('\n');
+    } else {
+        document.getElementById('editTeamId').value = '';
+        document.getElementById('teamName').value = '';
+        document.getElementById('teamMembers').value = '';
+    }
+    openModal('teamModal');
+}
+
+function saveTeam() {
+    const id = document.getElementById('editTeamId').value;
+    const name = document.getElementById('teamName').value;
+    const membersRaw = document.getElementById('teamMembers').value;
+
+    if (!name) return alert('Informe o nome da equipe!');
+
+    const members = membersRaw.split('\n').map(m => m.trim()).filter(m => m.length > 0);
+
+    const data = {
+        id: id || Date.now().toString(),
+        name,
+        members
+    };
+
+    if (id) {
+        const idx = teams.findIndex(t => t.id === id);
+        teams[idx] = data;
+    } else {
+        teams.push(data);
+    }
+
+    saveData();
+    renderAll();
+    closeModal('teamModal');
+}
+
+function deleteTeam(id) {
+    if (confirm('Deseja excluir esta equipe?')) {
+        teams = teams.filter(t => t.id !== id);
+        saveData();
+        renderAll();
+    }
+}
+
+// CONFIGURAÇÕES GERAIS
+function saveConfig() {
+    const title = document.getElementById('cfgTitle').value;
+    const subtitle = document.getElementById('cfgSubtitle').value;
+
+    document.getElementById('siteTitleHeader').textContent = title;
+    document.getElementById('siteSubtitleHeader').textContent = subtitle;
+
+    alert('Configurações salvas!');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     renderAll();
 });
 </script>
-
 </body>
 </html>
