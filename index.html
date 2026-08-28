@@ -1,1061 +1,360 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escravo, Nem Pensar! — CETI José Marques</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma - Etapa 1</title>
+  <style>
+    /* VARIABLES & PALETTE */
+    :root {
+      --fundo: #F4E7C8;
+      --fundo-claro: #FFF7E6;
+      --branco: #FFFFFF;
+      --terracota: #B94E2E;
+      --terracota-escuro: #963B24;
+      --laranja-terra: #D87532;
+      --azul-marinho: #142B3D;
+      --azul-marinho-claro: #1D3A4D;
+      --bege: #F5DDA5;
+      --bege-claro: #FFF1CC;
+      --texto: #142B3D;
+      --texto-secundario: #5C4635;
+      --ocre: #C58A35;
+      --amarelo-sol: #E6A83B;
+      --vermelho: #A63D2F;
+      --card-border: rgba(185, 78, 46, 0.15);
+      --sidebar-width: 260px;
+      --sidebar-collapsed-width: 70px;
+      --header-height: 60px;
+    }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    [data-theme="dark"] {
+      --fundo: #111820;
+      --fundo-claro: #18232C;
+      --branco: #FFFFFF;
+      --terracota: #D66A43;
+      --terracota-escuro: #B84E30;
+      --laranja-terra: #D98A45;
+      --azul-marinho: #E7D3A5;
+      --azul-marinho-claro: #F1DFC0;
+      --bege: #FFFFFF;
+      --bege-claro: #FFFFFF;
+      --texto: #FFFFFF;
+      --texto-secundario: #D8C9B5;
+      --ocre: #D49A43;
+      --amarelo-sol: #E5AE4A;
+      --card-border: rgba(214, 106, 67, 0.2);
+    }
 
-<style>
-:root {
-    --bg: #F8EFD9;
-    --bg-soft: #F2E4C4;
-    --header: #B44E2A;
-    --header-dark: #8E3B23;
-    --sidebar: #14293A;
-    --sidebar-hover: #1F3B52;
-    --card: #F4E7C9;
-    --card-hover: #EFDDBD;
-    --text: #14293A;
-    --text-soft: #5C4635;
-    --cream: #FFF4D9;
-    --white: #FFFDF8;
-    --orange: #D66B38;
-    --ocre: #D38C35;
-    --red: #A5412E;
-    --shadow: 0 8px 25px rgba(20,41,58,.12);
-    --radius: 18px;
-    --sidebar-width: 260px;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s, width 0.3s;
+    }
 
-[data-theme="dark"] {
-    --bg: #101820;
-    --bg-soft: #172633;
-    --header: #C9603C;
-    --header-dark: #A7462C;
-    --sidebar: #09131D;
-    --sidebar-hover: #172A3A;
-    --card: #1C2B37;
-    --card-hover: #243744;
-    --text: #FFF8E8;
-    --text-soft: #D8C9B4;
-    --cream: #FFF4D9;
-    --white: #FFFFFF;
-    --orange: #D97A49;
-    --ocre: #D99A4A;
-    --red: #C65A43;
-    --shadow: 0 8px 25px rgba(0,0,0,.35);
-}
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--fundo-claro);
+      color: var(--texto);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background-color: var(--terracota);
+      color: var(--bege-claro);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 100;
+    }
 
-body {
-    font-family: "DM Sans", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    background-image: radial-gradient(rgba(180,78,42,.055) 1px, transparent 1px);
-    background-size: 18px 18px;
-    transition: background .3s, color .3s;
-    overflow-x: hidden;
-}
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
-button, input, textarea, select { font-family: inherit; }
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: var(--bege-claro);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
 
-.header {
-    height: 100px;
-    background: var(--header);
-    color: var(--cream);
-    display: flex;
-    align-items: center;
-    padding: 15px 30px;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    box-shadow: 0 5px 20px rgba(0,0,0,.12);
-}
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
 
-.logo {
-    width: 60px; height: 60px;
-    background: var(--cream);
-    color: var(--sidebar);
-    border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    margin-right: 20px;
-    font-size: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,.15);
-    flex-shrink: 0;
-}
+    .theme-btn {
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-.header-content h1 { font-family: "Oswald", sans-serif; font-size: clamp(1.8rem, 3vw, 2.5rem); letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
-.header-content p { margin-top: 5px; font-size: 13px; font-weight: 600; letter-spacing: .5px; }
+    /* SIDEBAR */
+    aside {
+      position: fixed;
+      top: var(--header-height);
+      bottom: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+    }
 
-.theme-button {
-    margin-left: auto;
-    background: rgba(20,41,58,.8); color: var(--cream);
-    border: none; padding: 12px 18px; border-radius: 30px;
-    cursor: pointer; font-weight: 700; transition: .2s; min-height: 44px;
-}
+    body.sidebar-collapsed aside {
+      width: var(--sidebar-collapsed-width);
+    }
 
-.sidebar {
-    position: fixed; left: 0; top: 100px; bottom: 0;
-    width: var(--sidebar-width); background: var(--sidebar);
-    color: white; padding: 25px 16px; overflow-y: auto;
-    z-index: 900; transition: transform .3s ease;
-}
+    nav {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 0;
+    }
 
-.menu-title { color: var(--ocre); font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 13px; letter-spacing: 1.5px; margin: 0 12px 15px; }
-.menu { list-style: none; }
-.menu li { margin-bottom: 7px; }
-.menu button {
-    width: 100%; border: none; background: transparent; color: #FFF4D9;
-    text-align: left; padding: 14px 15px; border-radius: 13px;
-    cursor: pointer; font-size: 15px; font-weight: 600; transition: .2s;
-    display: flex; align-items: center; gap: 12px; min-height: 48px;
-}
-.menu button:hover, .menu button.active { background: var(--sidebar-hover); transform: translateX(3px); }
-.menu-icon { width: 25px; text-align: center; font-size: 19px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      color: var(--bege-claro);
+      text-decoration: none;
+      cursor: pointer;
+      gap: 1rem;
+      white-space: nowrap;
+    }
 
-.admin-menu { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-.admin-menu button { background: var(--cream); color: var(--sidebar); justify-content: center; }
+    .nav-item:hover, .nav-item.active {
+      background-color: var(--azul-marinho-claro);
+    }
 
-.mobile-menu {
-    display: none; position: fixed; top: 110px; left: 15px; z-index: 1100;
-    background: var(--sidebar); color: white; border: none;
-    width: 48px; height: 48px; border-radius: 13px; font-size: 24px;
-    cursor: pointer; box-shadow: var(--shadow);
-}
+    .nav-text {
+      display: inline;
+    }
 
-.main { margin-left: var(--sidebar-width); padding-top: 100px; min-height: 100vh; }
-.content { padding: 35px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    body.sidebar-collapsed .nav-text {
+      display: none;
+    }
 
-.hero {
-    min-height: 250px; background: var(--bg-soft); border-radius: 24px;
-    padding: 35px; display: flex; align-items: center; justify-content: space-between;
-    gap: 30px; position: relative; box-shadow: var(--shadow); margin-bottom: 35px;
-}
-.hero-text { max-width: 650px; z-index: 2; }
-.hero h2 { font-family: "Oswald", sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); line-height: 1.1; text-transform: uppercase; margin-bottom: 15px; }
-.hero p { color: var(--text-soft); font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
+    /* MAIN CONTENT AREA */
+    main {
+      margin-top: var(--header-height);
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+      width: 100%;
+    }
 
-.primary-button {
-    border: none; background: var(--header); color: var(--cream);
-    padding: 14px 22px; border-radius: 10px; cursor: pointer;
-    font-weight: 700; transition: .2s; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; justify-content: center;
-}
-.primary-button:hover { background: var(--header-dark); transform: translateY(-2px); }
+    body.sidebar-collapsed main {
+      margin-left: var(--sidebar-collapsed-width);
+    }
 
-.section-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 30px 0 20px; }
-.section-header h2 { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 26px; }
-.see-all { background: none; border: none; color: var(--header); font-weight: 700; cursor: pointer; font-size: 15px; }
+    .page {
+      display: none;
+    }
 
-/* Grid Centralizado para Cards de Atividades */
-.cards-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(290px, 350px)); 
-    gap: 25px; 
-    justify-content: center;
-    width: 100%;
-}
+    .page.active {
+      display: block;
+    }
 
-.card {
-    background: var(--card); border-radius: var(--radius); overflow: hidden;
-    border: 1px solid rgba(180,78,42,.15); box-shadow: var(--shadow);
-    cursor: pointer; transition: .3s; position: relative;
-    display: flex; flex-direction: column; width: 100%;
-}
-.card:hover { transform: translateY(-7px); background: var(--card-hover); }
-.card-image {
-    height: 190px; background: linear-gradient(135deg, var(--header), var(--orange));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 65px; color: var(--cream); position: relative; overflow: hidden;
-    background-size: cover; background-position: center;
-}
-.card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
-.card-body h3 { font-family: "Oswald", sans-serif; font-size: 22px; text-transform: uppercase; margin-bottom: 8px; }
-.card-body p { color: var(--text-soft); line-height: 1.5; font-size: 14px; flex: 1; }
-.card-link { margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; color: var(--header); font-weight: 800; font-size: 14px; }
+    /* CARDS GRID */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
 
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 35px; }
-.stat { background: var(--sidebar); color: var(--cream); padding: 20px; border-radius: 18px; text-align: center; }
-.stat strong { display: block; font-family: "Oswald", sans-serif; font-size: 36px; color: var(--ocre); }
-.stat span { font-size: 14px; font-weight: 600; }
+    .card {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
-.page { display: none; }
-.page.active { display: block; animation: fade .3s ease; }
-@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--terracota);
+    }
 
-.page-title { font-family: "Oswald", sans-serif; text-transform: uppercase; font-size: 38px; margin-bottom: 8px; }
-.page-subtitle { color: var(--text-soft); margin-bottom: 25px; }
+    .card-title {
+      color: var(--azul-marinho);
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
 
-.detail { background: var(--card); border-radius: 22px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 20px; }
-.detail-cover {
-    height: 300px; background: var(--header); border-radius: 18px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 90px; margin-bottom: 25px; background-size: cover; background-position: center;
-}
-.detail h2 { font-family: "Oswald", sans-serif; font-size: 32px; text-transform: uppercase; margin-bottom: 15px; }
-.detail p { color: var(--text-soft); line-height: 1.8; margin-bottom: 20px; font-size: 15px; }
+    .card-desc {
+      color: var(--texto-secundario);
+      font-size: 0.9rem;
+    }
 
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
-.gallery-item {
-    height: 200px; border-radius: 15px; background: var(--bg-soft);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden; background-size: cover; background-position: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
+    .back-btn {
+      background-color: var(--terracota);
+      color: var(--bege-claro);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
 
-/* Lista de Materiais */
-.materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-.material-card {
-    background: var(--bg-soft); border-radius: 15px; padding: 20px;
-    display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);
-}
-.material-type { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--header); margin-bottom: 8px; }
-.material-card h3 { font-family: "Oswald", sans-serif; font-size: 20px; margin-bottom: 10px; }
-.material-card p { font-size: 14px; color: var(--text-soft); margin-bottom: 15px; flex: 1; }
-.material-btn {
-    background: var(--sidebar); color: var(--cream); text-decoration: none;
-    padding: 10px 15px; border-radius: 8px; font-size: 13px; font-weight: 700;
-    text-align: center; display: block;
-}
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      aside {
+        transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
+      }
 
-/* Equipes / Sobre a Turma */
-.teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-.team-card { background: var(--bg-soft); border-radius: 18px; padding: 22px; box-shadow: var(--shadow); }
-.team-card h3 { font-family: "Oswald", sans-serif; color: var(--header); font-size: 22px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.team-members { list-style: none; margin-top: 10px; }
-.team-members li { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 14px; font-weight: 500; }
+      body.sidebar-open aside {
+        transform: translateX(0);
+      }
 
-/* Dashboard Administrativo */
-.admin-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-.admin-tab { background: var(--bg-soft); border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; color: var(--text); }
-.admin-tab.active { background: var(--header); color: var(--cream); }
-
-.admin-panel { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); }
-.admin-list { display: grid; gap: 12px; }
-.admin-item { background: var(--bg); padding: 15px 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-
-.small-button { border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; min-height: 40px; }
-.edit-button { background: var(--ocre); color: #fff; }
-.delete-button { background: var(--red); color: white; }
-
-/* Modal */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,.65); display: none; align-items: center; justify-content: center; padding: 15px; z-index: 3000; }
-.modal.show { display: flex; }
-.modal-box { width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; background: var(--bg); border-radius: 20px; padding: 25px; box-shadow: 0 20px 70px rgba(0,0,0,.4); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.modal-header h2 { font-family: "Oswald", sans-serif; text-transform: uppercase; }
-.close { border: none; background: transparent; font-size: 28px; cursor: pointer; color: var(--text); }
-
-.form-group { margin-bottom: 16px; }
-.form-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; }
-.form-group input, .form-group textarea, .form-group select {
-    width: 100%; padding: 12px 14px; border: 1px solid rgba(20,41,58,.2);
-    border-radius: 10px; background: var(--white); color: #222; outline: none; min-height: 48px;
-}
-.form-group textarea { min-height: 100px; resize: vertical; }
-.img-preview { max-width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; }
-
-.login-box { max-width: 400px; margin: 40px auto; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; }
-.login-box h2 { font-family: "Oswald", sans-serif; font-size: 30px; text-transform: uppercase; margin-bottom: 10px; }
-
-footer { margin-top: 50px; background: var(--sidebar); color: var(--cream); padding: 25px; text-align: center; font-size: 13px; }
-
-/* Otimizações Responsivas / Mobile */
-@media (max-width: 850px) {
-    .header { height: 80px; padding: 10px 15px; }
-    .logo { width: 45px; height: 45px; font-size: 22px; margin-right: 12px; }
-    .header-content h1 { font-size: 1.4rem; }
-    .header-content p { display: none; }
-    .theme-button { padding: 8px 12px; font-size: 12px; }
-    .sidebar { top: 80px; transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .mobile-menu { display: block; top: 95px; }
-    .main { margin-left: 0; padding-top: 80px; }
-    .content { padding: 20px 15px; }
-    .hero { padding: 22px; min-height: auto; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .admin-item { flex-direction: column; align-items: flex-start; }
-}
-</style>
+      main {
+        margin-left: 0 !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<header class="header">
-    <div class="logo">⛓️</div>
-    <div class="header-content">
-        <h1 id="siteTitleHeader">Escravo, Nem Pensar!</h1>
-        <p id="siteSubtitleHeader">INFORMAR PARA COMBATER. CONHECER PARA TRANSFORMAR.</p>
+  <header>
+    <div class="header-left">
+      <button class="toggle-btn" id="toggleSidebar">☰</button>
+      <div class="header-title">Minha Plataforma</div>
     </div>
-    <button class="theme-button" onclick="toggleTheme()">🌙 Modo escuro</button>
-</header>
+    <button class="theme-btn" id="toggleTheme">Modo Escuro</button>
+  </header>
 
-<button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+  <aside>
+    <nav>
+      <a class="nav-item active" data-target="home">
+        <span>🏠</span>
+        <span class="nav-text">Início</span>
+      </a>
+      <a class="nav-item" data-target="about">
+        <span>📖</span>
+        <span class="nav-text">Sobre o projeto</span>
+      </a>
+    </nav>
+  </aside>
 
-<aside class="sidebar" id="sidebar">
-    <div class="menu-title">Navegação</div>
-    <ul class="menu">
-        <li><button class="active" onclick="showPage('inicio', this)"><span class="menu-icon">🏠</span>Início</button></li>
-        <li><button onclick="showPage('projeto', this)"><span class="menu-icon">📖</span>Sobre o projeto</button></li>
-        <li><button onclick="showPage('atividades', this)"><span class="menu-icon">📚</span>Atividades</button></li>
-        <li><button onclick="showPage('galeria', this)"><span class="menu-icon">📷</span>Galeria</button></li>
-        <li><button onclick="showPage('materiais', this)"><span class="menu-icon">📄</span>Materiais</button></li>
-        <li><button onclick="showPage('sobre', this)"><span class="menu-icon">👥</span>Sobre a turma</button></li>
-    </ul>
-    <div class="admin-menu">
-        <button onclick="showLogin()"><span class="menu-icon">🔐</span>Área Restrita (ADM)</button>
-    </div>
-</aside>
+  <main>
+    <section id="home" class="page active">
+      <h1>Conteúdos</h1>
+      <div class="cards-grid" id="cardsContainer"></div>
+    </section>
 
-<main class="main">
-<div class="content">
+    <section id="about" class="page">
+      <h1>Sobre o projeto</h1>
+      <p style="margin-top: 1rem; color: var(--texto-secundario);">
+        Esta é a estrutura inicial da plataforma, preparada para receber novos módulos de forma modular e expansível.
+      </p>
+    </section>
 
-<!-- INÍCIO -->
-<section id="inicio" class="page active">
-    <div class="hero">
-        <div class="hero-text">
-            <h2>Conhecer é o primeiro passo para combater o trabalho escravo.</h2>
-            <p>Espaço oficial de divulgação das ações, produções e pesquisas desenvolvidas pelos estudantes no projeto <strong>Escravo, Nem Pensar!</strong></p>
-            <button class="primary-button" onclick="showPage('projeto')">Saiba mais sobre o projeto →</button>
-        </div>
-    </div>
+    <section id="contentView" class="page">
+      <button class="back-btn" id="backBtn">← Voltar</button>
+      <h1 id="contentTitle">Título do Conteúdo</h1>
+      <div style="margin-top: 1.5rem; color: var(--texto-secundario);" id="contentBody">
+        Estrutura vazia preparada para o conteúdo completo deste módulo.
+      </div>
+    </section>
+  </main>
 
-    <div class="section-header">
-        <h2>★ Atividades em Destaque</h2>
-        <button class="see-all" onclick="showPage('atividades')">Ver todas →</button>
-    </div>
+  <script>
+    // ARRAY DE CONTEÚDOS (Fácil para adicionar novos futuramente)
+    const contentsData = [
+      { id: '1', title: 'Conteúdo 1', desc: 'Clique para abrir o módulo 1.' },
+      { id: '2', title: 'Conteúdo 2', desc: 'Clique para abrir o módulo 2.' },
+      { id: '3', title: 'Conteúdo 3', desc: 'Clique para abrir o módulo 3.' }
+    ];
 
-    <div class="cards-grid" id="homeCards"></div>
+    // ELEMENTOS DOM
+    const body = document.body;
+    const toggleSidebarBtn = document.getElementById('toggleSidebar');
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = document.querySelectorAll('.page');
+    const cardsContainer = document.getElementById('cardsContainer');
+    const backBtn = document.getElementById('backBtn');
 
-    <div class="stats">
-        <div class="stat">
-            <strong id="statActivities">0</strong>
-            <span>Atividades realizadas</span>
-        </div>
-        <div class="stat">
-            <strong id="statPhotos">0</strong>
-            <span>Fotos na galeria</span>
-        </div>
-        <div class="stat">
-            <strong id="statMaterials">0</strong>
-            <span>Materiais disponíveis</span>
-        </div>
-    </div>
-</section>
-
-<!-- SOBRE O PROJETO -->
-<section id="projeto" class="page">
-    <h2 class="page-title">Sobre o projeto</h2>
-    <p class="page-subtitle">Conheça a proposta e a importância da conscientização.</p>
-    <div class="detail">
-        <div class="detail-cover">📚</div>
-        <h2>Escravo, Nem Pensar!</h2>
-        <p>O projeto visa promover reflexão crítica sobre o trabalho escravo contemporâneo, incentivando os alunos a agirem como agentes de transformação em suas comunidades.</p>
-        <p>Através de teatro, pesquisas de campo, produções audiovisuais e palestras, buscamos resgatar a dignidade e os direitos humanos fundamentais.</p>
-    </div>
-</section>
-
-<!-- ATIVIDADES -->
-<section id="atividades" class="page">
-    <div id="activitiesListContainer">
-        <h2 class="page-title">Atividades</h2>
-        <p class="page-subtitle">Confira todas as ações realizadas na escola.</p>
-        <div class="cards-grid" id="activitiesGrid"></div>
-    </div>
-    <div id="activityDetailContainer" style="display:none;"></div>
-</section>
-
-<!-- GALERIA -->
-<section id="galeria" class="page">
-    <h2 class="page-title">Galeria de Fotos</h2>
-    <p class="page-subtitle">Registros visuais de todas as etapas e apresentações.</p>
-    <div class="gallery" id="globalGalleryGrid"></div>
-</section>
-
-<!-- MATERIAIS -->
-<section id="materiais" class="page">
-    <h2 class="page-title">Biblioteca de Materiais</h2>
-    <p class="page-subtitle">Pesquisas, livros, apresentações, cartazes e arquivos em PDF.</p>
-    <div class="materials-grid" id="materialsGrid"></div>
-</section>
-
-<!-- SOBRE A TURMA -->
-<section id="sobre" class="page">
-    <h2 class="page-title">Sobre a Turma & Equipes</h2>
-    <p class="page-subtitle">Conheça os estudantes e educadores por trás das ações.</p>
-    <div class="detail" style="margin-bottom: 25px;">
-        <h2>CETI José Marques</h2>
-        <p>Alunos engajados na construção de um ambiente de aprendizado reflexivo e participativo.</p>
-    </div>
-    <div class="teams-grid" id="teamsGrid"></div>
-</section>
-
-<!-- LOGIN -->
-<section id="login" class="page">
-    <div class="login-box">
-        <div style="font-size: 50px; margin-bottom: 10px;">🔐</div>
-        <h2>Painel ADM</h2>
-        <p style="color: var(--text-soft); margin-bottom: 20px; font-size: 14px;">Acesso exclusivo para gerenciamento.</p>
-        <div class="form-group">
-            <label>Senha de Acesso</label>
-            <input type="password" id="adminPassword" placeholder="Digite a senha" onkeydown="if(event.key==='Enter') login()">
-        </div>
-        <button class="primary-button" style="width: 100%;" onclick="login()">Entrar</button>
-        <p id="loginError" style="color: var(--red); font-size: 13px; margin-top: 10px; display: none;">Senha incorreta.</p>
-    </div>
-</section>
-
-<!-- PAINEL ADMINISTRATIVO -->
-<section id="admin" class="page">
-    <h2 class="page-title">Gestão do Site</h2>
-    <p class="page-subtitle">Administre conteúdos, imagens, materiais e informações.</p>
-
-    <div class="admin-nav">
-        <button class="admin-tab active" onclick="switchAdminTab('act')">📚 Atividades</button>
-        <button class="admin-tab" onclick="switchAdminTab('mat')">📄 Materiais</button>
-        <button class="admin-tab" onclick="switchAdminTab('team')">👥 Equipes</button>
-        <button class="admin-tab" onclick="switchAdminTab('cfg')">⚙️ Configurações</button>
-    </div>
-
-    <!-- TAB ATIVIDADES -->
-    <div id="tabAct" class="admin-tab-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3>Atividades Cadastradas</h3>
-            <button class="primary-button" onclick="openActivityModal()">+ Nova Atividade</button>
-        </div>
-        <div class="admin-panel"><div class="admin-list" id="adminListAct"></div></div>
-    </div>
-
-    <!-- TAB MATERIAIS -->
-    <div id="tabMat" class="admin-tab-content" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3>Biblioteca de Materiais</h3>
-            <button class="primary-button" onclick="openMaterialModal()">+ Novo Material</button>
-        </div>
-        <div class="admin-panel"><div class="admin-list" id="adminListMat"></div></div>
-    </div>
-
-    <!-- TAB EQUIPES -->
-    <div id="tabTeam" class="admin-tab-content" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3>Equipes de Trabalho</h3>
-            <button class="primary-button" onclick="openTeamModal()">+ Nova Equipe</button>
-        </div>
-        <div class="admin-panel"><div class="admin-list" id="adminListTeam"></div></div>
-    </div>
-
-    <!-- TAB CONFIGURAÇÕES -->
-    <div id="tabCfg" class="admin-tab-content" style="display:none;">
-        <div class="admin-panel">
-            <h3>Informações Gerais</h3>
-            <div class="form-group" style="margin-top: 15px;">
-                <label>Título do Site</label>
-                <input type="text" id="cfgTitle" value="Escravo, Nem Pensar!">
-            </div>
-            <div class="form-group">
-                <label>Slogan / Subtítulo</label>
-                <input type="text" id="cfgSubtitle" value="INFORMAR PARA COMBATER. CONHECER PARA TRANSFORMAR.">
-            </div>
-            <button class="primary-button" onclick="saveConfig()">Salvar Configurações</button>
-        </div>
-    </div>
-</section>
-
-</div>
-
-<footer>
-    © <span id="year">2026</span> — Escravo, Nem Pensar! · CETI José Marques
-</footer>
-
-</main>
-
-<!-- MODAL ATIVIDADE -->
-<div class="modal" id="activityModal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h2 id="modalTitleAct">Atividade</h2>
-            <button class="close" onclick="closeModal('activityModal')">×</button>
-        </div>
-        <input type="hidden" id="editActId">
-        <div class="form-group">
-            <label>Título</label>
-            <input type="text" id="actTitle" placeholder="Ex.: Peça Teatral">
-        </div>
-        <div class="form-group">
-            <label>Ícone (Emoji)</label>
-            <input type="text" id="actIcon" placeholder="Ex.: 🎭">
-        </div>
-        <div class="form-group">
-            <label>Resumo (Cartão)</label>
-            <textarea id="actSummary" placeholder="Descrição curta..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>Descrição Completa</label>
-            <textarea id="actContent" placeholder="Texto detalhado..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>Capa - Upload do Dispositivo</label>
-            <input type="file" accept="image/*" onchange="handleImageUpload(event, 'actImage', 'previewActImg')">
-            <input type="hidden" id="actImage">
-            <img id="previewActImg" class="img-preview">
-        </div>
-        <div class="form-group">
-            <label>Link de Vídeo (YouTube Embed/URL)</label>
-            <input type="text" id="actVideo" placeholder="https://www.youtube.com/watch?v=...">
-        </div>
-        <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button class="small-button" onclick="closeModal('activityModal')">Cancelar</button>
-            <button class="primary-button" onclick="saveActivity()">Salvar</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL MATERIAL -->
-<div class="modal" id="materialModal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h2>Material Educativo</h2>
-            <button class="close" onclick="closeModal('materialModal')">×</button>
-        </div>
-        <input type="hidden" id="editMatId">
-        <div class="form-group">
-            <label>Título do Material</label>
-            <input type="text" id="matTitle" placeholder="Ex.: Cartilha sobre Direitos">
-        </div>
-        <div class="form-group">
-            <label>Tipo</label>
-            <select id="matType">
-                <option value="📄 Pesquisa">📄 Pesquisa</option>
-                <option value="📕 Livro">📕 Livro</option>
-                <option value="📊 Apresentação">📊 Apresentação</option>
-                <option value="📰 Cartaz">📰 Cartaz</option>
-                <option value="🎥 Vídeo">🎥 Vídeo</option>
-                <option value="📥 Arquivo PDF">📥 Arquivo PDF</option>
-                <option value="🔗 Link Externo">🔗 Link Externo</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Descrição</label>
-            <textarea id="matDesc" placeholder="Breve resumo do conteúdo..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>Link / URL do Arquivo</label>
-            <input type="text" id="matUrl" placeholder="https://drive.google.com/...">
-        </div>
-        <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button class="small-button" onclick="closeModal('materialModal')">Cancelar</button>
-            <button class="primary-button" onclick="saveMaterial()">Salvar</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL EQUIPE -->
-<div class="modal" id="teamModal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h2>Equipe / Grupo</h2>
-            <button class="close" onclick="closeModal('teamModal')">×</button>
-        </div>
-        <input type="hidden" id="editTeamId">
-        <div class="form-group">
-            <label>Nome da Equipe</label>
-            <input type="text" id="teamName" placeholder="Ex.: 🎭 Teatro & Expressão">
-        </div>
-        <div class="form-group">
-            <label>Membros (um por linha)</label>
-            <textarea id="teamMembers" placeholder="Ana Silva&#10;João Pedro&#10;Maria Souza"></textarea>
-        </div>
-        <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button class="small-button" onclick="closeModal('teamModal')">Cancelar</button>
-            <button class="primary-button" onclick="saveTeam()">Salvar</button>
-        </div>
-    </div>
-</div>
-
-<script>
-// DADOS INICIAIS
-const defaultActivities = [
-    {
-        id: "1",
-        title: "Apresentação Teatral",
-        icon: "🎭",
-        summary: "Peça sobre a realidade do trabalho análogo à escravidão.",
-        content: "Os alunos encenaram situações de vulnerabilidade social e resgate de direitos humanos.",
-        image: "",
-        video: ""
-    },
-    {
-        id: "2",
-        title: "Pesquisas e Debates",
-        icon: "📚",
-        summary: "Levantamento de estatísticas e análise de dados regionais.",
-        content: "Debate focado na identificação do trabalho escravo moderno e formas de denúncia.",
-        image: "",
-        video: ""
-    }
-];
-
-const defaultMaterials = [
-    { id: "1", title: "Cartilha de Prevenção", type: "📥 Arquivo PDF", desc: "Material informativo completo sobre combate ao trabalho escravo.", url: "#" },
-    { id: "2", title: "Apresentação de Slides", type: "📊 Apresentação", desc: "Slides utilizados nas palestras da escola.", url: "#" }
-];
-
-const defaultTeams = [
-    { id: "1", name: "🎭 Teatro & Expressão", members: ["Ana Clara", "Lucas Gabriel", "Beatriz Santos"] },
-    { id: "2", name: "📚 Pesquisa & Dados", members: ["Matheus Oliveira", "Sofia Lima"] },
-    { id: "3", name: "💻 Site & Mídia", members: ["Guilherme Costa", "Mariana Alves"] }
-];
-
-// STATE MANAGEMENT
-let activities = JSON.parse(localStorage.getItem('enp_act')) || defaultActivities;
-let materials = JSON.parse(localStorage.getItem('enp_mat')) || defaultMaterials;
-let teams = JSON.parse(localStorage.getItem('enp_teams')) || defaultTeams;
-
-function saveData() {
-    localStorage.setItem('enp_act', JSON.stringify(activities));
-    localStorage.setItem('enp_mat', JSON.stringify(materials));
-    localStorage.setItem('enp_teams', JSON.stringify(teams));
-}
-
-// INTERFACE
-function toggleTheme() {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    document.querySelector('.theme-button').textContent = isDark ? '🌙 Modo escuro' : '☀️ Modo claro';
-}
-
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-}
-
-function showPage(pageId, btn) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-
-    if (btn) {
-        document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    document.getElementById('sidebar').classList.remove('open');
-    if (pageId === 'atividades') {
-        document.getElementById('activitiesListContainer').style.display = 'block';
-        document.getElementById('activityDetailContainer').style.display = 'none';
-    }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    renderAll();
-}
-
-// CARREGAMENTO DAS FOTOS DO CELULAR/DISPOSITIVO (Base64)
-function handleImageUpload(e, targetInputId, previewImgId) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-            document.getElementById(targetInputId).value = evt.target.result;
-            const preview = document.getElementById(previewImgId);
-            preview.src = evt.target.result;
-            preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// RENDERIZADORES
-function renderAll() {
-    renderHomeCards();
-    renderActivities();
-    renderGallery();
-    renderMaterials();
-    renderTeams();
-    renderAdminLists();
-
-    document.getElementById('statActivities').textContent = activities.length;
-    document.getElementById('statPhotos').textContent = activities.filter(a => a.image).length;
-    document.getElementById('statMaterials').textContent = materials.length;
-}
-
-function renderHomeCards() {
-    const container = document.getElementById('homeCards');
-    container.innerHTML = '';
-    activities.slice(0, 3).forEach(act => {
-        container.appendChild(createCard(act));
+    // MODO ESCURO
+    toggleThemeBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      toggleThemeBtn.textContent = newTheme === 'light' ? 'Modo Escuro' : 'Modo Claro';
     });
-}
 
-function renderActivities() {
-    const container = document.getElementById('activitiesGrid');
-    container.innerHTML = '';
-    activities.forEach(act => {
-        container.appendChild(createCard(act));
+    // RECOLHER/EXPANDIR MENU
+    toggleSidebarBtn.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        body.classList.toggle('sidebar-open');
+      } else {
+        body.classList.toggle('sidebar-collapsed');
+      }
     });
-}
 
-function createCard(act) {
-    const el = document.createElement('div');
-    el.className = 'card';
-    el.onclick = () => openActivityDetail(act.id);
-    const bg = act.image ? `style="background-image: url('${act.image}')"` : '';
-    el.innerHTML = `
-        <div class="card-image" ${bg}>${act.image ? '' : (act.icon || '📌')}</div>
-        <div class="card-body">
-            <h3>${act.title}</h3>
-            <p>${act.summary}</p>
-            <div class="card-link">Acessar conteúdo →</div>
-        </div>
-    `;
-    return el;
-}
+    // NAVEGAÇÃO ENTRE PÁGINAS
+    function navigateTo(pageId) {
+      pages.forEach(page => page.classList.remove('active'));
+      navItems.forEach(item => item.classList.remove('active'));
 
-function openActivityDetail(id) {
-    const act = activities.find(a => a.id === id);
-    if (!act) return;
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) targetPage.classList.add('active');
 
-    const listCont = document.getElementById('activitiesListContainer');
-    const detailCont = document.getElementById('activityDetailContainer');
+      const activeNav = document.querySelector(`.nav-item[data-target="${pageId}"]`);
+      if (activeNav) activeNav.classList.add('active');
 
-    const bg = act.image ? `style="background-image: url('${act.image}')"` : '';
-    let videoHtml = act.video ? `<div class="video-wrapper" style="margin-top:20px;"><iframe src="${act.video}" style="width:100%; height:300px; border-radius:15px; border:none;"></iframe></div>` : '';
-
-    detailCont.innerHTML = `
-        <button class="primary-button" onclick="closeActivityDetail()" style="margin-bottom:20px;">← Voltar</button>
-        <div class="detail">
-            <div class="detail-cover" ${bg}>${act.image ? '' : (act.icon || '📌')}</div>
-            <h2>${act.title}</h2>
-            <p>${act.content}</p>
-            ${videoHtml}
-        </div>
-    `;
-
-    listCont.style.display = 'none';
-    detailCont.style.display = 'block';
-    showPage('atividades');
-}
-
-function closeActivityDetail() {
-    document.getElementById('activityDetailContainer').style.display = 'none';
-    document.getElementById('activitiesListContainer').style.display = 'block';
-}
-
-function renderGallery() {
-    const container = document.getElementById('globalGalleryGrid');
-    container.innerHTML = '';
-    const imgs = activities.filter(a => a.image).map(a => a.image);
-
-    if (imgs.length === 0) {
-        container.innerHTML = '<p class="page-subtitle">Nenhuma foto cadastrada ainda.</p>';
-        return;
+      if (window.innerWidth <= 768) body.classList.remove('sidebar-open');
     }
 
-    imgs.forEach(url => {
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-        item.style.backgroundImage = `url('${url}')`;
-        container.appendChild(item);
+    navItems.forEach(item => {
+      item.addEventListener('click', () => navigateTo(item.dataset.target));
     });
-}
 
-function renderMaterials() {
-    const container = document.getElementById('materialsGrid');
-    container.innerHTML = '';
-    materials.forEach(m => {
+    // RENDERIZAR CARDS
+    function renderCards() {
+      cardsContainer.innerHTML = '';
+      contentsData.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'material-card';
+        card.className = 'card';
         card.innerHTML = `
-            <div>
-                <div class="material-type">${m.type}</div>
-                <h3>${m.title}</h3>
-                <p>${m.desc}</p>
-            </div>
-            <a href="${m.url}" target="_blank" class="material-btn">Acessar Material</a>
+          <div class="card-title">${item.title}</div>
+          <div class="card-desc">${item.desc}</div>
         `;
-        container.appendChild(card);
-    });
-}
-
-function renderTeams() {
-    const container = document.getElementById('teamsGrid');
-    container.innerHTML = '';
-    teams.forEach(t => {
-        const card = document.createElement('div');
-        card.className = 'team-card';
-        const membersList = t.members.map(m => `<li>${m}</li>`).join('');
-        card.innerHTML = `
-            <h3>${t.name}</h3>
-            <ul class="team-members">${membersList}</ul>
-        `;
-        container.appendChild(card);
-    });
-}
-
-// ADMINISTRAÇÃO
-function showLogin() { showPage('login'); }
-
-function login() {
-    const pass = document.getElementById('adminPassword').value;
-    if (pass === '1234') {
-        document.getElementById('loginError').style.display = 'none';
-        showPage('admin');
-    } else {
-        document.getElementById('loginError').style.display = 'block';
-    }
-}
-
-function switchAdminTab(tabKey) {
-    document.querySelectorAll('.admin-tab-content').forEach(c => c.style.display = 'none');
-    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-
-    if (tabKey === 'act') {
-        document.getElementById('tabAct').style.display = 'block';
-    } else if (tabKey === 'mat') {
-        document.getElementById('tabMat').style.display = 'block';
-    } else if (tabKey === 'team') {
-        document.getElementById('tabTeam').style.display = 'block';
-    } else if (tabKey === 'cfg') {
-        document.getElementById('tabCfg').style.display = 'block';
-    }
-    event.target.classList.add('active');
-}
-
-function renderAdminLists() {
-    // Lista Atividades
-    const listAct = document.getElementById('adminListAct');
-    listAct.innerHTML = '';
-    activities.forEach(a => {
-        listAct.innerHTML += `
-            <div class="admin-item">
-                <div><strong>${a.icon || '📌'} ${a.title}</strong></div>
-                <div>
-                    <button class="small-button edit-button" onclick="openActivityModal('${a.id}')">Editar</button>
-                    <button class="small-button delete-button" onclick="deleteActivity('${a.id}')">Excluir</button>
-                </div>
-            </div>
-        `;
-    });
-
-    // Lista Materiais
-    const listMat = document.getElementById('adminListMat');
-    listMat.innerHTML = '';
-    materials.forEach(m => {
-        listMat.innerHTML += `
-            <div class="admin-item">
-                <div><strong>${m.type}: ${m.title}</strong></div>
-                <div>
-                    <button class="small-button edit-button" onclick="openMaterialModal('${m.id}')">Editar</button>
-                    <button class="small-button delete-button" onclick="deleteMaterial('${m.id}')">Excluir</button>
-                </div>
-            </div>
-        `;
-    });
-
-    // Lista Equipes
-    const listTeam = document.getElementById('adminListTeam');
-    listTeam.innerHTML = '';
-    teams.forEach(t => {
-        listTeam.innerHTML += `
-            <div class="admin-item">
-                <div><strong>${t.name}</strong> (${t.members.length} membros)</div>
-                <div>
-                    <button class="small-button edit-button" onclick="openTeamModal('${t.id}')">Editar</button>
-                    <button class="small-button delete-button" onclick="deleteTeam('${t.id}')">Excluir</button>
-                </div>
-            </div>
-        `;
-    });
-}
-
-// MODAIS ACCIONAMENTO
-function openModal(id) { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-
-// ATIVIDADES CRUD
-function openActivityModal(id = null) {
-    if (id) {
-        const a = activities.find(item => item.id === id);
-        document.getElementById('editActId').value = a.id;
-        document.getElementById('actTitle').value = a.title;
-        document.getElementById('actIcon').value = a.icon;
-        document.getElementById('actSummary').value = a.summary;
-        document.getElementById('actContent').value = a.content;
-        document.getElementById('actImage').value = a.image;
-        document.getElementById('actVideo').value = a.video;
-        if (a.image) {
-            const preview = document.getElementById('previewActImg');
-            preview.src = a.image;
-            preview.style.display = 'block';
-        }
-    } else {
-        document.getElementById('editActId').value = '';
-        document.getElementById('actTitle').value = '';
-        document.getElementById('actIcon').value = '📌';
-        document.getElementById('actSummary').value = '';
-        document.getElementById('actContent').value = '';
-        document.getElementById('actImage').value = '';
-        document.getElementById('actVideo').value = '';
-        document.getElementById('previewActImg').style.display = 'none';
-    }
-    openModal('activityModal');
-}
-
-function saveActivity() {
-    const id = document.getElementById('editActId').value;
-    const title = document.getElementById('actTitle').value;
-    const summary = document.getElementById('actSummary').value;
-
-    if (!title || !summary) return alert('Preencha os campos de título e resumo!');
-
-    const data = {
-        id: id || Date.now().toString(),
-        title,
-        icon: document.getElementById('actIcon').value,
-        summary,
-        content: document.getElementById('actContent').value,
-        image: document.getElementById('actImage').value,
-        video: document.getElementById('actVideo').value
-    };
-
-    if (id) {
-        const idx = activities.findIndex(a => a.id === id);
-        activities[idx] = data;
-    } else {
-        activities.unshift(data);
+        card.addEventListener('click', () => openContent(item));
+        cardsContainer.appendChild(card);
+      });
     }
 
-    saveData();
-    renderAll();
-    closeModal('activityModal');
-}
-
-function deleteActivity(id) {
-    if (confirm('Deseja remover esta atividade?')) {
-        activities = activities.filter(a => a.id !== id);
-        saveData();
-        renderAll();
-    }
-}
-
-// MATERIAIS CRUD
-function openMaterialModal(id = null) {
-    if (id) {
-        const m = materials.find(item => item.id === id);
-        document.getElementById('editMatId').value = m.id;
-        document.getElementById('matTitle').value = m.title;
-        document.getElementById('matType').value = m.type;
-        document.getElementById('matDesc').value = m.desc;
-        document.getElementById('matUrl').value = m.url;
-    } else {
-        document.getElementById('editMatId').value = '';
-        document.getElementById('matTitle').value = '';
-        document.getElementById('matDesc').value = '';
-        document.getElementById('matUrl').value = '';
-    }
-    openModal('materialModal');
-}
-
-function saveMaterial() {
-    const id = document.getElementById('editMatId').value;
-    const title = document.getElementById('matTitle').value;
-
-    if (!title) return alert('Preencha o título do material!');
-
-    const data = {
-        id: id || Date.now().toString(),
-        title,
-        type: document.getElementById('matType').value,
-        desc: document.getElementById('matDesc').value,
-        url: document.getElementById('matUrl').value || '#'
-    };
-
-    if (id) {
-        const idx = materials.findIndex(m => m.id === id);
-        materials[idx] = data;
-    } else {
-        materials.unshift(data);
+    // ABRIR PÁGINA DO CARD
+    function openContent(item) {
+      document.getElementById('contentTitle').textContent = item.title;
+      navigateTo('contentView');
     }
 
-    saveData();
-    renderAll();
-    closeModal('materialModal');
-}
+    backBtn.addEventListener('click', () => navigateTo('home'));
 
-function deleteMaterial(id) {
-    if (confirm('Deseja excluir este material?')) {
-        materials = materials.filter(m => m.id !== id);
-        saveData();
-        renderAll();
-    }
-}
-
-// EQUIPES CRUD
-function openTeamModal(id = null) {
-    if (id) {
-        const t = teams.find(item => item.id === id);
-        document.getElementById('editTeamId').value = t.id;
-        document.getElementById('teamName').value = t.name;
-        document.getElementById('teamMembers').value = t.members.join('\n');
-    } else {
-        document.getElementById('editTeamId').value = '';
-        document.getElementById('teamName').value = '';
-        document.getElementById('teamMembers').value = '';
-    }
-    openModal('teamModal');
-}
-
-function saveTeam() {
-    const id = document.getElementById('editTeamId').value;
-    const name = document.getElementById('teamName').value;
-    const membersRaw = document.getElementById('teamMembers').value;
-
-    if (!name) return alert('Informe o nome da equipe!');
-
-    const members = membersRaw.split('\n').map(m => m.trim()).filter(m => m.length > 0);
-
-    const data = {
-        id: id || Date.now().toString(),
-        name,
-        members
-    };
-
-    if (id) {
-        const idx = teams.findIndex(t => t.id === id);
-        teams[idx] = data;
-    } else {
-        teams.push(data);
-    }
-
-    saveData();
-    renderAll();
-    closeModal('teamModal');
-}
-
-function deleteTeam(id) {
-    if (confirm('Deseja excluir esta equipe?')) {
-        teams = teams.filter(t => t.id !== id);
-        saveData();
-        renderAll();
-    }
-}
-
-// CONFIGURAÇÕES GERAIS
-function saveConfig() {
-    const title = document.getElementById('cfgTitle').value;
-    const subtitle = document.getElementById('cfgSubtitle').value;
-
-    document.getElementById('siteTitleHeader').textContent = title;
-    document.getElementById('siteSubtitleHeader').textContent = subtitle;
-
-    alert('Configurações salvas!');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    renderAll();
-});
-</script>
+    // INICIALIZAÇÃO
+    renderCards();
+  </script>
 </body>
 </html>
