@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma - Etapa 1</title>
+  <title>Escravo, Nem Pensar!</title>
   <style>
-    /* VARIABLES & PALETTE */
     :root {
       --fundo: #F4E7C8;
       --fundo-claro: #FFF7E6;
@@ -22,7 +21,7 @@
       --ocre: #C58A35;
       --amarelo-sol: #E6A83B;
       --vermelho: #A63D2F;
-      --card-border: rgba(185, 78, 46, 0.15);
+      --card-border: rgba(185, 78, 46, 0.2);
       --sidebar-width: 260px;
       --sidebar-collapsed-width: 70px;
       --header-height: 60px;
@@ -43,23 +42,22 @@
       --texto-secundario: #D8C9B5;
       --ocre: #D49A43;
       --amarelo-sol: #E5AE4A;
-      --card-border: rgba(214, 106, 67, 0.2);
+      --card-border: rgba(214, 106, 67, 0.3);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      transition: background-color 0.3s, color 0.3s, width 0.3s;
+      transition: background-color 0.25s, color 0.25s, border-color 0.25s;
     }
 
     body {
       font-family: system-ui, -apple-system, sans-serif;
       background-color: var(--fundo-claro);
       color: var(--texto);
-      display: flex;
       min-height: 100vh;
-      overflow-x: hidden;
+      display: flex;
     }
 
     /* HEADER */
@@ -74,7 +72,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1rem;
+      padding: 0 1.25rem;
       z-index: 100;
     }
 
@@ -84,29 +82,50 @@
       gap: 1rem;
     }
 
-    .toggle-btn {
+    .icon-btn {
       background: none;
       border: none;
       color: var(--bege-claro);
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3rem;
+      border-radius: 4px;
+    }
+
+    .icon-btn:hover, .icon-btn:focus-visible {
+      background-color: var(--terracota-escuro);
+      outline: 2px solid var(--bege-claro);
     }
 
     .header-title {
-      font-size: 1.25rem;
-      font-weight: bold;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
     .theme-btn {
       background-color: var(--azul-marinho);
       color: var(--bege-claro);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
+      border: 1px solid var(--laranja-terra);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
       cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
     }
 
-    /* SIDEBAR */
+    /* SIDEBAR & OVERLAY */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 85;
+      display: none;
+    }
+
     aside {
       position: fixed;
       top: var(--header-height);
@@ -116,8 +135,7 @@
       background-color: var(--azul-marinho);
       color: var(--bege-claro);
       z-index: 90;
-      display: flex;
-      flex-direction: column;
+      transition: width 0.25s ease, transform 0.25s ease;
     }
 
     body.sidebar-collapsed aside {
@@ -127,123 +145,221 @@
     nav {
       display: flex;
       flex-direction: column;
-      padding: 1rem 0;
+      padding-top: 1rem;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      padding: 0.75rem 1.25rem;
+      padding: 0.85rem 1.25rem;
       color: var(--bege-claro);
       text-decoration: none;
       cursor: pointer;
       gap: 1rem;
       white-space: nowrap;
+      border-left: 4px solid transparent;
     }
 
     .nav-item:hover, .nav-item.active {
       background-color: var(--azul-marinho-claro);
-    }
-
-    .nav-text {
-      display: inline;
+      border-left-color: var(--laranja-terra);
     }
 
     body.sidebar-collapsed .nav-text {
       display: none;
     }
 
-    /* MAIN CONTENT AREA */
+    /* MAIN */
     main {
       margin-top: var(--header-height);
       margin-left: var(--sidebar-width);
       padding: 2rem;
       width: 100%;
+      transition: margin-left 0.25s ease;
     }
 
     body.sidebar-collapsed main {
       margin-left: var(--sidebar-collapsed-width);
     }
 
-    .page {
-      display: none;
-    }
+    .page { display: none; }
+    .page.active { display: block; }
 
-    .page.active {
-      display: block;
-    }
-
-    /* CARDS GRID */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .card {
+    .hero-banner {
       background-color: var(--fundo);
       border: 1px solid var(--card-border);
-      border-radius: 8px;
       padding: 1.5rem;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      margin-bottom: 2rem;
     }
 
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: var(--terracota);
-    }
-
-    .card-title {
-      color: var(--azul-marinho);
-      font-size: 1.2rem;
+    .hero-banner h1 {
+      color: var(--terracota);
+      font-size: 1.8rem;
       margin-bottom: 0.5rem;
     }
 
-    .card-desc {
-      color: var(--texto-secundario);
-      font-size: 0.9rem;
+    /* CARDS COMO JANELAS DE CONTEÚDO */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
     }
 
-    .back-btn {
+    .window-card {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    }
+
+    .window-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--terracota);
+    }
+
+    .window-header {
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .window-body {
+      padding: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .window-title {
+      color: var(--terracota);
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .window-desc {
+      color: var(--texto-secundario);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    /* ÁREA DE EXIBIÇÃO DE CONTEÚDO ENRIQUECIDO */
+    .content-area {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      padding: 2rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    .content-area img, .content-area iframe {
+      max-width: 100%;
+      border-radius: 6px;
+      margin: 1rem 0;
+    }
+
+    .btn-action {
       background-color: var(--terracota);
       color: var(--bege-claro);
       border: none;
       padding: 0.5rem 1rem;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
+      font-weight: 600;
+
+    }
+
+    .btn-action:hover {
+      background-color: var(--terracota-escuro);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--terracota);
+      color: var(--texto);
+    }
+
+    /* TABELA ADMINISTRATIVA */
+    .admin-form {
+      background-color: var(--fundo);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .form-group {
       margin-bottom: 1rem;
     }
 
-    /* RESPONSIVE */
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 4px;
+      border: 1px solid var(--card-border);
+      background-color: var(--fundo-claro);
+      color: var(--texto);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--fundo);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .admin-table th, .admin-table td {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .admin-table th {
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+    }
+
+    /* MOBILE ADJUSTMENTS */
     @media (max-width: 768px) {
       aside {
         transform: translateX(-100%);
         width: var(--sidebar-width) !important;
       }
-
-      body.sidebar-open aside {
-        transform: translateX(0);
-      }
-
-      main {
-        margin-left: 0 !important;
-      }
+      body.sidebar-open aside { transform: translateX(0); }
+      body.sidebar-open .overlay { display: block; }
+      main { margin-left: 0 !important; }
     }
   </style>
 </head>
 <body>
 
+  <div class="overlay" id="overlay" onclick="App.toggleSidebar()"></div>
+
   <header>
     <div class="header-left">
-      <button class="toggle-btn" id="toggleSidebar">☰</button>
-      <div class="header-title">Minha Plataforma</div>
+      <button class="icon-btn" id="btnToggleSidebar" aria-label="Abrir ou recolher menu lateral">☰</button>
+      <div class="header-title">Escravo, Nem Pensar!</div>
     </div>
-    <button class="theme-btn" id="toggleTheme">Modo Escuro</button>
+    <button class="theme-btn" id="btnToggleTheme" aria-label="Alternar tema">Modo Escuro</button>
   </header>
 
-  <aside>
+  <aside aria-label="Menu principal">
     <nav>
       <a class="nav-item active" data-target="home">
         <span>🏠</span>
@@ -253,108 +369,313 @@
         <span>📖</span>
         <span class="nav-text">Sobre o projeto</span>
       </a>
+      <a class="nav-item" data-target="admin">
+        <span>🔐</span>
+        <span class="nav-text">Administração</span>
+      </a>
     </nav>
   </aside>
 
   <main>
+    <!-- PÁGINA INICIAL -->
     <section id="home" class="page active">
-      <h1>Conteúdos</h1>
+      <div class="hero-banner">
+        <h1>Projeto Escravo, Nem Pensar!</h1>
+        <p style="color: var(--texto-secundario);">
+          Plataforma de conteúdos educativos e informativos para a prevenção ao trabalho escravo e promoção dos direitos humanos.
+        </p>
+      </div>
+      <h2>Módulos e Atividades</h2>
+      <br>
       <div class="cards-grid" id="cardsContainer"></div>
     </section>
 
+    <!-- SOBRE O PROJETO -->
     <section id="about" class="page">
       <h1>Sobre o projeto</h1>
-      <p style="margin-top: 1rem; color: var(--texto-secundario);">
-        Esta é a estrutura inicial da plataforma, preparada para receber novos módulos de forma modular e expansível.
-      </p>
+      <div class="content-area">
+        <p>O <strong>Escravo, Nem Pensar!</strong> é um programa de educação dedicado à prevenção do trabalho escravo no Brasil.</p>
+        <br>
+        <p>Esta plataforma foi desenvolvida de forma modular para organizar e disponibilizar atividades, textos de apoio, fotos e materiais interativos sobre direitos humanos e trabalho digno.</p>
+      </div>
     </section>
 
+    <!-- VISUALIZADOR DE CONTEÚDO (JANELA ABERTA) -->
     <section id="contentView" class="page">
-      <button class="back-btn" id="backBtn">← Voltar</button>
-      <h1 id="contentTitle">Título do Conteúdo</h1>
-      <div style="margin-top: 1.5rem; color: var(--texto-secundario);" id="contentBody">
-        Estrutura vazia preparada para o conteúdo completo deste módulo.
+      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar para o início</button>
+      <h1 id="viewTitle" style="margin-top: 1rem; color: var(--terracota);"></h1>
+      <div class="content-area" id="viewBody"></div>
+    </section>
+
+    <!-- ÁREA DO ADMINISTRADOR -->
+    <section id="admin" class="page">
+      <h1>🔐 Área do Administrador</h1>
+      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Gerencie o conteúdo exibido nos cards da tela inicial.</p>
+
+      <div class="admin-form">
+        <h3 id="formTitle">➕ Criar Novo Conteúdo</h3>
+        <br>
+        <form id="contentForm">
+          <input type="hidden" id="editId">
+          <div class="form-group">
+            <label for="inputTitle">Título da Atividade / Card</label>
+            <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
+          </div>
+          <div class="form-group">
+            <label for="inputDesc">Descrição Curta (Aparece no Card)</label>
+            <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
+          </div>
+          <div class="form-group">
+            <label for="inputStatus">Status</label>
+            <select id="inputStatus">
+              <option value="Publicado">Publicado</option>
+              <option value="Rascunho">Rascunho</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="inputBody">Conteúdo Completo (Suporta texto e tags HTML como &lt;img&gt;)</label>
+            <textarea id="inputBody" rows="6" placeholder="Estrutura de texto, imagens ou links do conteúdo..."></textarea>
+          </div>
+          <button type="submit" class="btn-action">Salvar Conteúdo</button>
+          <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
+        </form>
       </div>
+
+      <h3>Conteúdos Cadastrados</h3>
+      <br>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
     </section>
   </main>
 
   <script>
-    // ARRAY DE CONTEÚDOS (Fácil para adicionar novos futuramente)
-    const contentsData = [
-      { id: '1', title: 'Conteúdo 1', desc: 'Clique para abrir o módulo 1.' },
-      { id: '2', title: 'Conteúdo 2', desc: 'Clique para abrir o módulo 2.' },
-      { id: '3', title: 'Conteúdo 3', desc: 'Clique para abrir o módulo 3.' }
-    ];
+    /* MÓDULO PRINCIPAL DE GERENCIAMENTO (ESTRUTURA LIMPA E EXPANSÍVEL) */
+    const App = (() => {
+      // DADOS INICIAIS PADRÃO
+      const initialContents = [
+        {
+          id: '1',
+          title: 'Atividade 01 — Trabalho Digno',
+          desc: 'Aprenda a reconhecer situações de exploração e os conceitos básicos de trabalho escravo contemporâneo.',
+          status: 'Publicado',
+          body: '<p>Este é o conteúdo estruturado da Atividade 01. A área está pronta para receber textos explicativos, diretrizes pedagógicas e imagens de apoio.</p>'
+        },
+        {
+          id: '2',
+          title: 'Atividade 02 — Direitos Humanos',
+          desc: 'Entenda como os direitos fundamentais garantem a dignidade no trabalho e na sociedade.',
+          status: 'Publicado',
+          body: '<p>Conteúdo da Atividade 02 em estrutura pronta para expansão.</p>'
+        }
+      ];
 
-    // ELEMENTOS DOM
-    const body = document.body;
-    const toggleSidebarBtn = document.getElementById('toggleSidebar');
-    const toggleThemeBtn = document.getElementById('toggleTheme');
-    const navItems = document.querySelectorAll('.nav-item');
-    const pages = document.querySelectorAll('.page');
-    const cardsContainer = document.getElementById('cardsContainer');
-    const backBtn = document.getElementById('backBtn');
+      // ESTADO DA APLICAÇÃO
+      let contents = JSON.parse(localStorage.getItem('enp_contents')) || initialContents;
 
-    // MODO ESCURO
-    toggleThemeBtn.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      toggleThemeBtn.textContent = newTheme === 'light' ? 'Modo Escuro' : 'Modo Claro';
-    });
-
-    // RECOLHER/EXPANDIR MENU
-    toggleSidebarBtn.addEventListener('click', () => {
-      if (window.innerWidth <= 768) {
-        body.classList.toggle('sidebar-open');
-      } else {
-        body.classList.toggle('sidebar-collapsed');
+      function saveData() {
+        localStorage.setItem('enp_contents', JSON.stringify(contents));
       }
-    });
 
-    // NAVEGAÇÃO ENTRE PÁGINAS
-    function navigateTo(pageId) {
-      pages.forEach(page => page.classList.remove('active'));
-      navItems.forEach(item => item.classList.remove('active'));
+      // NAVEGAÇÃO
+      function navigateTo(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
 
-      const targetPage = document.getElementById(pageId);
-      if (targetPage) targetPage.classList.add('active');
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) targetPage.classList.add('active');
 
-      const activeNav = document.querySelector(`.nav-item[data-target="${pageId}"]`);
-      if (activeNav) activeNav.classList.add('active');
+        const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
+        if (navLink) navLink.classList.add('active');
 
-      if (window.innerWidth <= 768) body.classList.remove('sidebar-open');
-    }
+        // FECHAR MENU NO MOBILE AO NAVEGAR
+        if (window.innerWidth <= 768) {
+          document.body.classList.remove('sidebar-open');
+        }
+      }
 
-    navItems.forEach(item => {
-      item.addEventListener('click', () => navigateTo(item.dataset.target));
-    });
+      // CONTROLE DE TEMA (LIGHT/DARK)
+      function initTheme() {
+        const btnTheme = document.getElementById('btnToggleTheme');
+        btnTheme.addEventListener('click', () => {
+          const current = document.documentElement.getAttribute('data-theme');
+          const next = current === 'light' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', next);
+          btnTheme.textContent = next === 'light' ? 'Modo Escuro' : 'Modo Claro';
+        });
+      }
 
-    // RENDERIZAR CARDS
-    function renderCards() {
-      cardsContainer.innerHTML = '';
-      contentsData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-title">${item.title}</div>
-          <div class="card-desc">${item.desc}</div>
-        `;
-        card.addEventListener('click', () => openContent(item));
-        cardsContainer.appendChild(card);
-      });
-    }
+      // CONTROLE DA SIDEBAR RESPONSIVA
+      function initSidebar() {
+        const btnToggle = document.getElementById('btnToggleSidebar');
+        btnToggle.addEventListener('click', toggleSidebar);
 
-    // ABRIR PÁGINA DO CARD
-    function openContent(item) {
-      document.getElementById('contentTitle').textContent = item.title;
-      navigateTo('contentView');
-    }
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.addEventListener('click', () => navigateTo(item.dataset.target));
+        });
+      }
 
-    backBtn.addEventListener('click', () => navigateTo('home'));
+      function toggleSidebar() {
+        if (window.innerWidth <= 768) {
+          document.body.classList.toggle('sidebar-open');
+        } else {
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      }
 
-    // INICIALIZAÇÃO
-    renderCards();
+      // RENDERIZAR CARDS PUBLICADOS NA PÁGINA INICIAL
+      function renderCards() {
+        const container = document.getElementById('cardsContainer');
+        container.innerHTML = '';
+
+        const published = contents.filter(item => item.status === 'Publicado');
+
+        if (published.length === 0) {
+          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum conteúdo publicado no momento.</p>';
+          return;
+        }
+
+        published.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'window-card';
+          card.innerHTML = `
+            <div class="window-header">
+              <span>Módulo</span>
+              <span>🗔</span>
+            </div>
+            <div class="window-body">
+              <h3 class="window-title">${item.title}</h3>
+              <p class="window-desc">${item.desc}</p>
+            </div>
+          `;
+          card.onclick = () => openContent(item.id);
+          container.appendChild(card);
+        });
+      }
+
+      // ABRIR JANELA DE CONTEÚDO
+      function openContent(id) {
+        const item = contents.find(c => c.id === id);
+        if (!item) return;
+
+        document.getElementById('viewTitle').textContent = item.title;
+        document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo em construção...</p>';
+        navigateTo('contentView');
+      }
+
+      // GERENCIADOR DA ÁREA DO ADMINISTRADOR
+      function initAdmin() {
+        const form = document.getElementById('contentForm');
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('editId').value;
+          const title = document.getElementById('inputTitle').value;
+          const desc = document.getElementById('inputDesc').value;
+          const status = document.getElementById('inputStatus').value;
+          const body = document.getElementById('inputBody').value;
+
+          if (editId) {
+            // EDITAR EXISTENTE
+            const item = contents.find(c => c.id === editId);
+            if (item) {
+              item.title = title;
+              item.desc = desc;
+              item.status = status;
+              item.body = body;
+            }
+          } else {
+            // CRIAR NOVO
+            contents.push({
+              id: Date.now().toString(),
+              title,
+              desc,
+              status,
+              body
+            });
+          }
+
+          saveData();
+          resetForm();
+          renderCards();
+          renderAdminTable();
+        });
+      }
+
+      function renderAdminTable() {
+        const tbody = document.getElementById('adminTableBody');
+        tbody.innerHTML = '';
+
+        contents.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${item.title}</strong></td>
+            <td>${item.status}</td>
+            <td>
+              <button class="btn-action btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
+              <button class="btn-action btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function editItem(id) {
+        const item = contents.find(c => c.id === id);
+        if (!item) return;
+
+        document.getElementById('editId').value = item.id;
+        document.getElementById('inputTitle').value = item.title;
+        document.getElementById('inputDesc').value = item.desc;
+        document.getElementById('inputStatus').value = item.status;
+        document.getElementById('inputBody').value = item.body || '';
+
+        document.getElementById('formTitle').textContent = '✏️ Editar Conteúdo';
+        document.getElementById('btnCancelEdit').style.display = 'inline-block';
+      }
+
+      function deleteItem(id) {
+        if (confirm('Deseja realmente excluir este conteúdo?')) {
+          contents = contents.filter(c => c.id !== id);
+          saveData();
+          renderCards();
+          renderAdminTable();
+        }
+      }
+
+      function resetForm() {
+        document.getElementById('contentForm').reset();
+        document.getElementById('editId').value = '';
+        document.getElementById('formTitle').textContent = '➕ Criar Novo Conteúdo';
+        document.getElementById('btnCancelEdit').style.display = 'none';
+      }
+
+      // INICIALIZAÇÃO GERAL
+      function init() {
+        initTheme();
+        initSidebar();
+        initAdmin();
+        renderCards();
+        renderAdminTable();
+      }
+
+      return {
+        init,
+        navigateTo,
+        toggleSidebar,
+        editItem,
+        deleteItem,
+        resetForm
+      };
+    })();
+
+    document.addEventListen    document.addEventListener('DOMContentLoaded', App.init);
   </script>
 </body>
 </html>
