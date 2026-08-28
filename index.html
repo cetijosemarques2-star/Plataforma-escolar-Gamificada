@@ -136,16 +136,40 @@
       color: var(--bege-claro);
       z-index: 90;
       transition: width 0.25s ease, transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* CONTAINER DA LOGO NO TOPO DA SIDEBAR */
+    .sidebar-logo-container {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--azul-marinho-claro);
+    }
+
+    .sidebar-logo {
+      max-width: 100%;
+      max-height: 80px;
+      object-fit: contain;
     }
 
     body.sidebar-collapsed aside {
       width: var(--sidebar-collapsed-width);
     }
 
+    body.sidebar-collapsed .sidebar-logo-container {
+      padding: 0.5rem;
+    }
+
+    body.sidebar-collapsed .sidebar-logo {
+      max-height: 40px;
+    }
+
     nav {
       display: flex;
       flex-direction: column;
-      padding-top: 1rem;
+      padding-top: 0.5rem;
+      flex-grow: 1;
     }
 
     .nav-item {
@@ -452,6 +476,10 @@
   </header>
 
   <aside aria-label="Menu principal">
+    <!-- LOGO NO CANTO SUPERIOR DO MENU LATERAL -->
+    <div class="sidebar-logo-container">
+      <img src="logo.png" alt="Logo Escravo, Nem Pensar!" class="sidebar-logo" onerror="this.style.display='none'">
+    </div>
     <nav>
       <a class="nav-item active" data-target="home">
         <span>🏠</span>
@@ -514,10 +542,11 @@
       <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
         <h3>Acesso Restrito</h3>
         <br>
-        <form id="loginForm">
+        <form id="loginForm" autocomplete="off">
           <div class="form-group">
             <label for="inputPassword">Senha de Acesso</label>
-            <input type="password" id="inputPassword" required placeholder="Digite a senha (padrão: admin123)">
+            <!-- CAMPO DE SENHA OCULTO -->
+            <input type="password" id="inputPassword" required autocomplete="current-password" placeholder="Digite a senha de acesso">
           </div>
           <button type="submit" class="btn-action">Entrar</button>
         </form>
@@ -625,7 +654,6 @@
       getStorage, ref, uploadBytes, getDownloadURL 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // Configuração do Firebase com suas credenciais
     const firebaseConfig = {
       apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
       authDomain: "escravonempensar-d87c3.firebaseapp.com",
@@ -637,15 +665,13 @@
       measurementId: "G-7QJ9XL751E"
     };
 
-    // Inicialização do Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const storage = getStorage(app);
     const contentsRef = collection(db, "contents");
 
-    /* ABSTRAÇÃO DO REPOSITÓRIO COM FIREBASE FIRESTORE E STORAGE */
+    /* REPOSITÓRIO DO FIREBASE FIRESTORE E STORAGE */
     const ContentRepository = {
-      // Escutar dados em tempo real
       subscribe(callback) {
         return onSnapshot(contentsRef, (snapshot) => {
           const contents = snapshot.docs.map(doc => ({
@@ -653,34 +679,37 @@
             ...doc.data()
           }));
           callback(contents);
+        }, (error) => {
+          console.error("Erro na sincronização:", error);
         });
       },
 
-      // Upload de Imagem para o Firebase Storage
       async uploadFile(file, path) {
-        const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-        await uploadBytes(storageRef, file);
-        return await getDownloadURL(storageRef);
+        try {
+          const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
+          await upload          await uploadBytes(storageRef, file);
+          return await getDownloadURL(storageRef);
+        } catch (err) {
+          console.error("Erro no upload do arquivo:", err);
+          throw err;
+        }
       },
 
-      // Criar Novo Documento
       async create(data) {
-        await addDoc(contentsRef, {
+        return await addDoc(contentsRef, {
           ...data,
           createdAt: serverTimestamp()
         });
       },
 
-      // Atualizar Documento Existente
       async update(id, data) {
         const docRef = doc(db, "contents", id);
-        await updateDoc(docRef, data);
+        return await updateDoc(docRef, data);
       },
 
-      // Deletar Documento
       async delete(id) {
         const docRef = doc(db, "contents", id);
-        await deleteDoc(docRef);
+        return await deleteDoc(docRef);
       }
     };
 
@@ -689,7 +718,6 @@
       let contents = [];
       let filteredContents = [];
 
-      // CONEXÃO COM O REPOSITÓRIO E INIC      // CONEXÃO COM O REPOSITÓRIO E INICIALIZAÇÃO DE DADOS EM TEMPO REAL
       function initFirebaseListener() {
         ContentRepository.subscribe((data) => {
           contents = data;
@@ -700,7 +728,6 @@
         });
       }
 
-      // NAVEGAÇÃO
       function navigateTo(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -716,7 +743,6 @@
         }
       }
 
-      // CONTROLE DE TEMA
       function initTheme() {
         const btnTheme = document.getElementById('btnToggleTheme');
         btnTheme.addEventListener('click', () => {
@@ -727,7 +753,6 @@
         });
       }
 
-      // CONTROLE DA SIDEBAR RESPONSIVA
       function initSidebar() {
         const btnToggle = document.getElementById('btnToggleSidebar');
         btnToggle.addEventListener('click', toggleSidebar);
@@ -745,17 +770,15 @@
         }
       }
 
-      // BUSCA EM TEMPO REAL
       function handleSearch() {
         const query = document.getElementById('searchInput').value.toLowerCase().trim();
         filteredContents = contents.filter(item => 
-          item.title.toLowerCase().includes(query) || 
-          item.desc.toLowerCase().includes(query)
+          (item.title && item.title.toLowerCase().includes(query)) || 
+          (item.desc && item.desc.toLowerCase().includes(query))
         );
         renderCards();
       }
 
-      // RENDERIZAR CARDS PUBLICADOS NA PÁGINA INICIAL
       function renderCards() {
         const container = document.getElementById('cardsContainer');
         container.innerHTML = '';
@@ -782,8 +805,8 @@
             </div>
             ${coverHtml}
             <div class="window-body">
-              <h3 class="window-title">${item.title}</h3>
-              <p class="window-desc">${item.desc}</p>
+              <h3 class="window-title">${item.title || ''}</h3>
+              <p class="window-desc">${item.desc || ''}</p>
             </div>
           `;
           card.onclick = () => openContent(item.id);
@@ -791,12 +814,11 @@
         });
       }
 
-      // ABRIR JANELA DE CONTEÚDO
       function openContent(id) {
         const item = contents.find(c => c.id === id);
         if (!item) return;
 
-        document.getElementById('viewTitle').textContent = item.title;
+        document.getElementById('viewTitle').textContent = item.title || '';
         
         const coverContainer = document.getElementById('viewCoverContainer');
         if (item.coverUrl) {
@@ -805,18 +827,16 @@
           coverContainer.innerHTML = '';
         }
 
-        document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo em construção...</p>';
+        document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo sem texto.</p>';
         navigateTo('contentView');
       }
 
-      // ATUALIZAR PAINEL DE ESTATÍSTICAS DO ADMIN
       function updateStats() {
         document.getElementById('statTotal').textContent = contents.length;
         document.getElementById('statPublished').textContent = contents.filter(c => c.status === 'Publicado').length;
         document.getElementById('statDrafts').textContent = contents.filter(c => c.status === 'Rascunho').length;
       }
 
-      // AUTENTICAÇÃO E ÁREA ADMINISTRATIVA
       function initAdmin() {
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', (e) => {
@@ -836,7 +856,7 @@
           e.preventDefault();
           const btnSubmit = document.getElementById('btnSubmitForm');
           btnSubmit.disabled = true;
-          btnSubmit.textContent = 'Salvando no Firebase...';
+          btnSubmit.textContent = 'Salvando...';
 
           try {
             const editId = document.getElementById('editId').value;
@@ -844,9 +864,8 @@
             const desc = document.getElementById('inputDesc').value;
             const status = document.getElementById('inputStatus').value;
             const body = document.getElementById('editorContent').innerHTML;
-            let coverUrl = document.getElementById('currentCoverUrl').value;
+            let coverUrl = document.getElementById('currentCoverUrl').value || '';
 
-            // Fazer upload da foto de capa se selecionada
             const coverInput = document.getElementById('coverInput');
             if (coverInput.files && coverInput.files[0]) {
               coverUrl = await ContentRepository.uploadFile(coverInput.files[0], 'covers');
@@ -860,10 +879,11 @@
               await ContentRepository.create(payload);
             }
 
+            alert('Conteúdo salvo com sucesso!');
             resetForm();
           } catch (err) {
             console.error(err);
-            alert('Erro ao salvar no Firebase!');
+            alert('Erro ao salvar no banco de dados. Verifique o console.');
           } finally {
             btnSubmit.disabled = false;
             btnSubmit.textContent = 'Salvar Conteúdo';
@@ -888,8 +908,8 @@
 
           tr.innerHTML = `
             <td>${coverThumb}</td>
-            <td><strong>${item.title}</strong></td>
-            <td>${item.status}</td>
+            <td><strong>${item.title || ''}</strong></td>
+            <td>${item.status || ''}</td>
             <td>
               <button class="btn-action btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
               <button class="btn-action btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
@@ -904,9 +924,9 @@
         if (!item) return;
 
         document.getElementById('editId').value = item.id;
-        document.getElementById('inputTitle').value = item.title;
-        document.getElementById('inputDesc').value = item.desc;
-        document.getElementById('inputStatus').value = item.status;
+        document.getElementById('inputTitle').value = item.title || '';
+        document.getElementById('inputDesc').value = item.desc || '';
+        document.getElementById('inputStatus').value = item.status || 'Publicado';
         document.getElementById('editorContent').innerHTML = item.body || '';
         document.getElementById('currentCoverUrl').value = item.coverUrl || '';
 
@@ -922,8 +942,13 @@
       }
 
       async function deleteItem(id) {
-        if (confirm('Deseja realmente excluir este conteúdo permanentemente do Firebase?')) {
-          await ContentRepository.delete(id);
+        if (confirm('Deseja realmente excluir este conteúdo permanentemente?')) {
+          try {
+            await ContentRepository.delete(id);
+          } catch (err) {
+            console.error(err);
+            alert('Erro ao excluir o item.');
+          }
         }
       }
 
@@ -937,7 +962,6 @@
         document.getElementById('btnCancelEdit').style.display = 'none';
       }
 
-      // COMANDOS DO EDITOR VISUAL
       function execEditorCmd(command, value = null) {
         document.execCommand(command, false, value);
       }
@@ -954,12 +978,11 @@
             execEditorCmd('insertImage', url);
           } catch (err) {
             console.error(err);
-            alert('Erro ao fazer upload da imagem.');
+            alert('Erro ao enviar imagem no editor.');
           }
         }
       }
 
-      // INICIALIZAÇÃO GERAL
       function init() {
         initTheme();
         initSidebar();
@@ -967,7 +990,6 @@
         initFirebaseListener();
       }
 
-      // EXPOR MÉTODOS GLOBAIS
       window.App = {
         init,
         navigateTo,
