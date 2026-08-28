@@ -199,6 +199,23 @@
       margin-bottom: 0.5rem;
     }
 
+    /* BARRA DE PESQUISA */
+    .search-bar {
+      margin-bottom: 1.5rem;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background-color: var(--fundo);
+      color: var(--texto);
+      font-size: 0.95rem;
+    }
+
     /* CARDS COMO JANELAS DE CONTEÚDO */
     .cards-grid {
       display: grid;
@@ -231,6 +248,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .card-cover-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--card-border);
     }
 
     .window-body {
@@ -288,7 +312,34 @@
       color: var(--texto);
     }
 
-    /* EDITOR VISUAL DE TEXTO (WYSIWYG) */
+    /* PAINEL DE ESTATÍSTICAS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-box {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      padding: 1.25rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--terracota);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--texto-secundario);
+    }
+
+    /* EDITOR VISUAL DE TEXTO */
     .editor-container {
       border: 1px solid var(--card-border);
       border-radius: 6px;
@@ -384,7 +435,7 @@
       }
       body.sidebar-open aside { transform: translateX(0); }
       body.sidebar-open .overlay { display: block; }
-      main { margin-left: 0 !important; }
+      main { margin-left: 0 !important; padding: 1.25rem 1rem; }
     }
   </style>
 </head>
@@ -426,6 +477,11 @@
           Plataforma de conteúdos educativos e informativos para a prevenção ao trabalho escravo e promoção dos direitos humanos.
         </p>
       </div>
+
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="🔎 Pesquisar atividades por título ou descrição..." oninput="App.handleSearch()">
+      </div>
+
       <h2>Módulos e Atividades</h2>
       <br>
       <div class="cards-grid" id="cardsContainer"></div>
@@ -445,6 +501,7 @@
     <section id="contentView" class="page">
       <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar para o início</button>
       <h1 id="viewTitle" style="margin-top: 1rem; color: var(--terracota);"></h1>
+      <div id="viewCoverContainer"></div>
       <div class="content-area" id="viewBody"></div>
     </section>
 
@@ -468,9 +525,25 @@
 
       <!-- PAINEL ADMINISTRATIVO (OCULTO ATÉ O LOGIN) -->
       <div id="adminPanel" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
           <span>Sessão ativa como <strong>Administrador</strong></span>
           <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
+        </div>
+
+        <!-- PAINEL DE ESTATÍSTICAS -->
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-number" id="statTotal">0</div>
+            <div class="stat-label">Total de Conteúdos</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="statPublished">0</div>
+            <div class="stat-label">Publicados</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="statDrafts">0</div>
+            <div class="stat-label">Rascunhos</div>
+          </div>
         </div>
 
         <div class="admin-card">
@@ -486,6 +559,15 @@
               <label for="inputDesc">Descrição Curta (Aparece no Card)</label>
               <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
             </div>
+
+            <!-- UPLOAD DA IMAGEM DE CAPA DO CARD -->
+            <div class="form-group">
+              <label for="coverInput">Imagem de Capa do Card</label>
+              <input type="file" id="coverInput" accept="image/*">
+              <input type="hidden" id="currentCoverUrl">
+              <div id="coverPreviewContainer" style="margin-top: 0.5rem;"></div>
+            </div>
+
             <div class="form-group">
               <label for="inputStatus">Status</label>
               <select id="inputStatus">
@@ -511,7 +593,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn-action">Salvar Conteúdo</button>
+            <button type="submit" class="btn-action" id="btnSubmitForm">Salvar Conteúdo</button>
             <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
           </form>
         </div>
@@ -521,6 +603,7 @@
         <table class="admin-table">
           <thead>
             <tr>
+              <th>Capa</th>
               <th>Título</th>
               <th>Status</th>
               <th>Ações</th>
@@ -532,50 +615,89 @@
     </section>
   </main>
 
-  <script>
-    /* ABSTRAÇÃO DE DADOS (PREPARADO PARA BANCO DE DADOS NO FUTURO) */
+  <!-- FIREBASE SDKs (MÓDULOS ESM) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      getStorage, ref, uploadBytes, getDownloadURL 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+    // Configuração do Firebase com suas credenciais
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
+      authDomain: "escravonempensar-d87c3.firebaseapp.com",
+      databaseURL: "https://escravonempensar-d87c3-default-rtdb.firebaseio.com",
+      projectId: "escravonempensar-d87c3",
+      storageBucket: "escravonempensar-d87c3.firebasestorage.app",
+      messagingSenderId: "132266908384",
+      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85",
+      measurementId: "G-7QJ9XL751E"
+    };
+
+    // Inicialização do Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const contentsRef = collection(db, "contents");
+
+    /* ABSTRAÇÃO DO REPOSITÓRIO COM FIREBASE FIRESTORE E STORAGE */
     const ContentRepository = {
-      defaultContents: [
-        {
-          id: '1',
-          title: 'Atividade 01 — Trabalho Digno',
-          desc: 'Aprenda a reconhecer situações de exploração e os conceitos básicos de trabalho escravo contemporâneo.',
-          status: 'Publicado',
-          body: '<h2>Trabalho Digno</h2><p>Este é o conteúdo estruturado da Atividade 01. O editor visual permite formatar textos e adicionar imagens de apoio.</p>'
-        },
-        {
-          id: '2',
-          title: 'Atividade 02 — Direitos Humanos',
-          desc: 'Entenda como os direitos fundamentais garantem a dignidade no trabalho e na sociedade.',
-          status: 'Publicado',
-          body: '<h2>Direitos Humanos</h2><p>Conteúdo da Atividade 02 em estrutura pronta para expansão.</p>'
-        }
-      ],
-      async getAll() {
-        const stored = localStorage.getItem('enp_contents');
-        return stored ? JSON.parse(stored) : this.defaultContents;
+      // Escutar dados em tempo real
+      subscribe(callback) {
+        return onSnapshot(contentsRef, (snapshot) => {
+          const contents = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          callback(contents);
+        });
       },
-      async saveAll(contents) {
-        localStorage.setItem('enp_contents', JSON.stringify(contents));
+
+      // Upload de Imagem para o Firebase Storage
+      async uploadFile(file, path) {
+        const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        return await getDownloadURL(storageRef);
+      },
+
+      // Criar Novo Documento
+      async create(data) {
+        await addDoc(contentsRef, {
+          ...data,
+          createdAt: serverTimestamp()
+        });
+      },
+
+      // Atualizar Documento Existente
+      async update(id, data) {
+        const docRef = doc(db, "contents", id);
+        await updateDoc(docRef, data);
+      },
+
+      // Deletar Documento
+      async delete(id) {
+        const docRef = doc(db, "contents", id);
+        await deleteDoc(docRef);
       }
     };
 
     /* MÓDULO PRINCIPAL DA APLICAÇÃO */
     const App = (() => {
       let contents = [];
-      let isAdminAuthenticated = false;
+      let filteredContents = [];
 
-      // REPOSITÓRIO E INICIALIZAÇÃO DE DADOS
-      async function loadContents() {
-        contents = await ContentRepository.getAll();
-        renderCards();
-        renderAdminTable();
-      }
-
-      async function persistContents() {
-        await ContentRepository.saveAll(contents);
-        renderCards();
-        renderAdminTable();
+      // CONEXÃO COM O REPOSITÓRIO E INIC      // CONEXÃO COM O REPOSITÓRIO E INICIALIZAÇÃO DE DADOS EM TEMPO REAL
+      function initFirebaseListener() {
+        ContentRepository.subscribe((data) => {
+          contents = data;
+          filteredContents = [...contents];
+          renderCards();
+          renderAdminTable();
+          updateStats();
+        });
       }
 
       // NAVEGAÇÃO
@@ -623,26 +745,42 @@
         }
       }
 
+      // BUSCA EM TEMPO REAL
+      function handleSearch() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        filteredContents = contents.filter(item => 
+          item.title.toLowerCase().includes(query) || 
+          item.desc.toLowerCase().includes(query)
+        );
+        renderCards();
+      }
+
       // RENDERIZAR CARDS PUBLICADOS NA PÁGINA INICIAL
       function renderCards() {
         const container = document.getElementById('cardsContainer');
         container.innerHTML = '';
 
-        const published = contents.filter(item => item.status === 'Publicado');
+        const published = filteredContents.filter(item => item.status === 'Publicado');
 
         if (published.length === 0) {
-          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum conteúdo publicado no momento.</p>';
+          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum conteúdo encontrado.</p>';
           return;
         }
 
         published.forEach(item => {
           const card = document.createElement('div');
           card.className = 'window-card';
+          
+          const coverHtml = item.coverUrl 
+            ? `<img src="${item.coverUrl}" alt="${item.title}" class="card-cover-img">`
+            : '';
+
           card.innerHTML = `
             <div class="window-header">
               <span>Módulo</span>
               <span>🗔</span>
             </div>
+            ${coverHtml}
             <div class="window-body">
               <h3 class="window-title">${item.title}</h3>
               <p class="window-desc">${item.desc}</p>
@@ -659,18 +797,32 @@
         if (!item) return;
 
         document.getElementById('viewTitle').textContent = item.title;
+        
+        const coverContainer = document.getElementById('viewCoverContainer');
+        if (item.coverUrl) {
+          coverContainer.innerHTML = `<img src="${item.coverUrl}" style="max-width:100%; height:auto; border-radius:8px; margin-top:1rem;">`;
+        } else {
+          coverContainer.innerHTML = '';
+        }
+
         document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo em construção...</p>';
         navigateTo('contentView');
       }
 
+      // ATUALIZAR PAINEL DE ESTATÍSTICAS DO ADMIN
+      function updateStats() {
+        document.getElementById('statTotal').textContent = contents.length;
+        document.getElementById('statPublished').textContent = contents.filter(c => c.status === 'Publicado').length;
+        document.getElementById('statDrafts').textContent = contents.filter(c => c.status === 'Rascunho').length;
+      }
+
       // AUTENTICAÇÃO E ÁREA ADMINISTRATIVA
       function initAdmin() {
-        const         loginForm = document.getElementById('loginForm');
+        const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', (e) => {
           e.preventDefault();
           const pass = document.getElementById('inputPassword').value;
           if (pass === 'admin123') {
-            isAdminAuthenticated = true;
             document.getElementById('adminLoginBox').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('inputPassword').value = '';
@@ -682,37 +834,44 @@
         const form = document.getElementById('contentForm');
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const editId = document.getElementById('editId').value;
-          const title = document.getElementById('inputTitle').value;
-          const desc = document.getElementById('inputDesc').value;
-          const status = document.getElementById('inputStatus').value;
-          const body = document.getElementById('editorContent').innerHTML;
+          const btnSubmit = document.getElementById('btnSubmitForm');
+          btnSubmit.disabled = true;
+          btnSubmit.textContent = 'Salvando no Firebase...';
 
-          if (editId) {
-            const item = contents.find(c => c.id === editId);
-            if (item) {
-              item.title = title;
-              item.desc = desc;
-              item.status = status;
-              item.body = body;
+          try {
+            const editId = document.getElementById('editId').value;
+            const title = document.getElementById('inputTitle').value;
+            const desc = document.getElementById('inputDesc').value;
+            const status = document.getElementById('inputStatus').value;
+            const body = document.getElementById('editorContent').innerHTML;
+            let coverUrl = document.getElementById('currentCoverUrl').value;
+
+            // Fazer upload da foto de capa se selecionada
+            const coverInput = document.getElementById('coverInput');
+            if (coverInput.files && coverInput.files[0]) {
+              coverUrl = await ContentRepository.uploadFile(coverInput.files[0], 'covers');
             }
-          } else {
-            contents.push({
-              id: Date.now().toString(),
-              title,
-              desc,
-              status,
-              body
-            });
-          }
 
-          await persistContents();
-          resetForm();
+            const payload = { title, desc, status, body, coverUrl };
+
+            if (editId) {
+              await ContentRepository.update(editId, payload);
+            } else {
+              await ContentRepository.create(payload);
+            }
+
+            resetForm();
+          } catch (err) {
+            console.error(err);
+            alert('Erro ao salvar no Firebase!');
+          } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = 'Salvar Conteúdo';
+          }
         });
       }
 
       function logoutAdmin() {
-        isAdminAuthenticated = false;
         document.getElementById('adminLoginBox').style.display = 'block';
         document.getElementById('adminPanel').style.display = 'none';
       }
@@ -723,7 +882,12 @@
 
         contents.forEach(item => {
           const tr = document.createElement('tr');
+          const coverThumb = item.coverUrl 
+            ? `<img src="${item.coverUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">`
+            : '—';
+
           tr.innerHTML = `
+            <td>${coverThumb}</td>
             <td><strong>${item.title}</strong></td>
             <td>${item.status}</td>
             <td>
@@ -744,27 +908,36 @@
         document.getElementById('inputDesc').value = item.desc;
         document.getElementById('inputStatus').value = item.status;
         document.getElementById('editorContent').innerHTML = item.body || '';
+        document.getElementById('currentCoverUrl').value = item.coverUrl || '';
+
+        const preview = document.getElementById('coverPreviewContainer');
+        if (item.coverUrl) {
+          preview.innerHTML = `<img src="${item.coverUrl}" style="height:60px; border-radius:4px;">`;
+        } else {
+          preview.innerHTML = '';
+        }
 
         document.getElementById('formTitle').textContent = '✏️ Editar Conteúdo';
         document.getElementById('btnCancelEdit').style.display = 'inline-block';
       }
 
       async function deleteItem(id) {
-        if (confirm('Deseja realmente excluir este conteúdo?')) {
-          contents = contents.filter(c => c.id !== id);
-          await persistContents();
+        if (confirm('Deseja realmente excluir este conteúdo permanentemente do Firebase?')) {
+          await ContentRepository.delete(id);
         }
       }
 
       function resetForm() {
         document.getElementById('contentForm').reset();
         document.getElementById('editId').value = '';
+        document.getElementById('currentCoverUrl').value = '';
+        document.getElementById('coverPreviewContainer').innerHTML = '';
         document.getElementById('editorContent').innerHTML = '';
         document.getElementById('formTitle').textContent = '➕ Criar Novo Conteúdo';
         document.getElementById('btnCancelEdit').style.display = 'none';
       }
 
-      // COMANDOS DO EDITOR VISUAL (RICH TEXT)
+      // COMANDOS DO EDITOR VISUAL
       function execEditorCmd(command, value = null) {
         document.execCommand(command, false, value);
       }
@@ -773,14 +946,16 @@
         document.getElementById('imageInput').click();
       }
 
-      function handleImageUpload(event) {
+      async function handleImageUpload(event) {
         const file = event.target.files[0];
         if (file) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            execEditorCmd('insertImage', e.target.result);
-          };
-          reader.readAsDataURL(file);
+          try {
+            const url = await ContentRepository.uploadFile(file, 'editor_images');
+            execEditorCmd('insertImage', url);
+          } catch (err) {
+            console.error(err);
+            alert('Erro ao fazer upload da imagem.');
+          }
         }
       }
 
@@ -789,13 +964,15 @@
         initTheme();
         initSidebar();
         initAdmin();
-        loadContents();
+        initFirebaseListener();
       }
 
-      return {
+      // EXPOR MÉTODOS GLOBAIS
+      window.App = {
         init,
         navigateTo,
         toggleSidebar,
+        handleSearch,
         logoutAdmin,
         editItem,
         deleteItem,
@@ -804,9 +981,9 @@
         triggerImageUpload,
         handleImageUpload
       };
-    })();
 
-    document.addEventListener('DOMContentLoaded', App.init);
+      init();
+    })();
   </script>
 </body>
 </html>
