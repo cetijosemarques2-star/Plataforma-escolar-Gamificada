@@ -260,10 +260,12 @@
       line-height: 1.6;
     }
 
-    .content-area img, .content-area iframe {
+    .content-area img {
       max-width: 100%;
+      height: auto;
       border-radius: 6px;
       margin: 1rem 0;
+      display: block;
     }
 
     .btn-action {
@@ -274,7 +276,6 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-
     }
 
     .btn-action:hover {
@@ -287,8 +288,48 @@
       color: var(--texto);
     }
 
-    /* TABELA ADMINISTRATIVA */
-    .admin-form {
+    /* EDITOR VISUAL DE TEXTO (WYSIWYG) */
+    .editor-container {
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      overflow: hidden;
+      background-color: var(--fundo-claro);
+    }
+
+    .editor-toolbar {
+      background-color: var(--fundo);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.5rem;
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .editor-toolbar button {
+      background: var(--fundo-claro);
+      border: 1px solid var(--card-border);
+      color: var(--texto);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .editor-toolbar button:hover {
+      background-color: var(--terracota);
+      color: var(--bege-claro);
+    }
+
+    .editor-content {
+      min-height: 200px;
+      padding: 1rem;
+      outline: none;
+      color: var(--texto);
+    }
+
+    /* LOGIN & TABELA ADMINISTRATIVA */
+    .admin-card {
       background-color: var(--fundo);
       padding: 1.5rem;
       border-radius: 8px;
@@ -307,7 +348,7 @@
       font-size: 0.9rem;
     }
 
-    .form-group input, .form-group textarea, .form-group select {
+    .form-group input, .form-group select {
       width: 100%;
       padding: 0.6rem;
       border-radius: 4px;
@@ -412,76 +453,129 @@
       <h1>🔐 Área do Administrador</h1>
       <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Gerencie o conteúdo exibido nos cards da tela inicial.</p>
 
-      <div class="admin-form">
-        <h3 id="formTitle">➕ Criar Novo Conteúdo</h3>
+      <!-- PAINEL DE LOGIN -->
+      <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
+        <h3>Acesso Restrito</h3>
         <br>
-        <form id="contentForm">
-          <input type="hidden" id="editId">
+        <form id="loginForm">
           <div class="form-group">
-            <label for="inputTitle">Título da Atividade / Card</label>
-            <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
+            <label for="inputPassword">Senha de Acesso</label>
+            <input type="password" id="inputPassword" required placeholder="Digite a senha (padrão: admin123)">
           </div>
-          <div class="form-group">
-            <label for="inputDesc">Descrição Curta (Aparece no Card)</label>
-            <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
-          </div>
-          <div class="form-group">
-            <label for="inputStatus">Status</label>
-            <select id="inputStatus">
-              <option value="Publicado">Publicado</option>
-              <option value="Rascunho">Rascunho</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="inputBody">Conteúdo Completo (Suporta texto e tags HTML como &lt;img&gt;)</label>
-            <textarea id="inputBody" rows="6" placeholder="Estrutura de texto, imagens ou links do conteúdo..."></textarea>
-          </div>
-          <button type="submit" class="btn-action">Salvar Conteúdo</button>
-          <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
+          <button type="submit" class="btn-action">Entrar</button>
         </form>
       </div>
 
-      <h3>Conteúdos Cadastrados</h3>
-      <br>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="adminTableBody"></tbody>
-      </table>
+      <!-- PAINEL ADMINISTRATIVO (OCULTO ATÉ O LOGIN) -->
+      <div id="adminPanel" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <span>Sessão ativa como <strong>Administrador</strong></span>
+          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
+        </div>
+
+        <div class="admin-card">
+          <h3 id="formTitle">➕ Criar Novo Conteúdo</h3>
+          <br>
+          <form id="contentForm">
+            <input type="hidden" id="editId">
+            <div class="form-group">
+              <label for="inputTitle">Título da Atividade / Card</label>
+              <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
+            </div>
+            <div class="form-group">
+              <label for="inputDesc">Descrição Curta (Aparece no Card)</label>
+              <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
+            </div>
+            <div class="form-group">
+              <label for="inputStatus">Status</label>
+              <select id="inputStatus">
+                <option value="Publicado">Publicado</option>
+                <option value="Rascunho">Rascunho</option>
+              </select>
+            </div>
+
+            <!-- EDITOR VISUAL RICH TEXT -->
+            <div class="form-group">
+              <label>Conteúdo Completo</label>
+              <div class="editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" onclick="App.execEditorCmd('bold')" title="Negrito">B</button>
+                  <button type="button" onclick="App.execEditorCmd('italic')" title="Itálico">I</button>
+                  <button type="button" onclick="App.execEditorCmd('underline')" title="Sublinhado">U</button>
+                  <button type="button" onclick="App.execEditorCmd('formatBlock', 'H2')" title="Título">H2</button>
+                  <button type="button" onclick="App.execEditorCmd('formatBlock', 'P')" title="Parágrafo">P</button>
+                  <button type="button" onclick="App.triggerImageUpload()" title="Inserir Imagem">📷 Imagem</button>
+                  <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="App.handleImageUpload(event)">
+                </div>
+                <div id="editorContent" class="editor-content" contenteditable="true"></div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-action">Salvar Conteúdo</button>
+            <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
+          </form>
+        </div>
+
+        <h3>Conteúdos Cadastrados</h3>
+        <br>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody"></tbody>
+        </table>
+      </div>
     </section>
   </main>
 
   <script>
-    /* MÓDULO PRINCIPAL DE GERENCIAMENTO (ESTRUTURA LIMPA E EXPANSÍVEL) */
-    const App = (() => {
-      // DADOS INICIAIS PADRÃO
-      const initialContents = [
+    /* ABSTRAÇÃO DE DADOS (PREPARADO PARA BANCO DE DADOS NO FUTURO) */
+    const ContentRepository = {
+      defaultContents: [
         {
           id: '1',
           title: 'Atividade 01 — Trabalho Digno',
           desc: 'Aprenda a reconhecer situações de exploração e os conceitos básicos de trabalho escravo contemporâneo.',
           status: 'Publicado',
-          body: '<p>Este é o conteúdo estruturado da Atividade 01. A área está pronta para receber textos explicativos, diretrizes pedagógicas e imagens de apoio.</p>'
+          body: '<h2>Trabalho Digno</h2><p>Este é o conteúdo estruturado da Atividade 01. O editor visual permite formatar textos e adicionar imagens de apoio.</p>'
         },
         {
           id: '2',
           title: 'Atividade 02 — Direitos Humanos',
           desc: 'Entenda como os direitos fundamentais garantem a dignidade no trabalho e na sociedade.',
           status: 'Publicado',
-          body: '<p>Conteúdo da Atividade 02 em estrutura pronta para expansão.</p>'
+          body: '<h2>Direitos Humanos</h2><p>Conteúdo da Atividade 02 em estrutura pronta para expansão.</p>'
         }
-      ];
-
-      // ESTADO DA APLICAÇÃO
-      let contents = JSON.parse(localStorage.getItem('enp_contents')) || initialContents;
-
-      function saveData() {
+      ],
+      async getAll() {
+        const stored = localStorage.getItem('enp_contents');
+        return stored ? JSON.parse(stored) : this.defaultContents;
+      },
+      async saveAll(contents) {
         localStorage.setItem('enp_contents', JSON.stringify(contents));
+      }
+    };
+
+    /* MÓDULO PRINCIPAL DA APLICAÇÃO */
+    const App = (() => {
+      let contents = [];
+      let isAdminAuthenticated = false;
+
+      // REPOSITÓRIO E INICIALIZAÇÃO DE DADOS
+      async function loadContents() {
+        contents = await ContentRepository.getAll();
+        renderCards();
+        renderAdminTable();
+      }
+
+      async function persistContents() {
+        await ContentRepository.saveAll(contents);
+        renderCards();
+        renderAdminTable();
       }
 
       // NAVEGAÇÃO
@@ -495,13 +589,12 @@
         const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
         if (navLink) navLink.classList.add('active');
 
-        // FECHAR MENU NO MOBILE AO NAVEGAR
         if (window.innerWidth <= 768) {
           document.body.classList.remove('sidebar-open');
         }
       }
 
-      // CONTROLE DE TEMA (LIGHT/DARK)
+      // CONTROLE DE TEMA
       function initTheme() {
         const btnTheme = document.getElementById('btnToggleTheme');
         btnTheme.addEventListener('click', () => {
@@ -570,19 +663,32 @@
         navigateTo('contentView');
       }
 
-      // GERENCIADOR DA ÁREA DO ADMINISTRADOR
+      // AUTENTICAÇÃO E ÁREA ADMINISTRATIVA
       function initAdmin() {
+        const         loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const pass = document.getElementById('inputPassword').value;
+          if (pass === 'admin123') {
+            isAdminAuthenticated = true;
+            document.getElementById('adminLoginBox').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('inputPassword').value = '';
+          } else {
+            alert('Senha incorreta!');
+          }
+        });
+
         const form = document.getElementById('contentForm');
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
           e.preventDefault();
           const editId = document.getElementById('editId').value;
           const title = document.getElementById('inputTitle').value;
           const desc = document.getElementById('inputDesc').value;
           const status = document.getElementById('inputStatus').value;
-          const body = document.getElementById('inputBody').value;
+          const body = document.getElementById('editorContent').innerHTML;
 
           if (editId) {
-            // EDITAR EXISTENTE
             const item = contents.find(c => c.id === editId);
             if (item) {
               item.title = title;
@@ -591,7 +697,6 @@
               item.body = body;
             }
           } else {
-            // CRIAR NOVO
             contents.push({
               id: Date.now().toString(),
               title,
@@ -601,11 +706,15 @@
             });
           }
 
-          saveData();
+          await persistContents();
           resetForm();
-          renderCards();
-          renderAdminTable();
         });
+      }
+
+      function logoutAdmin() {
+        isAdminAuthenticated = false;
+        document.getElementById('adminLoginBox').style.display = 'block';
+        document.getElementById('adminPanel').style.display = 'none';
       }
 
       function renderAdminTable() {
@@ -634,26 +743,45 @@
         document.getElementById('inputTitle').value = item.title;
         document.getElementById('inputDesc').value = item.desc;
         document.getElementById('inputStatus').value = item.status;
-        document.getElementById('inputBody').value = item.body || '';
+        document.getElementById('editorContent').innerHTML = item.body || '';
 
         document.getElementById('formTitle').textContent = '✏️ Editar Conteúdo';
         document.getElementById('btnCancelEdit').style.display = 'inline-block';
       }
 
-      function deleteItem(id) {
+      async function deleteItem(id) {
         if (confirm('Deseja realmente excluir este conteúdo?')) {
           contents = contents.filter(c => c.id !== id);
-          saveData();
-          renderCards();
-          renderAdminTable();
+          await persistContents();
         }
       }
 
       function resetForm() {
         document.getElementById('contentForm').reset();
         document.getElementById('editId').value = '';
+        document.getElementById('editorContent').innerHTML = '';
         document.getElementById('formTitle').textContent = '➕ Criar Novo Conteúdo';
         document.getElementById('btnCancelEdit').style.display = 'none';
+      }
+
+      // COMANDOS DO EDITOR VISUAL (RICH TEXT)
+      function execEditorCmd(command, value = null) {
+        document.execCommand(command, false, value);
+      }
+
+      function triggerImageUpload() {
+        document.getElementById('imageInput').click();
+      }
+
+      function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            execEditorCmd('insertImage', e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
       }
 
       // INICIALIZAÇÃO GERAL
@@ -661,21 +789,24 @@
         initTheme();
         initSidebar();
         initAdmin();
-        renderCards();
-        renderAdminTable();
+        loadContents();
       }
 
       return {
         init,
         navigateTo,
         toggleSidebar,
+        logoutAdmin,
         editItem,
         deleteItem,
-        resetForm
+        resetForm,
+        execEditorCmd,
+        triggerImageUpload,
+        handleImageUpload
       };
     })();
 
-    document.addEventListen    document.addEventListener('DOMContentLoaded', App.init);
+    document.addEventListener('DOMContentLoaded', App.init);
   </script>
 </body>
 </html>
