@@ -262,7 +262,7 @@
       }
     };
 
-    /* ESTADO E MÉTODOS */
+    /* ESTADO E MÉTODOS DE INTERFACE */
     let contents = [];
     let filteredContents = [];
 
@@ -547,7 +547,7 @@
       }
     }
 
-    /* OBJETO GLOBAL */
+    /* VINCULAÇÃO GLOBAL DAS FUNÇÕES AO OBJETO WINDOW */
     window.App = {
       navigateTo,
       toggleSidebar,
@@ -561,7 +561,7 @@
       handleImageUpload
     };
 
-    /* INICIALIZAÇÃO */
+    /* INICIALIZAÇÃO APÓS CARREGAR O DOM */
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initSidebar();
