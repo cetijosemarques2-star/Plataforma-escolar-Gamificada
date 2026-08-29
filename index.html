@@ -1,312 +1,385 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escravo, Nem Pensar!</title>
+  <title>Escravo, nem pensar! - Painel Administrativo</title>
   <style>
     :root {
-      --fundo: #F4E7C8;
-      --fundo-claro: #FFF7E6;
-      --branco: #FFFFFF;
-      --terracota: #B94E2E;
-      --terracota-escuro: #963B24;
-      --laranja-terra: #D87532;
-      --azul-marinho: #142B3D;
-      --azul-marinho-claro: #1D3A4D;
-      --bege: #F5DDA5;
-      --bege-claro: #FFF1CC;
-      --texto: #142B3D;
-      --texto-secundario: #5C4635;
-      --card-border: rgba(185, 78, 46, 0.2);
-      --sidebar-width: 260px;
-      --sidebar-collapsed-width: 70px;
-      --header-height: 60px;
+      --primary: #c0392b;
+      --primary-dark: #962d22;
+      --secondary: #2c3e50;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #2c3e50;
+      --text-muted: #7f8c8d;
+      --border: #e2e8f0;
+      --success: #27ae60;
+      --danger: #e53e3e;
+      --danger-hover: #c53030;
     }
 
-    [data-theme="dark"] {
-      --fundo: #111820;
-      --fundo-claro: #18232C;
-      --terracota: #D66A43;
-      --terracota-escuro: #B84E30;
-      --laranja-terra: #D98A45;
-      --azul-marinho: #E7D3A5;
-      --azul-marinho-claro: #F1DFC0;
-      --texto: #FFFFFF;
-      --texto-secundario: #D8C9B5;
-      --card-border: rgba(214, 106, 67, 0.3);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.25s, color 0.25s; }
-    body { font-family: system-ui, -apple-system, sans-serif; background-color: var(--fundo-claro); color: var(--texto); min-height: 100vh; display: flex; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 3rem;
+    }
 
-    header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background-color: var(--terracota); color: var(--bege-claro); display: flex; align-items: center; justify-content: space-between; padding: 0 1.25rem; z-index: 100; }
-    .header-left { display: flex; align-items: center; gap: 1rem; }
-    .icon-btn { background: none; border: none; color: var(--bege-claro); font-size: 1.4rem; cursor: pointer; padding: 0.3rem; border-radius: 4px; }
-    .theme-btn { background-color: var(--azul-marinho); color: var(--bege-claro); border: 1px solid var(--laranja-terra); padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+    /* BARRA SUPERIOR / HEADER */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #ffffff;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    .overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 85; display: none; }
-    aside { position: fixed; top: var(--header-height); bottom: 0; left: 0; width: var(--sidebar-width); background-color: var(--azul-marinho); color: var(--bege-claro); z-index: 90; transition: width 0.25s ease, transform 0.25s ease; overflow-y: auto; }
-    body.sidebar-collapsed aside { width: var(--sidebar-collapsed-width); }
-    nav { display: flex; flex-direction: column; padding-top: 1rem; }
-    .nav-item { display: flex; align-items: center; padding: 0.85rem 1.25rem; color: var(--bege-claro); text-decoration: none; cursor: pointer; gap: 1rem; white-space: nowrap; border-left: 4px solid transparent; }
-    .nav-item:hover, .nav-item.active { background-color: var(--azul-marinho-claro); border-left-color: var(--laranja-terra); }
-    body.sidebar-collapsed .nav-text { display: none; }
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
 
-    main { margin-top: var(--header-height); margin-left: var(--sidebar-width); padding: 2rem; width: 100%; transition: margin-left 0.25s ease; }
-    body.sidebar-collapsed main { margin-left: var(--sidebar-collapsed-width); }
+    nav button {
+      background: transparent;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
 
-    .page { display: none; }
-    .page.active { display: block; }
-    .hero-banner { background-color: var(--fundo); border: 1px solid var(--card-border); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-    
-    .window-card { background-color: var(--fundo); border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
-    .window-header { background-color: var(--azul-marinho); color: var(--bege-claro); padding: 0.6rem 1rem; font-size: 0.85rem; font-weight: 600; display: flex; justify-content: space-between; }
-    .card-cover-img { width: 100%; height: 160px; object-fit: cover; }
-    .window-body { padding: 1.25rem; flex-grow: 1; }
-    .meta-tag { display: inline-block; font-size: 0.75rem; background-color: var(--laranja-terra); color: #fff; padding: 0.2rem 0.5rem; border-radius: 4px; margin-top: 0.5rem; margin-right: 0.2rem; }
+    nav button:hover {
+      background: #ffffff;
+      color: var(--primary);
+    }
 
-    /* TIMELINE STYLES */
-    .timeline { position: relative; border-left: 3px solid var(--terracota); margin: 1.5rem 0 1.5rem 1rem; padding-left: 1.5rem; }
-    .timeline-item { position: relative; margin-bottom: 2rem; background: var(--fundo); border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 8px; }
-    .timeline-item::before { content: ''; position: absolute; left: -2.1rem; top: 1.2rem; width: 14px; height: 14px; background: var(--terracota); border-radius: 50%; }
+    /* CONTEÚDO PRINCIPAL */
+    main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
 
-    .content-area { background-color: var(--fundo); border: 1px solid var(--card-border); padding: 2rem; border-radius: 8px; margin-top: 1rem; line-height: 1.6; }
-    .btn-action { background-color: var(--terracota); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .btn-secondary { background-color: transparent; border: 1px solid var(--terracota); color: var(--texto); }
+    .section-title {
+      font-size: 1.4rem;
+      color: var(--secondary);
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2rem solid var(--primary);
+      border-bottom-width: 2px;
+    }
 
-    .editor-container { border: 1px solid var(--card-border); border-radius: 6px; overflow: hidden; background-color: var(--fundo-claro); }
-    .editor-toolbar { background-color: var(--fundo); border-bottom: 1px solid var(--card-border); padding: 0.5rem; display: flex; gap: 0.4rem; }
-    .editor-toolbar button { background: var(--fundo-claro); border: 1px solid var(--card-border); padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; }
-    .editor-content { min-height: 150px; padding: 1rem; outline: none; }
+    /* CARDS DE FORMULÁRIO */
+    .admin-card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
 
-    .admin-card { background-color: var(--fundo); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid var(--card-border); }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; margin-bottom: 0.3rem; font-weight: 600; font-size: 0.9rem; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--card-border); background-color: var(--fundo-claro); color: var(--texto); }
+    .admin-card h3 {
+      margin-bottom: 1.2rem;
+      color: var(--primary);
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-    .admin-table { width: 100%; border-collapse: collapse; background-color: var(--fundo); border-radius: 8px; overflow: hidden; margin-bottom: 2rem; }
-    .admin-table th, .admin-table td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--card-border); }
-    .admin-table th { background-color: var(--azul-marinho); color: var(--bege-claro); }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-group-row .form-group {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--secondary);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: #fafafa;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background-color: #fff;
+    }
+
+    input[type="file"] {
+      padding: 0.5rem 0;
+    }
+
+    .btn-action {
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: inline-block;
+    }
+
+    .btn-action:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* TABELAS */
+    .table-container {
+      overflow-x: auto;
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .admin-table th,
+    .admin-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .admin-table th {
+      background-color: #f1f5f9;
+      color: var(--secondary);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .img-thumb {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: #e2e8f0;
+      color: var(--secondary);
+    }
+
+    .badge-status.ativo {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .btn-delete {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-delete:hover {
+      background-color: var(--danger-hover);
+    }
 
     @media (max-width: 768px) {
-      aside { transform: translateX(-100%); width: var(--sidebar-width) !important; }
-      body.sidebar-open aside { transform: translateX(0); }
-      body.sidebar-open .overlay { display: block; }
-      main { margin-left: 0 !important; }
+      .form-group-row {
+        flex-direction: column;
+        gap: 0;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="overlay" id="overlay"></div>
-
   <header>
-    <div class="header-left">
-      <button class="icon-btn" id="btnToggleSidebar">☰</button>
-      <div class="header-title">Escravo, Nem Pensar!</div>
-    </div>
-    <button class="theme-btn" id="btnToggleTheme">Modo Escuro</button>
+    <h1>Escravo, nem pensar!</h1>
+    <nav>
+      <button id="toggleAdminBtn">Painel do Administrador</button>
+    </nav>
   </header>
 
-  <aside>
-    <nav>
-      <a class="nav-item active" data-target="home"><span>🏠</span><span class="nav-text">Início</span></a>
-      <a class="nav-item" data-target="news"><span>📰</span><span class="nav-text">Notícias</span></a>
-      <a class="nav-item" data-target="about"><span>📖</span><span class="nav-text">Sobre o projeto</span></a>
-      <a class="nav-item" data-target="activities"><span>🎯</span><span class="nav-text">Atividades</span></a>
-      <a class="nav-item" data-target="practice"><span>📸</span><span class="nav-text">Projeto na Prática</span></a>
-      <a class="nav-item" data-target="materials"><span>📚</span><span class="nav-text">Materiais</span></a>
-      <a class="nav-item" data-target="admin"><span>🔐</span><span class="nav-text">Administração</span></a>
-    </nav>
-  </aside>
-
   <main>
-    <!-- INÍCIO -->
-    <section id="home" class="page active">
-      <div class="hero-banner">
-        <h1>Projeto Escravo, Nem Pensar!</h1>
-        <p style="color: var(--texto-secundario);">Prevenção ao trabalho escravo e promoção dos direitos humanos na escola.</p>
-      </div>
-      <h2>Buscar Atividades</h2>
-      <br>
-      <div class="form-group" style="max-width: 350px;">
-        <input type="text" id="searchInput" placeholder="🔍 Buscar por título..." oninput="App.searchActivities()">
-      </div>
-      <br>
-      <div class="cards-grid" id="cardsContainer"></div>
-    </section>
+    <section id="adminPanel">
 
-    <!-- NOTÍCIAS E ATUALIZAÇÕES -->
-    <section id="news" class="page">
-      <h1>📰 Notícias e Atualizações</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Acompanhe os avisos, campanhas e ações do projeto.</p>
-      <div class="cards-grid" id="newsContainer"></div>
-    </section>
-
-    <!-- SOBRE O PROJETO -->
-    <section id="about" class="page">
-      <h1>Sobre o projeto</h1>
-      <div class="content-area">
-        <p>O <strong>Escravo, Nem Pensar!</strong> é um programa de educação dedicado à prevenção do trabalho escravo no Brasil.</p>
-      </div>
-    </section>
-
-    <!-- ATIVIDADES -->
-    <section id="activities" class="page">
-      <h1>🎯 Atividades Pedagógicas</h1>
-      <br>
-      <div class="cards-grid" id="activitiesContainer"></div>
-    </section>
-
-    <!-- PROJETO NA PRÁTICA (LINHA DO TEMPO) -->
-    <section id="practice" class="page">
-      <h1>📸 Projeto na Prática</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Linha do tempo oficial com os registros realizados pelos estudantes.</p>
-      <div class="timeline" id="practiceTimeline"></div>
-    </section>
-
-    <!-- MATERIAIS -->
-    <section id="materials" class="page">
-      <h1>📚 Materiais de Apoio</h1>
-      <div class="content-area">
-        <p>Guias pedagógicos, cartilhas e publicações para consulta.</p>
-      </div>
-    </section>
-
-    <!-- VISUALIZADOR -->
-    <section id="contentView" class="page">
-      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar</button>
-      <h1 id="viewTitle" style="margin-top: 1rem; color: var(--terracota);"></h1>
-      <div id="viewCoverContainer"></div>
-      <div class="content-area" id="viewBody"></div>
-    </section>
-
-    <!-- ÁREA DO ADMINISTRADOR -->
-    <section id="admin" class="page">
-      <h1>🔐 Área do Administrador</h1>
-      <br>
-
-      <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
-        <h3>Acesso Restrito</h3>
-        <br>
-        <form id="loginForm">
+      <!-- FORMULÁRIO 1: CONTEÚDO PRINCIPAL -->
+      <div class="admin-card">
+        <h3>📝 Adicionar Conteúdo Principal</h3>
+        <form id="contentForm">
+          <input type="hidden" id="contentId">
+          
           <div class="form-group">
-            <label>Senha de Acesso</label>
-            <input type="password" id="inputPassword" required placeholder="Digite a senha (padrão: admin123)">
+            <label for="contentTitle">Título da Atividade / Conteúdo</label>
+            <input type="text" id="contentTitle" required placeholder="Ex: Caderno Pedagógico sobre Trabalho Escravo">
           </div>
-          <button type="submit" class="btn-action">Entrar</button>
+
+          <div class="form-group">
+            <label for="contentStatus">Status</label>
+            <select id="contentStatus">
+              <option value="Ativo">Ativo</option>
+              <option value="Rascunho">Rascunho</option>
+              <option value="Arquivado">Arquivado</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="contentImageInput">Imagem de Capa</label>
+            <input type="file" id="contentImageInput" accept="image/*">
+          </div>
+
+          <button type="submit" class="btn-action">Salvar Conteúdo</button>
         </form>
       </div>
 
-      <div id="adminPanel" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <span>Painel de Gestão</span>
-          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
-        </div>
+      <!-- FORMULÁRIO 2: PROJETO NA PRÁTICA -->
+      <div class="admin-card">
+        <h3>📸 Adicionar Registro "Projeto na Prática"</h3>
+        <form id="practiceForm">
+          <div class="form-group">
+            <label for="practiceTitle">Título da Ação / Registro</label>
+            <input type="text" id="practiceTitle" required placeholder="Ex: Feira Pedagógica sobre Direitos Humanos">
+          </div>
 
-        <!-- FORMULÁRIO 1: ATIVIDADES & NOTÍCIAS -->
-        <div class="admin-card">
-          <h3 id="formTitle">➕ Criar Atividade / Notícia</h3>
-          <br>
-          <form id="contentForm">
-            <input type="hidden" id="editId">
+          <div class="form-group">
+            <label for="practiceCategory">Categoria</label>
+            <select id="practiceCategory">
+              <option value="Culminância">Culminância</option>
+              <option value="Galeria de Fotos">Galeria de Fotos</option>
+              <option value="Apresentações">Apresentações</option>
+              <option value="Relatos dos estudantes">Relatos dos estudantes</option>
+              <option value="Trabalhos produzidos">Trabalhos produzidos</option>
+              <option value="Vídeos">Vídeos</option>
+            </select>
+          </div>
+
+          <div class="form-group-row">
             <div class="form-group">
-              <label>Tipo de Conteúdo</label>
-              <select id="inputType">
-                <option value="Atividade">Atividade Pedagógica</option>
-                <option value="Notícia">Notícia / Aviso</option>
-              </select>
+              <label for="practiceDate">Data da Ação</label>
+              <input type="date" id="practiceDate" required>
             </div>
-
             <div class="form-group">
-              <label>Título</label>
-              <input type="text" id="inputTitle" required placeholder="Título da publicação">
+              <label for="practiceLocation">Local da Ação</label>
+              <input type="text" id="practiceLocation" placeholder="Ex: Auditório da Escola / Sala 03">
             </div>
-            
-            <div class="form-group">
-              <label>Descrição Curta</label>
-              <input type="text" id="inputDesc" required placeholder="Resumo em poucas palavras">
-            </div>
+          </div>
 
-            <div class="form-group">
-              <label>Conteúdo Completo</label>
-              <div class="editor-container">
-                <div class="editor-toolbar">
-                  <button type="button" onclick="App.execEditorCmd('bold')">B</button>
-                  <button type="button" onclick="App.execEditorCmd('italic')">I</button>
-                </div>
-                <div id="editorContent" class="editor-content" contenteditable="true"></div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="practiceDesc">Descrição ou Relato</label>
+            <textarea id="practiceDesc" rows="4" placeholder="Detalhes do que foi realizado pelos estudantes..."></textarea>
+          </div>
 
-            <button type="submit" class="btn-action">Salvar Publicação</button>
-            <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
-          </form>
-        </div>
+          <div class="form-group">
+            <label for="practiceMediaInput">Anexo de Mídia (Foto de Capa / Evidência)</label>
+            <input type="file" id="practiceMediaInput" accept="image/*">
+          </div>
 
-        <!-- FORMULÁRIO 2: PROJETO NA PRÁTICA -->
-        <div class="admin-card">
-          <h3>📸 Registro na Prática (Linha do Tempo)</h3>
-          <br>
-          <form id="practiceForm">
-            <div class="form-group">
-              <label>Ação / Atividade Realizada</label>
-              <input type="text" id="practiceTitle" required placeholder="Ex: Feira de Direitos Humanos">
-            </div>
+          <button type="submit" class="btn-action">Salvar Registro na Prática</button>
+        </form>
+      </div>
 
-            <div class="form-group">
-              <label>Categoria</label>
-              <select id="practiceCategory">
-                <option value="Culminância">Culminância</option>
-                <option value="Galeria de Fotos">Galeria de Fotos</option>
-                <option value="Apresentações">Apresentações</option>
-                <option value="Relatos dos estudantes">Relatos dos estudantes</option>
-                <option value="Trabalhos produzidos">Trabalhos produzidos</option>
-                <option value="Vídeos">Vídeos</option>
-              </select>
-            </div>
-
-            <div style="display: flex; gap: 1rem;">
-              <div class="form-group" style="flex: 1;">
-                <label>Data</label>
-                <input type="date" id="practiceDate" required>
-              </div>
-              <div class="form-group" style="flex: 1;">
-                <label>Local</label>
-                <input type="text" id="practiceLocation" required placeholder="Ex: Pátio Principal">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Relato / Detalhes</label>
-              <textarea id="practiceDesc" rows="3" placeholder="Escreva o relato do que ocorreu..."></textarea>
-            </div>
-
-            <button type="submit" class="btn-action">Adicionar à Linha do Tempo</button>
-          </form>
-        </div>
-
-        <h3>Publicações Cadastradas</h3>
-        <br>
+      <!-- TABELA 1: ATIVIDADES -->
+      <h3 class="section-title">Atividades Cadastradas</h3>
+      <div class="table-container">
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Tipo</th>
+              <th>Capa</th>
               <th>Título</th>
+              <th>Status</th>
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="adminTableBody"></tbody>
+          <tbody id="adminTableBody">
+            <!-- Os dados serão inseridos dinamicamente aqui -->
+          </tbody>
         </table>
       </div>
+
+      <!-- TABELA 2: REGISTROS PRÁTICOS -->
+      <h3 class="section-title">Registros "Projeto na Prática" Cadastrados</h3>
+      <div class="table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Título</th>
+              <th>Categoria</th>
+              <th>Data</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="adminPracticeTableBody">
+            <!-- Os dados serão inseridos dinamicamente aqui -->
+          </tbody>
+        </table>
+      </div>
+
     </section>
   </main>
 
+  <!-- FIREBASE ENGINE & LÓGICA JAVASCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
@@ -321,239 +394,202 @@
 
     const firebaseApp = initializeApp(firebaseConfig);
     const db = getFirestore(firebaseApp);
+    const storage = getStorage(firebaseApp);
 
+    // Repositório de dados com rotas assíncronas
     window.FirebaseRepo = {
       async getContents() {
         try {
           const snapshot = await getDocs(collection(db, "contents"));
           return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
         } catch (e) {
-          return JSON.parse(localStorage.getItem('enp_contents') || '[]');
+          console.warn("Erro ao carregar do Firestore. Recuperando do armazenamento local:", e);
+          const stored = localStorage.getItem('enp_contents');
+          return stored ? JSON.parse(stored) : [];
         }
       },
+
       async saveContent(item) {
         try {
-          await addDoc(collection(db, "contents"), item);
+          if (item.id) {
+            const itemRef = doc(db, "contents", item.id);
+            const dataToSave = { ...item };
+            delete dataToSave.id;
+            await updateDoc(itemRef, dataToSave);
+          } else {
+            const dataToSave = { ...item };
+            delete dataToSave.id;
+            await addDoc(collection(db, "contents"), dataToSave);
+          }
         } catch (e) {
-          const stored = JSON.parse(localStorage.getItem('enp_contents') || '[]');
-          item.id = Date.now().toString();
-          stored.push(item);
-          localStorage.setItem('enp_contents', JSON.stringify(stored));
+          console.error("Erro ao salvar no Firestore:", e);
+          alert("Não foi possível salvar no banco de dados. Verifique as permissões.");
         }
       },
+
       async deleteContent(id) {
         try {
           await deleteDoc(doc(db, "contents", id));
         } catch (e) {
-          let stored = JSON.parse(localStorage.getItem('enp_contents') || '[]');
-          stored = stored.filter(i => i.id !== id);
-          localStorage.setItem('enp_contents', JSON.stringify(stored));
+          console.error("Erro ao remover do Firestore:", e);
         }
       },
+
       async getPracticeRecords() {
         try {
           const snapshot = await getDocs(collection(db, "practice_records"));
           return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
         } catch (e) {
-          return JSON.parse(localStorage.getItem('enp_practice') || '[]');
+          console.warn("Erro ao buscar registros de prática do Firestore:", e);
+          const stored = localStorage.getItem('enp_practice');
+          return stored ? JSON.parse(stored) : [];
         }
       },
+
       async savePracticeRecord(item) {
         try {
           await addDoc(collection(db, "practice_records"), item);
         } catch (e) {
-          const stored = JSON.parse(localStorage.getItem('enp_practice') || '[]');
-          item.id = Date.now().toString();
-          stored.push(item);
-          localStorage.setItem('enp_practice', JSON.stringify(stored));
+          console.error("Erro ao salvar prática no Firestore:", e);
+        }
+      },
+
+      async deletePracticeRecord(id) {
+        try {
+          await deleteDoc(doc(db, "practice_records", id));
+        } catch (e) {
+          console.error("Erro ao excluir registro de prática:", e);
+        }
+      },
+
+      async uploadFile(file) {
+        try {
+          const fileRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+          const snapshot = await uploadBytes(fileRef, file);
+          return await getDownloadURL(snapshot.ref);
+        } catch (e) {
+          console.warn("Falha no upload para o Storage. Convertendo imagem localmente:", e);
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+          });
         }
       }
     };
-  </script>
 
-  <script>
-    const App = (() => {
-      let contents = [];
-      let practiceRecords = [];
+    // Renderização inicial e eventos do DOM
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTables();
+    });
 
-      async function loadData() {
-        if (window.FirebaseRepo) {
-          contents = await window.FirebaseRepo.getContents();
-          practiceRecords = await window.FirebaseRepo.getPracticeRecords();
-        }
-        renderHomeCards();
-        renderNewsCards();
-        renderActivitiesCards();
-        renderTimeline();
-        renderAdminTables();
+    async function loadTables() {
+      const contents = await window.FirebaseRepo.getContents();
+      const practices = await window.FirebaseRepo.getPracticeRecords();
+
+      renderContentTable(contents);
+      renderPracticeTable(practices);
+    }
+
+    function renderContentTable(items) {
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nenhum conteúdo cadastrado.</td></tr>';
+        return;
       }
-
-      function navigateTo(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        const targetPage = document.getElementById(pageId);
-        if (targetPage) targetPage.classList.add('active');
-        const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
-        if (navLink) navLink.classList.add('active');
-      }
-
-      function initSidebar() {
-        document.getElementById('btnToggleSidebar').addEventListener('click', () => {
-          document.body.classList.toggle(window.innerWidth <= 768 ? 'sidebar-open' : 'sidebar-collapsed');
-        });
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.addEventListener('click', () => navigateTo(item.dataset.target));
-        });
-      }
-
-      function renderHomeCards() {
-        const container = document.getElementById('cardsContainer');
-        container.innerHTML = '';
-        contents.filter(i => i.type === 'Atividade').forEach(item => container.appendChild(createCard(item)));
-      }
-
-      function renderNewsCards() {
-        const container = document.getElementById('newsContainer');
-        container.innerHTML = '';
-        const news = contents.filter(i => i.type === 'Notícia');
-        if (news.length === 0) {
-          container.innerHTML = '<p style="color:var(--texto-secundario)">Nenhuma notícia cadastrada.</p>';
-          return;
-        }
-        news.forEach(item => container.appendChild(createCard(item)));
-      }
-
-      function renderActivitiesCards() {
-        const container = document.getElementById('activitiesContainer');
-        container.innerHTML = '';
-        contents.filter(i => i.type === 'Atividade').forEach(item => container.appendChild(createCard(item)));
-      }
-
-        function renderTimeline() {
-        const container = document.getElementById('practiceTimeline');
-        container.innerHTML = '';
-        if (practiceRecords.length === 0) {
-          container.innerHTML = '<p style="color:var(--texto-secundario)">Nenhum registro na linha do tempo.</p>';
-          return;
-        }
-
-        practiceRecords.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'timeline-item';
-          div.innerHTML = `
-            <h3>${item.title}</h3>
-            <span class="meta-tag">📅 ${item.date}</span>
-            <span class="meta-tag" style="background:var(--azul-marinho)">📍 ${item.location}</span>
-            <span class="meta-tag" style="background:var(--laranja-terra)">🎯 ${item.category}</span>
-            <p style="margin-top:0.8rem;">📝 ${item.desc}</p>
-          `;
-          container.appendChild(div);
-        });
-      }
-
-      function createCard(item) {
-        const card = document.createElement('div');
-        card.className = 'window-card';
-        card.innerHTML = `
-          <div class="window-header"><span>${item.type}</span></div>
-          <div class="window-body">
-            <h3>${item.title}</h3>
-            <p>${item.desc}</p>
-          </div>
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        const imageSrc = item.imageUrl || 'https://via.placeholder.com/50?text=Sem+Foto';
+        tr.innerHTML = `
+          <td><img src="${imageSrc}" class="img-thumb" alt="Capa"></td>
+          <td><strong>${item.title}</strong></td>
+          <td><span class="badge-status ${item.status === 'Ativo' ? 'ativo' : ''}">${item.status}</span></td>
+          <td><button class="btn-delete" onclick="window.removeContent('${item.id}')">Excluir</button></td>
         `;
-        card.onclick = () => {
-          document.getElementById('viewTitle').textContent = item.title;
-          document.getElementById('viewBody').innerHTML = item.body || item.desc;
-          navigateTo('contentView');
-        };
-        return card;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderPracticeTable(items) {
+      const tbody = document.getElementById('adminPracticeTableBody');
+      tbody.innerHTML = '';
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum registro de prática cadastrado.</td></tr>';
+        return;
+      }
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        const imageSrc = item.mediaUrl || 'https://via.placeholder.com/50?text=Sem+Foto';
+        tr.innerHTML = `
+          <td><img src="${imageSrc}" class="img-thumb" alt="Evidência"></td>
+          <td><strong>${item.title}</strong></td>
+          <td>${item.category}</td>
+          <td>${item.date}</td>
+          <td><button class="btn-delete" onclick="window.removePractice('${item.id}')">Excluir</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Handlers para envio dos formulários
+    document.getElementById('contentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('contentImageInput');
+      let imageUrl = '';
+
+      if (fileInput.files[0]) {
+        imageUrl = await window.FirebaseRepo.uploadFile(fileInput.files[0]);
       }
 
-      function searchActivities() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('#cardsContainer .window-card');
-        cards.forEach(card => {
-          const text = card.textContent.toLowerCase();
-          card.style.display = text.includes(term) ? 'flex' : 'none';
-        });
+      const item = {
+        id: document.getElementById('contentId').value,
+        title: document.getElementById('contentTitle').value,
+        status: document.getElementById('contentStatus').value,
+        imageUrl: imageUrl
+      };
+
+      await window.FirebaseRepo.saveContent(item);
+      e.target.reset();
+      loadTables();
+    });
+
+    document.getElementById('practiceForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const mediaInput = document.getElementById('practiceMediaInput');
+      let mediaUrl = '';
+
+      if (mediaInput.files[0]) {
+        mediaUrl = await window.FirebaseRepo.uploadFile(mediaInput.files[0]);
       }
 
-      function initAdmin() {
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-          e.preventDefault();
-          if (document.getElementById('inputPassword').value === 'admin123') {
-            document.getElementById('adminLoginBox').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-          }
-        });
+      const item = {
+        title: document.getElementById('practiceTitle').value,
+        category: document.getElementById('practiceCategory').value,
+        date: document.getElementById('practiceDate').value,
+        location: document.getElementById('practiceLocation').value,
+        description: document.getElementById('practiceDesc').value,
+        mediaUrl: mediaUrl
+      };
 
-        document.getElementById('contentForm').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const item = {
-            type: document.getElementById('inputType').value,
-            title: document.getElementById('inputTitle').value,
-            desc: document.getElementById('inputDesc').value,
-            body: document.getElementById('editorContent').innerHTML
-          };
-          await window.FirebaseRepo.saveContent(item);
-          await loadData();
-          document.getElementById('contentForm').reset();
-          document.getElementById('editorContent').innerHTML = '';
-        });
+      await window.FirebaseRepo.savePracticeRecord(item);
+      e.target.reset();
+      loadTables();
+    });
 
-        document.getElementById('practiceForm').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const practiceItem = {
-            title: document.getElementById('practiceTitle').value,
-            category: document.getElementById('practiceCategory').value,
-            date: document.getElementById('practiceDate').value,
-            location: document.getElementById('practiceLocation').value,
-            desc: document.getElementById('practiceDesc').value
-          };
-          await window.FirebaseRepo.savePracticeRecord(practiceItem);
-          await loadData();
-          document.getElementById('practiceForm').reset();
-        });
+    window.removeContent = async (id) => {
+      if (confirm('Deseja realmente remover este conteúdo?')) {
+        await window.FirebaseRepo.deleteContent(id);
+        loadTables();
       }
+    };
 
-      function renderAdminTables() {
-        const tbody = document.getElementById('adminTableBody');
-        tbody.innerHTML = '';
-        contents.forEach(item => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item.type}</td>
-            <td><strong>${item.title}</strong></td>
-            <td><button class="btn-action btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button></td>
-          `;
-          tbody.appendChild(tr);
-        });
+    window.removePractice = async (id) => {
+      if (confirm('Deseja realmente remover esta prática?')) {
+        await window.FirebaseRepo.deletePracticeRecord(id);
+        loadTables();
       }
-
-      async function deleteItem(id) {
-        if (confirm('Deseja excluir este item?')) {
-          await window.FirebaseRepo.deleteContent(id);
-          await loadData();
-        }
-      }
-
-      function logoutAdmin() {
-        document.getElementById('adminLoginBox').style.display = 'block';
-        document.getElementById('adminPanel').style.display = 'none';
-      }
-
-      function execEditorCmd(cmd) { document.execCommand(cmd, false, null); }
-
-      function init() {
-        initSidebar();
-        initAdmin();
-        setTimeout(loadData, 600);
-      }
-
-      return { init, navigateTo, logoutAdmin, deleteItem, execEditorCmd, searchActivities };
-    })();
-
-    document.addEventListener('DOMContentLoaded', App.init);
+    };
   </script>
 </body>
 </html>
