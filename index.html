@@ -3,633 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escravo, Nem Pensar!</title>
+  <title>Plataforma de Conteúdos</title>
   <style>
     :root {
-      --fundo: #F4E7C8;
-      --fundo-claro: #FFF7E6;
-      --branco: #FFFFFF;
-      --terracota: #B94E2E;
-      --terracota-escuro: #963B24;
-      --laranja-terra: #D87532;
-      --azul-marinho: #142B3D;
-      --azul-marinho-claro: #1D3A4D;
-      --bege: #F5DDA5;
-      --bege-claro: #FFF1CC;
-      --texto: #142B3D;
-      --texto-secundario: #5C4635;
-      --ocre: #C58A35;
-      --amarelo-sol: #E6A83B;
-      --vermelho: #A63D2F;
-      --card-border: rgba(185, 78, 46, 0.2);
-      --sidebar-width: 260px;
-      --sidebar-collapsed-width: 70px;
-      --header-height: 60px;
+      --bg-principal: #f4f6f8;
+      --bg-card: #ffffff;
+      --texto-principal: #1a1a1a;
+      --texto-secundario: #666666;
+      --cor-primaria: #0066cc;
+      --cor-borda: #e0e0e0;
+      --sidebar-width: 250px;
     }
 
     [data-theme="dark"] {
-      --fundo: #111820;
-      --fundo-claro: #18232C;
-      --branco: #FFFFFF;
-      --terracota: #D66A43;
-      --terracota-escuro: #B84E30;
-      --laranja-terra: #D98A45;
-      --azul-marinho: #E7D3A5;
-      --azul-marinho-claro: #F1DFC0;
-      --bege: #FFFFFF;
-      --bege-claro: #FFFFFF;
-      --texto: #FFFFFF;
-      --texto-secundario: #D8C9B5;
-      --ocre: #D49A43;
-      --amarelo-sol: #E5AE4A;
-      --card-border: rgba(214, 106, 67, 0.3);
+      --bg-principal: #121212;
+      --bg-card: #1e1e1e;
+      --texto-principal: #ffffff;
+      --texto-secundario: #aaa;
+      --cor-primaria: #3794ff;
+      --cor-borda: #333333;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.25s, color 0.25s, border-color 0.25s;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-principal); color: var(--texto-principal); display: flex; min-height: 100vh; }
 
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: var(--fundo-claro);
-      color: var(--texto);
-      min-height: 100vh;
-      display: flex;
-    }
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-width); background: var(--bg-card); border-right: 1px solid var(--cor-borda); padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1rem; transition: transform 0.3s ease; }
+    .nav-item { padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer; color: var(--texto-secundario); font-weight: 500; display: flex; align-items: center; gap: 0.5rem; }
+    .nav-item:hover, .nav-item.active { background: rgba(0, 102, 204, 0.1); color: var(--cor-primaria); }
 
-    /* HEADER */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--header-height);
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.25rem;
-      z-index: 100;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--bege-claro);
-      font-size: 1.4rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.3rem;
-      border-radius: 4px;
-    }
-
-    .icon-btn:hover, .icon-btn:focus-visible {
-      background-color: var(--terracota-escuro);
-      outline: 2px solid var(--bege-claro);
-    }
-
-    .header-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .theme-btn {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      border: 1px solid var(--laranja-terra);
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    /* SIDEBAR & OVERLAY */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 85;
-      display: none;
-    }
-
-    aside {
-      position: fixed;
-      top: var(--header-height);
-      bottom: 0;
-      left: 0;
-      width: var(--sidebar-width);
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      z-index: 90;
-      transition: width 0.25s ease, transform 0.25s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* CONTAINER DA LOGO NO TOPO DA SIDEBAR */
-    .sidebar-logo-container {
-      padding: 1rem;
-      text-align: center;
-      border-bottom: 1px solid var(--azul-marinho-claro);
-    }
-
-    .sidebar-logo {
-      max-width: 100%;
-      max-height: 80px;
-      object-fit: contain;
-    }
-
-    body.sidebar-collapsed aside {
-      width: var(--sidebar-collapsed-width);
-    }
-
-    body.sidebar-collapsed .sidebar-logo-container {
-      padding: 0.5rem;
-    }
-
-    body.sidebar-collapsed .sidebar-logo {
-      max-height: 40px;
-    }
-
-    nav {
-      display: flex;
-      flex-direction: column;
-      padding-top: 0.5rem;
-      flex-grow: 1;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 0.85rem 1.25rem;
-      color: var(--bege-claro);
-      text-decoration: none;
-      cursor: pointer;
-      gap: 1rem;
-      white-space: nowrap;
-      border-left: 4px solid transparent;
-    }
-
-    .nav-item:hover, .nav-item.active {
-      background-color: var(--azul-marinho-claro);
-      border-left-color: var(--laranja-terra);
-    }
-
-    body.sidebar-collapsed .nav-text {
-      display: none;
-    }
-
-    /* MAIN */
-    main {
-      margin-top: var(--header-height);
-      margin-left: var(--sidebar-width);
-      padding: 2rem;
-      width: 100%;
-      transition: margin-left 0.25s ease;
-    }
-
-    body.sidebar-collapsed main {
-      margin-left: var(--sidebar-collapsed-width);
-    }
-
+    /* MAIN CONTENT */
+    .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    
+    /* PAGES */
     .page { display: none; }
     .page.active { display: block; }
 
-    .hero-banner {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-    }
+    /* CARDS GRID */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .window-card { background: var(--bg-card); border: 1px solid var(--cor-borda); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .window-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+    .window-header { background: rgba(0,0,0,0.05); padding: 0.5rem 1rem; display: flex; justify-content: space-between; font-size: 0.8rem; border-bottom: 1px solid var(--cor-borda); }
+    .card-cover-img { width: 100%; height: 160px; object-fit: cover; }
+    .window-body { padding: 1rem; }
+    .window-title { margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .window-desc { font-size: 0.9rem; color: var(--texto-secundario); }
 
-    .hero-banner h1 {
-      color: var(--terracota);
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-    }
+    /* INPUTS & BUTTONS */
+    input, select, textarea { width: 100%; padding: 0.75rem; margin-top: 0.5rem; margin-bottom: 1rem; border: 1px solid var(--cor-borda); border-radius: 6px; background: var(--bg-card); color: var(--texto-principal); }
+    button { padding: 0.75rem 1.5rem; border: none; border-radius: 6px; background: var(--cor-primaria); color: white; cursor: pointer; font-weight: 600; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary { background: transparent; border: 1px solid var(--cor-borda); color: var(--texto-principal); }
+    .btn-action { padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-right: 0.25rem; }
 
-    /* BARRA DE PESQUISA */
-    .search-bar {
-      margin-bottom: 1.5rem;
-      width: 100%;
-      max-width: 500px;
-    }
+    /* EDITOR WYSIWYG */
+    .editor-toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 0.5rem; background: rgba(0,0,0,0.05); border: 1px solid var(--cor-borda); border-bottom: none; border-radius: 6px 6px 0 0; }
+    .editor-toolbar button { padding: 0.25rem 0.5rem; background: var(--bg-card); color: var(--texto-principal); border: 1px solid var(--cor-borda); }
+    .editor-content { min-height: 200px; border: 1px solid var(--cor-borda); border-radius: 0 0 6px 6px; padding: 1rem; background: var(--bg-card); margin-bottom: 1rem; }
 
-    .search-bar input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      border: 1px solid var(--card-border);
-      background-color: var(--fundo);
-      color: var(--texto);
-      font-size: 0.95rem;
-    }
+    /* TABELA ADMIN */
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--cor-borda); }
 
-    /* CARDS COMO JANELAS DE CONTEÚDO */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .window-card {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.04);
-    }
-
-    .window-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--terracota);
-    }
-
-    .window-header {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      padding: 0.6rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .card-cover-img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .window-body {
-      padding: 1.25rem;
-      flex-grow: 1;
-    }
-
-    .window-title {
-      color: var(--terracota);
-      font-size: 1.15rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .window-desc {
-      color: var(--texto-secundario);
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
-    /* ÁREA DE EXIBIÇÃO DE CONTEÚDO ENRIQUECIDO */
-    .content-area {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 2rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-      line-height: 1.6;
-    }
-
-    .content-area img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 6px;
-      margin: 1rem 0;
-      display: block;
-    }
-
-    .btn-action {
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .btn-action:hover {
-      background-color: var(--terracota-escuro);
-    }
-
-    .btn-secondary {
-      background-color: transparent;
-      border: 1px solid var(--terracota);
-      color: var(--texto);
-    }
-
-    /* PAINEL DE ESTATÍSTICAS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-box {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 1.25rem;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--terracota);
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--texto-secundario);
-    }
-
-    /* EDITOR VISUAL DE TEXTO */
-    .editor-container {
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      overflow: hidden;
-      background-color: var(--fundo-claro);
-    }
-
-    .editor-toolbar {
-      background-color: var(--fundo);
-      border-bottom: 1px solid var(--card-border);
-      padding: 0.5rem;
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .editor-toolbar button {
-      background: var(--fundo-claro);
-      border: 1px solid var(--card-border);
-      color: var(--texto);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.85rem;
-    }
-
-    .editor-toolbar button:hover {
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-    }
-
-    .editor-content {
-      min-height: 200px;
-      padding: 1rem;
-      outline: none;
-      color: var(--texto);
-    }
-
-    /* LOGIN & TABELA ADMINISTRATIVA */
-    .admin-card {
-      background-color: var(--fundo);
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--card-border);
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.3rem;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 0.6rem;
-      border-radius: 4px;
-      border: 1px solid var(--card-border);
-      background-color: var(--fundo-claro);
-      color: var(--texto);
-    }
-
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: var(--fundo);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .admin-table th, .admin-table td {
-      padding: 0.8rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .admin-table th {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-    }
-
-    /* MOBILE ADJUSTMENTS */
     @media (max-width: 768px) {
-      aside {
-        transform: translateX(-100%);
-        width: var(--sidebar-width) !important;
-      }
-      body.sidebar-open aside { transform: translateX(0); }
-      body.sidebar-open .overlay { display: block; }
-      main { margin-left: 0 !important; padding: 1.25rem 1rem; }
+      body { flex-direction: column; }
+      .sidebar { width: 100%; transform: translateY(-100%); position: absolute; z-index: 100; }
+      body.sidebar-open .sidebar { transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <div class="overlay" id="overlay" onclick="App.toggleSidebar()"></div>
-
-  <header>
-    <div class="header-left">
-      <button class="icon-btn" id="btnToggleSidebar" aria-label="Abrir ou recolher menu lateral">☰</button>
-      <div class="header-title">Escravo, Nem Pensar!</div>
-    </div>
-    <button class="theme-btn" id="btnToggleTheme" aria-label="Alternar tema">Modo Escuro</button>
-  </header>
-
-  <aside aria-label="Menu principal">
-    <!-- LOGO NO CANTO SUPERIOR DO MENU LATERAL -->
-    <div class="sidebar-logo-container">
-      <img src="logo.png" alt="Logo Escravo, Nem Pensar!" class="sidebar-logo" onerror="this.style.display='none'">
-    </div>
-    <nav>
-      <a class="nav-item active" data-target="home">
-        <span>🏠</span>
-        <span class="nav-text">Início</span>
-      </a>
-      <a class="nav-item" data-target="about">
-        <span>📖</span>
-        <span class="nav-text">Sobre o projeto</span>
-      </a>
-      <a class="nav-item" data-target="admin">
-        <span>🔐</span>
-        <span class="nav-text">Administração</span>
-      </a>
-    </nav>
+  <!-- NAVEGAÇÃO LATERAL -->
+  <aside class="sidebar">
+    <h2>Painel</h2>
+    <div class="nav-item active" data-target="home">🏠 Início</div>
+    <div class="nav-item" data-target="admin">⚙️ Administração</div>
+    <button id="btnToggleTheme" class="btn-secondary" style="margin-top: auto;">Modo Escuro</button>
   </aside>
 
-  <main>
-    <!-- PÁGINA INICIAL -->
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <div class="header-bar">
+      <button id="btnToggleSidebar" class="btn-secondary">☰ Menu</button>
+      <input type="text" id="searchInput" placeholder="Pesquisar conteúdo..." style="max-width: 300px; margin: 0;" oninput="window.App.handleSearch()">
+    </div>
+
+    <!-- PÁGINA: INÍCIO (CARDS) -->
     <section id="home" class="page active">
-      <div class="hero-banner">
-        <h1>Projeto Escravo, Nem Pensar!</h1>
-        <p style="color: var(--texto-secundario);">
-          Plataforma de conteúdos educativos e informativos para a prevenção ao trabalho escravo e promoção dos direitos humanos.
-        </p>
-      </div>
-
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="🔎 Pesquisar atividades por título ou descrição..." oninput="App.handleSearch()">
-      </div>
-
-      <h2>Módulos e Atividades</h2>
-      <br>
-      <div class="cards-grid" id="cardsContainer"></div>
+      <h1 style="margin-bottom: 1.5rem;">Conteúdos Publicados</h1>
+      <div id="cardsContainer" class="cards-grid"></div>
     </section>
 
-    <!-- SOBRE O PROJETO -->
-    <section id="about" class="page">
-      <h1>Sobre o projeto</h1>
-      <div class="content-area">
-        <p>O <strong>Escravo, Nem Pensar!</strong> é um programa de educação dedicado à prevenção do trabalho escravo no Brasil.</p>
-        <br>
-        <p>Esta plataforma foi desenvolvida de forma modular para organizar e disponibilizar atividades, textos de apoio, fotos e materiais interativos sobre direitos humanos e trabalho digno.</p>
-      </div>
-    </section>
-
-    <!-- VISUALIZADOR DE CONTEÚDO (JANELA ABERTA) -->
+    <!-- PÁGINA: LEITOR DE CONTEÚDO -->
     <section id="contentView" class="page">
-      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar para o início</button>
-      <h1 id="viewTitle" style="margin-top: 1rem; color: var(--terracota);"></h1>
+      <button class="btn-secondary" onclick="window.App.navigateTo('home')" style="margin-bottom: 1rem;">← Voltar</button>
+      <h1 id="viewTitle"></h1>
       <div id="viewCoverContainer"></div>
-      <div class="content-area" id="viewBody"></div>
+      <div id="viewBody" style="margin-top: 1.5rem; line-height: 1.6;"></div>
     </section>
 
-    <!-- ÁREA DO ADMINISTRADOR -->
+    <!-- PÁGINA: PAINEL ADMINISTRATIVO -->
     <section id="admin" class="page">
-      <h1>🔐 Área do Administrador</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Gerencie o conteúdo exibido nos cards da tela inicial.</p>
-
-      <!-- PAINEL DE LOGIN -->
-      <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
-        <h3>Acesso Restrito</h3>
-        <br>
-        <form id="loginForm" autocomplete="off">
-          <div class="form-group">
-            <label for="inputPassword">Senha de Acesso</label>
-            <!-- CAMPO DE SENHA OCULTO -->
-            <input type="password" id="inputPassword" required autocomplete="current-password" placeholder="Digite a senha de acesso">
-          </div>
-          <button type="submit" class="btn-action">Entrar</button>
+      <!-- TELA DE LOGIN -->
+      <div id="adminLoginBox" style="max-width: 400px; margin: 2rem auto; text-align: center;">
+        <h2>Acesso Restrito</h2>
+        <form id="loginForm">
+          <input type="password" id="inputPassword" placeholder="Digite a senha (admin123)" required>
+          <button type="submit" style="width: 100%;">Entrar</button>
         </form>
       </div>
 
-      <!-- PAINEL ADMINISTRATIVO (OCULTO ATÉ O LOGIN) -->
+      <!-- PAINEL COMPLETO -->
       <div id="adminPanel" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <span>Sessão ativa como <strong>Administrador</strong></span>
-          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h1>Gerenciador de Módulos</h1>
+          <button class="btn-secondary" onclick="window.App.logoutAdmin()">Sair</button>
         </div>
 
-        <!-- PAINEL DE ESTATÍSTICAS -->
-        <div class="stats-grid">
-          <div class="stat-box">
-            <div class="stat-number" id="statTotal">0</div>
-            <div class="stat-label">Total de Conteúdos</div>
+        <!-- ESTATÍSTICAS -->
+        <div style="display: flex; gap: 1rem; margin: 1.5rem 0;">
+          <div style="padding: 1rem; background: var(--bg-card); border: 1px solid var(--cor-borda); border-radius: 8px; flex: 1;">
+            <small>Total</small>
+            <h2 id="statTotal">0</h2>
           </div>
-          <div class="stat-box">
-            <div class="stat-number" id="statPublished">0</div>
-            <div class="stat-label">Publicados</div>
+          <div style="padding: 1rem; background: var(--bg-card); border: 1px solid var(--cor-borda); border-radius: 8px; flex: 1;">
+            <small>Publicados</small>
+            <h2 id="statPublished">0</h2>
           </div>
-          <div class="stat-box">
-            <div class="stat-number" id="statDrafts">0</div>
-            <div class="stat-label">Rascunhos</div>
+          <div style="padding: 1rem; background: var(--bg-card); border: 1px solid var(--cor-borda); border-radius: 8px; flex: 1;">
+            <small>Rascunhos</small>
+            <h2 id="statDrafts">0</h2>
           </div>
         </div>
 
-        <div class="admin-card">
+        <!-- FORMULÁRIO -->
+        <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--cor-borda);">
           <h3 id="formTitle">➕ Criar Novo Conteúdo</h3>
-          <br>
           <form id="contentForm">
             <input type="hidden" id="editId">
-            <div class="form-group">
-              <label for="inputTitle">Título da Atividade / Card</label>
-              <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
-            </div>
-            <div class="form-group">
-              <label for="inputDesc">Descrição Curta (Aparece no Card)</label>
-              <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
-            </div>
+            <input type="hidden" id="currentCoverUrl">
 
-            <!-- UPLOAD DA IMAGEM DE CAPA DO CARD -->
-            <div class="form-group">
-              <label for="coverInput">Imagem de Capa do Card</label>
-              <input type="file" id="coverInput" accept="image/*">
-              <input type="hidden" id="currentCoverUrl">
-              <div id="coverPreviewContainer" style="margin-top: 0.5rem;"></div>
-            </div>
+            <label>Título</label>
+            <input type="text" id="inputTitle" required>
 
-            <div class="form-group">
-              <label for="inputStatus">Status</label>
-              <select id="inputStatus">
-                <option value="Publicado">Publicado</option>
-                <option value="Rascunho">Rascunho</option>
-              </select>
-            </div>
+            <label>Descrição Breve</label>
+            <input type="text" id="inputDesc" required>
 
-            <!-- EDITOR VISUAL RICH TEXT -->
-            <div class="form-group">
-              <label>Conteúdo Completo</label>
-              <div class="editor-container">
-                <div class="editor-toolbar">
-                  <button type="button" onclick="App.execEditorCmd('bold')" title="Negrito">B</button>
-                  <button type="button" onclick="App.execEditorCmd('italic')" title="Itálico">I</button>
-                  <button type="button" onclick="App.execEditorCmd('underline')" title="Sublinhado">U</button>
-                  <button type="button" onclick="App.execEditorCmd('formatBlock', 'H2')" title="Título">H2</button>
-                  <button type="button" onclick="App.execEditorCmd('formatBlock', 'P')" title="Parágrafo">P</button>
-                  <button type="button" onclick="App.triggerImageUpload()" title="Inserir Imagem">📷 Imagem</button>
-                  <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="App.handleImageUpload(event)">
-                </div>
-                <div id="editorContent" class="editor-content" contenteditable="true"></div>
-              </div>
-            </div>
+            <label>Status</label>
+            <select id="inputStatus">
+              <option value="Publicado">Publicado</option>
+              <option value="Rascunho">Rascunho</option>
+            </select>
 
-            <button type="submit" class="btn-action" id="btnSubmitForm">Salvar Conteúdo</button>
-            <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
+            <label>Imagem de Capa</label>
+            <input type="file" id="coverInput" accept="image/*">
+            <div id="coverPreviewContainer"></div>
+
+            <label>Conteúdo Principal</label>
+            <div class="editor-toolbar">
+              <button type="button" onclick="window.App.execEditorCmd('bold')"><b>B</b></button>
+              <button type="button" onclick="window.App.execEditorCmd('italic')"><i>I</i></button>
+              <button type="button" onclick="window.App.execEditorCmd('insertUnorderedList')">• Lista</button>
+              <button type="button" onclick="window.App.triggerImageUpload()">📷 Inserir Imagem</button>
+              <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="window.App.handleImageUpload(event)">
+            </div>
+            <div id="editorContent" class="editor-content" contenteditable="true"></div>
+
+            <button type="submit" id="btnSubmitForm">Salvar Conteúdo</button>
+            <button type="button" id="btnCancelEdit" class="btn-secondary" style="display: none;" onclick="window.App.resetForm()">Cancelar</button>
           </form>
         </div>
 
-        <h3>Conteúdos Cadastrados</h3>
-        <br>
-        <table class="admin-table">
+        <!-- TABELA -->
+        <h3 style="margin-top: 2rem;">Lista de Conteúdos</h3>
+        <table>
           <thead>
             <tr>
               <th>Capa</th>
@@ -644,7 +193,7 @@
     </section>
   </main>
 
-  <!-- FIREBASE SDKs (MÓDULOS ESM) -->
+  <!-- FIREBASE SDKs & LÓGICA JAVASCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -670,7 +219,7 @@
     const storage = getStorage(app);
     const contentsRef = collection(db, "contents");
 
-    /* REPOSITÓRIO DO FIREBASE FIRESTORE E STORAGE */
+    /* REPOSITÓRIO FIRESTORE / STORAGE */
     const ContentRepository = {
       subscribe(callback) {
         return onSnapshot(contentsRef, (snapshot) => {
@@ -687,7 +236,7 @@
       async uploadFile(file, path) {
         try {
           const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-          await upload          await uploadBytes(storageRef, file);
+          await uploadBytes(storageRef, file);
           return await getDownloadURL(storageRef);
         } catch (err) {
           console.error("Erro no upload do arquivo:", err);
@@ -713,38 +262,38 @@
       }
     };
 
-    /* MÓDULO PRINCIPAL DA APLICAÇÃO */
-    const App = (() => {
-      let contents = [];
-      let filteredContents = [];
+    /* ESTADO E MÉTODOS */
+    let contents = [];
+    let filteredContents = [];
 
-      function initFirebaseListener() {
-        ContentRepository.subscribe((data) => {
-          contents = data;
-          filteredContents = [...contents];
-          renderCards();
-          renderAdminTable();
-          updateStats();
-        });
+    function initFirebaseListener() {
+      ContentRepository.subscribe((data) => {
+        contents = data;
+        filteredContents = [...contents];
+        renderCards();
+        renderAdminTable();
+        updateStats();
+      });
+    }
+
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) targetPage.classList.add('active');
+
+      const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
+      if (navLink) navLink.classList.add('active');
+
+      if (window.innerWidth <= 768) {
+        document.body.classList.remove('sidebar-open');
       }
+    }
 
-      function navigateTo(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-
-        const targetPage = document.getElementById(pageId);
-        if (targetPage) targetPage.classList.add('active');
-
-        const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
-        if (navLink) navLink.classList.add('active');
-
-        if (window.innerWidth <= 768) {
-          document.body.classList.remove('sidebar-open');
-        }
-      }
-
-      function initTheme() {
-        const btnTheme = document.getElementById('btnToggleTheme');
+    function initTheme() {
+      const btnTheme = document.getElementById('btnToggleTheme');
+      if (btnTheme) {
         btnTheme.addEventListener('click', () => {
           const current = document.documentElement.getAttribute('data-theme');
           const next = current === 'light' ? 'dark' : 'light';
@@ -752,93 +301,104 @@
           btnTheme.textContent = next === 'light' ? 'Modo Escuro' : 'Modo Claro';
         });
       }
+    }
 
-      function initSidebar() {
-        const btnToggle = document.getElementById('btnToggleSidebar');
+    function initSidebar() {
+      const btnToggle = document.getElementById('btnToggleSidebar');
+      if (btnToggle) {
         btnToggle.addEventListener('click', toggleSidebar);
-
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.addEventListener('click', () => navigateTo(item.dataset.target));
-        });
       }
 
-      function toggleSidebar() {
-        if (window.innerWidth <= 768) {
-          document.body.classList.toggle('sidebar-open');
-        } else {
-          document.body.classList.toggle('sidebar-collapsed');
-        }
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => navigateTo(item.dataset.target));
+      });
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 768) {
+        document.body.classList.toggle('sidebar-open');
+      } else {
+        document.body.classList.toggle('sidebar-collapsed');
+      }
+    }
+
+    function handleSearch() {
+      const searchInput = document.getElementById('searchInput');
+      if (!searchInput) return;
+      const query = searchInput.value.toLowerCase().trim();
+      filteredContents = contents.filter(item => 
+        (item.title && item.title.toLowerCase().includes(query)) || 
+        (item.desc && item.desc.toLowerCase().includes(query))
+      );
+      renderCards();
+    }
+
+    function renderCards() {
+      const container = document.getElementById('cardsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const published = filteredContents.filter(item => item.status === 'Publicado');
+
+      if (published.length === 0) {
+        container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum conteúdo encontrado.</p>';
+        return;
       }
 
-      function handleSearch() {
-        const query = document.getElementById('searchInput').value.toLowerCase().trim();
-        filteredContents = contents.filter(item => 
-          (item.title && item.title.toLowerCase().includes(query)) || 
-          (item.desc && item.desc.toLowerCase().includes(query))
-        );
-        renderCards();
-      }
-
-      function renderCards() {
-        const container = document.getElementById('cardsContainer');
-        container.innerHTML = '';
-
-        const published = filteredContents.filter(item => item.status === 'Publicado');
-
-        if (published.length === 0) {
-          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum conteúdo encontrado.</p>';
-          return;
-        }
-
-        published.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'window-card';
-          
-          const coverHtml = item.coverUrl 
-            ? `<img src="${item.coverUrl}" alt="${item.title}" class="card-cover-img">`
-            : '';
-
-          card.innerHTML = `
-            <div class="window-header">
-              <span>Módulo</span>
-              <span>🗔</span>
-            </div>
-            ${coverHtml}
-            <div class="window-body">
-              <h3 class="window-title">${item.title || ''}</h3>
-              <p class="window-desc">${item.desc || ''}</p>
-            </div>
-          `;
-          card.onclick = () => openContent(item.id);
-          container.appendChild(card);
-        });
-      }
-
-      function openContent(id) {
-        const item = contents.find(c => c.id === id);
-        if (!item) return;
-
-        document.getElementById('viewTitle').textContent = item.title || '';
+      published.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'window-card';
         
-        const coverContainer = document.getElementById('viewCoverContainer');
-        if (item.coverUrl) {
-          coverContainer.innerHTML = `<img src="${item.coverUrl}" style="max-width:100%; height:auto; border-radius:8px; margin-top:1rem;">`;
-        } else {
-          coverContainer.innerHTML = '';
-        }
+        const coverHtml = item.coverUrl 
+          ? `<img src="${item.coverUrl}" alt="${item.title}" class="card-cover-img">`
+          : '';
 
-        document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo sem texto.</p>';
-        navigateTo('contentView');
+        card.innerHTML = `
+          <div class="window-header">
+            <span>Módulo</span>
+            <span>🗔</span>
+          </div>
+          ${coverHtml}
+          <div class="window-body">
+            <h3 class="window-title">${item.title || ''}</h3>
+            <p class="window-desc">${item.desc || ''}</p>
+          </div>
+        `;
+        card.onclick = () => openContent(item.id);
+        container.appendChild(card);
+      });
+    }
+
+    function openContent(id) {
+      const item = contents.find(c => c.id === id);
+      if (!item) return;
+
+      document.getElementById('viewTitle').textContent = item.title || '';
+      
+      const coverContainer = document.getElementById('viewCoverContainer');
+      if (item.coverUrl) {
+        coverContainer.innerHTML = `<img src="${item.coverUrl}" style="max-width:100%; height:auto; border-radius:8px; margin-top:1rem;">`;
+      } else {
+        coverContainer.innerHTML = '';
       }
 
-      function updateStats() {
-        document.getElementById('statTotal').textContent = contents.length;
-        document.getElementById('statPublished').textContent = contents.filter(c => c.status === 'Publicado').length;
-        document.getElementById('statDrafts').textContent = contents.filter(c => c.status === 'Rascunho').length;
-      }
+      document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo sem texto.</p>';
+      navigateTo('contentView');
+    }
 
-      function initAdmin() {
-        const loginForm = document.getElementById('loginForm');
+    function updateStats() {
+      const statTotal = document.getElementById('statTotal');
+      const statPublished = document.getElementById('statPublished');
+      const statDrafts = document.getElementById('statDrafts');
+
+      if (statTotal) statTotal.textContent = contents.length;
+      if (statPublished) statPublished.textContent = contents.filter(c => c.status === 'Publicado').length;
+      if (statDrafts) statDrafts.textContent = contents.filter(c => c.status === 'Rascunho').length;
+    }
+
+    function initAdmin() {
+      const loginForm = document.getElementById('loginForm');
+      if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
           e.preventDefault();
           const pass = document.getElementById('inputPassword').value;
@@ -850,8 +410,10 @@
             alert('Senha incorreta!');
           }
         });
+      }
 
-        const form = document.getElementById('contentForm');
+      const form = document.getElementById('contentForm');
+      if (form) {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           const btnSubmit = document.getElementById('btnSubmitForm');
@@ -883,129 +445,129 @@
             resetForm();
           } catch (err) {
             console.error(err);
-            alert('Erro ao salvar no banco de dados. Verifique o console.');
+            alert('Erro ao salvar no banco de dados. Verifique a conexão.');
           } finally {
             btnSubmit.disabled = false;
             btnSubmit.textContent = 'Salvar Conteúdo';
           }
         });
       }
+    }
 
-      function logoutAdmin() {
-        document.getElementById('adminLoginBox').style.display = 'block';
-        document.getElementById('adminPanel').style.display = 'none';
+    function logoutAdmin() {
+      document.getElementById('adminLoginBox').style.display = 'block';
+      document.getElementById('adminPanel').style.display = 'none';
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('adminTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      contents.forEach(item => {
+        const tr = document.createElement('tr');
+        const coverThumb = item.coverUrl 
+          ? `<img src="${item.coverUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">`
+          : '—';
+
+        tr.innerHTML = `
+          <td>${coverThumb}</td>
+          <td><strong>${item.title || ''}</strong></td>
+          <td>${item.status || ''}</td>
+          <td>
+            <button class="btn-action btn-secondary" onclick="window.App.editItem('${item.id}')">✏️ Editar</button>
+            <button class="btn-action btn-secondary" onclick="window.App.deleteItem('${item.id}')">🗑️ Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function editItem(id) {
+      const item = contents.find(c => c.id === id);
+      if (!item) return;
+
+      document.getElementById('editId').value = item.id;
+      document.getElementById('inputTitle').value = item.title || '';
+      document.getElementById('inputDesc').value = item.desc || '';
+      document.getElementById('inputStatus').value = item.status || 'Publicado';
+      document.getElementById('editorContent').innerHTML = item.body || '';
+      document.getElementById('currentCoverUrl').value = item.coverUrl || '';
+
+      const preview = document.getElementById('coverPreviewContainer');
+      if (item.coverUrl) {
+        preview.innerHTML = `<img src="${item.coverUrl}" style="height:60px; border-radius:4px;">`;
+      } else {
+        preview.innerHTML = '';
       }
 
-      function renderAdminTable() {
-        const tbody = document.getElementById('adminTableBody');
-        tbody.innerHTML = '';
+      document.getElementById('formTitle').textContent = '✏️ Editar Conteúdo';
+      document.getElementById('btnCancelEdit').style.display = 'inline-block';
+    }
 
-        contents.forEach(item => {
-          const tr = document.createElement('tr');
-          const coverThumb = item.coverUrl 
-            ? `<img src="${item.coverUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">`
-            : '—';
-
-          tr.innerHTML = `
-            <td>${coverThumb}</td>
-            <td><strong>${item.title || ''}</strong></td>
-            <td>${item.status || ''}</td>
-            <td>
-              <button class="btn-action btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
-              <button class="btn-action btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-      }
-
-      function editItem(id) {
-        const item = contents.find(c => c.id === id);
-        if (!item) return;
-
-        document.getElementById('editId').value = item.id;
-        document.getElementById('inputTitle').value = item.title || '';
-        document.getElementById('inputDesc').value = item.desc || '';
-        document.getElementById('inputStatus').value = item.status || 'Publicado';
-        document.getElementById('editorContent').innerHTML = item.body || '';
-        document.getElementById('currentCoverUrl').value = item.coverUrl || '';
-
-        const preview = document.getElementById('coverPreviewContainer');
-        if (item.coverUrl) {
-          preview.innerHTML = `<img src="${item.coverUrl}" style="height:60px; border-radius:4px;">`;
-        } else {
-          preview.innerHTML = '';
-        }
-
-        document.getElementById('formTitle').textContent = '✏️ Editar Conteúdo';
-        document.getElementById('btnCancelEdit').style.display = 'inline-block';
-      }
-
-      async function deleteItem(id) {
-        if (confirm('Deseja realmente excluir este conteúdo permanentemente?')) {
-          try {
-            await ContentRepository.delete(id);
-          } catch (err) {
-            console.error(err);
-            alert('Erro ao excluir o item.');
-          }
-        }
-      }
-
-      function resetForm() {
-        document.getElementById('contentForm').reset();
-        document.getElementById('editId').value = '';
-        document.getElementById('currentCoverUrl').value = '';
-        document.getElementById('coverPreviewContainer').innerHTML = '';
-        document.getElementById('editorContent').innerHTML = '';
-        document.getElementById('formTitle').textContent = '➕ Criar Novo Conteúdo';
-        document.getElementById('btnCancelEdit').style.display = 'none';
-      }
-
-      function execEditorCmd(command, value = null) {
-        document.execCommand(command, false, value);
-      }
-
-      function triggerImageUpload() {
-        document.getElementById('imageInput').click();
-      }
-
-      async function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-          try {
-            const url = await ContentRepository.uploadFile(file, 'editor_images');
-            execEditorCmd('insertImage', url);
-          } catch (err) {
-            console.error(err);
-            alert('Erro ao enviar imagem no editor.');
-          }
+    async function deleteItem(id) {
+      if (confirm('Deseja realmente excluir este conteúdo permanentemente?')) {
+        try {
+          await ContentRepository.delete(id);
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao excluir o item.');
         }
       }
+    }
 
-      function init() {
-        initTheme();
-        initSidebar();
-        initAdmin();
-        initFirebaseListener();
+    function resetForm() {
+      document.getElementById('contentForm').reset();
+      document.getElementById('editId').value = '';
+      document.getElementById('currentCoverUrl').value = '';
+      document.getElementById('coverPreviewContainer').innerHTML = '';
+      document.getElementById('editorContent').innerHTML = '';
+      document.getElementById('formTitle').textContent = '➕ Criar Novo Conteúdo';
+      document.getElementById('btnCancelEdit').style.display = 'none';
+    }
+
+    function execEditorCmd(command, value = null) {
+      document.execCommand(command, false, value);
+    }
+
+    function triggerImageUpload() {
+      document.getElementById('imageInput').click();
+    }
+
+    async function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        try {
+          const url = await ContentRepository.uploadFile(file, 'editor_images');
+          execEditorCmd('insertImage', url);
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao enviar imagem no editor.');
+        }
       }
+    }
 
-      window.App = {
-        init,
-        navigateTo,
-        toggleSidebar,
-        handleSearch,
-        logoutAdmin,
-        editItem,
-        deleteItem,
-        resetForm,
-        execEditorCmd,
-        triggerImageUpload,
-        handleImageUpload
-      };
+    /* OBJETO GLOBAL */
+    window.App = {
+      navigateTo,
+      toggleSidebar,
+      handleSearch,
+      logoutAdmin,
+      editItem,
+      deleteItem,
+      resetForm,
+      execEditorCmd,
+      triggerImageUpload,
+      handleImageUpload
+    };
 
-      init();
-    })();
+    /* INICIALIZAÇÃO */
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initSidebar();
+      initAdmin();
+      initFirebaseListener();
+    });
   </script>
 </body>
 </html>
