@@ -3,108 +3,584 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Atividades</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Escravo, Nem Pensar!</title>
+  <style>
+    :root {
+      --fundo: #F4E7C8;
+      --fundo-claro: #FFF7E6;
+      --branco: #FFFFFF;
+      --terracota: #B94E2E;
+      --terracota-escuro: #963B24;
+      --laranja-terra: #D87532;
+      --azul-marinho: #142B3D;
+      --azul-marinho-claro: #1D3A4D;
+      --bege: #F5DDA5;
+      --bege-claro: #FFF1CC;
+      --texto: #142B3D;
+      --texto-secundario: #5C4635;
+      --ocre: #C58A35;
+      --amarelo-sol: #E6A83B;
+      --vermelho: #A63D2F;
+      --card-border: rgba(185, 78, 46, 0.2);
+      --sidebar-width: 260px;
+      --sidebar-collapsed-width: 70px;
+      --header-height: 60px;
+    }
+
+    [data-theme="dark"] {
+      --fundo: #111820;
+      --fundo-claro: #18232C;
+      --branco: #FFFFFF;
+      --terracota: #D66A43;
+      --terracota-escuro: #B84E30;
+      --laranja-terra: #D98A45;
+      --azul-marinho: #E7D3A5;
+      --azul-marinho-claro: #F1DFC0;
+      --bege: #FFFFFF;
+      --bege-claro: #FFFFFF;
+      --texto: #FFFFFF;
+      --texto-secundario: #D8C9B5;
+      --ocre: #D49A43;
+      --amarelo-sol: #E5AE4A;
+      --card-border: rgba(214, 106, 67, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--fundo-claro);
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background-color: var(--terracota);
+      color: var(--bege-claro);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--bege-claro);
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3rem;
+      border-radius: 4px;
+    }
+
+    .icon-btn:hover, .icon-btn:focus-visible {
+      background-color: var(--terracota-escuro);
+      outline: 2px solid var(--bege-claro);
+    }
+
+    .header-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .theme-btn {
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+      border: 1px solid var(--laranja-terra);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* SIDEBAR & OVERLAY */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 85;
+      display: none;
+    }
+
+    aside {
+      position: fixed;
+      top: var(--header-height);
+      bottom: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+      z-index: 90;
+      transition: width 0.25s ease, transform 0.25s ease;
+    }
+
+    body.sidebar-collapsed aside {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      padding-top: 1rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.85rem 1.25rem;
+      color: var(--bege-claro);
+      text-decoration: none;
+      cursor: pointer;
+      gap: 1rem;
+      white-space: nowrap;
+      border-left: 4px solid transparent;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background-color: var(--azul-marinho-claro);
+      border-left-color: var(--laranja-terra);
+    }
+
+    body.sidebar-collapsed .nav-text {
+      display: none;
+    }
+
+    /* MAIN */
+    main {
+      margin-top: var(--header-height);
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+      width: 100%;
+      transition: margin-left 0.25s ease;
+    }
+
+    body.sidebar-collapsed main {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .hero-banner {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-banner h1 {
+      color: var(--terracota);
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* CARDS COMO JANELAS DE CONTEÚDO */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .window-card {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    }
+
+    .window-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--terracota);
+    }
+
+    .window-header {
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-cover-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .window-body {
+      padding: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .window-title {
+      color: var(--terracota);
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .window-desc {
+      color: var(--texto-secundario);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    /* ÁREA DE EXIBIÇÃO DE CONTEÚDO ENRIQUECIDO */
+    .content-area {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      padding: 2rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    .content-area img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin: 1rem 0;
+      display: block;
+    }
+
+    .btn-action {
+      background-color: var(--terracota);
+      color: var(--bege-claro);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+
+    }
+
+    .btn-action:hover {
+      background-color: var(--terracota-escuro);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--terracota);
+      color: var(--texto);
+    }
+
+    /* EDITOR VISUAL DE TEXTO (WYSIWYG) */
+    .editor-container {
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      overflow: hidden;
+      background-color: var(--fundo-claro);
+    }
+
+    .editor-toolbar {
+      background-color: var(--fundo);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.5rem;
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .editor-toolbar button {
+      background: var(--fundo-claro);
+      border: 1px solid var(--card-border);
+      color: var(--texto);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .editor-toolbar button:hover {
+      background-color: var(--terracota);
+      color: var(--bege-claro);
+    }
+
+    .editor-content {
+      min-height: 200px;
+      padding: 1rem;
+      outline: none;
+      color: var(--texto);
+    }
+
+    /* LOGIN & TABELA ADMINISTRATIVA */
+    .admin-card {
+      background-color: var(--fundo);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 4px;
+      border: 1px solid var(--card-border);
+      background-color: var(--fundo-claro);
+      color: var(--texto);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--fundo);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .admin-table th, .admin-table td {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .admin-table th {
+      background-color: var(--azul-marinho);
+      color: var(--bege-claro);
+    }
+
+    .stats-container {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-box {
+      background-color: var(--fundo);
+      border: 1px solid var(--card-border);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      flex: 1;
+    }
+
+    .stat-box span {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--texto-secundario);
+    }
+
+    .stat-box strong {
+      font-size: 1.5rem;
+      color: var(--terracota);
+    }
+
+    /* MOBILE ADJUSTMENTS */
+    @media (max-width: 768px) {
+      aside {
+        transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
+      }
+      body.sidebar-open aside { transform: translateX(0); }
+      body.sidebar-open .overlay { display: block; }
+      main { margin-left: 0 !important; }
+      .stats-container { flex-direction: column; gap: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
 
-  <aside class="sidebar">
-    <h2>Painel</h2>
+  <div class="overlay" id="overlay" onclick="App.toggleSidebar()"></div>
+
+  <header>
+    <div class="header-left">
+      <button class="icon-btn" id="btnToggleSidebar" aria-label="Abrir ou recolher menu lateral">☰</button>
+      <div class="header-title">Escravo, Nem Pensar!</div>
+    </div>
+    <button class="theme-btn" id="btnToggleTheme" aria-label="Alternar tema">Modo Escuro</button>
+  </header>
+
+  <aside aria-label="Menu principal">
     <nav>
-      <div class="nav-item active" data-target="homeView" onclick="App.navigateTo('homeView')">🏠 Início</div>
-      <div class="nav-item" data-target="adminView" onclick="App.navigateTo('adminView')">⚙️ Administração</div>
+      <a class="nav-item active" data-target="home">
+        <span>🏠</span>
+        <span class="nav-text">Início</span>
+      </a>
+      <a class="nav-item" data-target="about">
+        <span>📖</span>
+        <span class="nav-text">Sobre o projeto</span>
+      </a>
+      <a class="nav-item" data-target="admin">
+        <span>🔐</span>
+        <span class="nav-text">Administração</span>
+      </a>
     </nav>
-    <br>
-    <button class="btn btn-secondary" id="btnToggleTheme" onclick="App.toggleTheme()">Modo Escuro</button>
   </aside>
 
-  <main class="main-content">
-    
-    <section id="homeView" class="page active">
-      <h1>Atividades e Conteúdos</h1>
-      <input type="text" id="searchInput" class="form-control" placeholder="Buscar conteúdos..." oninput="App.handleSearch()" style="max-width: 300px; margin-bottom: 1rem;">
-      <div id="cardsContainer" class="cards-grid"></div>
+  <main>
+    <!-- PÁGINA INICIAL -->
+    <section id="home" class="page active">
+      <div class="hero-banner">
+        <h1>Projeto Escravo, Nem Pensar!</h1>
+        <p style="color: var(--texto-secundario);">
+          Plataforma de conteúdos educativos e informativos para a prevenção ao trabalho escravo e promoção dos direitos humanos.
+        </p>
+      </div>
+      <h2>Módulos e Atividades</h2>
+      <br>
+      <div class="form-group" style="max-width: 320px;">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar por título ou palavra-chave..." oninput="App.handleSearch()">
+      </div>
+      <br>
+      <div class="cards-grid" id="cardsContainer"></div>
     </section>
 
+    <!-- SOBRE O PROJETO -->
+    <section id="about" class="page">
+      <h1>Sobre o projeto</h1>
+      <div class="content-area">
+        <p>O <strong>Escravo, Nem Pensar!</strong> é um programa de educação dedicado à prevenção do trabalho escravo no Brasil.</p>
+        <br>
+        <p>Esta plataforma foi desenvolvida de forma modular para organizar e disponibilizar atividades, textos de apoio, fotos e materiais interativos sobre direitos humanos e trabalho digno.</p>
+      </div>
+    </section>
+
+    <!-- VISUALIZADOR DE CONTEÚDO -->
     <section id="contentView" class="page">
-      <button class="btn btn-secondary" onclick="App.navigateTo('homeView')">← Voltar</button>
-      <h1 id="viewTitle" style="margin-top: 1rem;"></h1>
+      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar para o início</button>
+      <h1 id="viewTitle" style="margin-top: 1rem; color: var(--terracota);"></h1>
       <div id="viewCoverContainer"></div>
-      <div id="viewBody" style="margin-top: 1.5rem;"></div>
+      <div class="content-area" id="viewBody"></div>
     </section>
 
-    <section id="adminView" class="page">
-      <h1>Administração de Conteúdo</h1>
+    <!-- ÁREA DO ADMINISTRADOR -->
+    <section id="admin" class="page">
+      <h1>🔐 Área do Administrador</h1>
+      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Gerencie o conteúdo exibido nos cards da tela inicial.</p>
 
-      <div id="adminLoginBox" style="max-width: 350px; background: var(--bg-card); padding: 1.5rem; border: 1px solid var(--cor-borda); border-radius: 8px;">
+      <!-- PAINEL DE LOGIN -->
+      <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
         <h3>Acesso Restrito</h3>
+        <br>
         <form id="loginForm">
           <div class="form-group">
             <label for="inputPassword">Senha de Acesso</label>
-            <input type="password" id="inputPassword" class="form-control" required autocomplete="current-password">
+            <input type="password" id="inputPassword" required placeholder="Digite a senha (padrão: admin123)" autocomplete="current-password">
           </div>
-          <button type="submit" class="btn">Entrar</button>
+          <button type="submit" class="btn-action">Entrar</button>
         </form>
       </div>
 
+      <!-- PAINEL ADMINISTRATIVO -->
       <div id="adminPanel" style="display: none;">
-        <button class="btn btn-secondary" onclick="App.logoutAdmin()">Sair do Painel</button>
-        
-        <div style="display: flex; gap: 2rem; margin-top: 1rem;">
-          <p>Total: <strong id="statTotal">0</strong></p>
-          <p>Publicados: <strong id="statPublished">0</strong></p>
-          <p>Rascunhos: <strong id="statDrafts">0</strong></p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <span>Sessão ativa como <strong>Administrador</strong></span>
+          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
         </div>
 
-        <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--cor-borda);">
-
-        <h2 id="formTitle">➕ Criar Novo Conteúdo</h2>
-        <form id="contentForm">
-          <input type="hidden" id="editId">
-          <input type="hidden" id="currentCoverUrl">
-
-          <div class="form-group">
-            <label>Título</label>
-            <input type="text" id="inputTitle" class="form-control" required>
+        <div class="stats-container">
+          <div class="stat-box">
+            <span>Total de Conteúdos</span>
+            <strong id="statTotal">0</strong>
           </div>
-
-          <div class="form-group">
-            <label>Descrição Curta</label>
-            <input type="text" id="inputDesc" class="form-control" required>
+          <div class="stat-box">
+            <span>Publicados</span>
+            <strong id="statPublished">0</strong>
           </div>
-
-          <div class="form-group">
-            <label>Status</label>
-            <select id="inputStatus" class="form-control">
-              <option value="Publicado">Publicado</option>
-              <option value="Rascunho">Rascunho</option>
-            </select>
+          <div class="stat-box">
+            <span>Rascunhos</span>
+            <strong id="statDrafts">0</strong>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label>Imagem de Capa</label>
-            <input type="file" id="coverInput" class="form-control" accept="image/*">
-            <div id="coverPreviewContainer" style="margin-top: 0.5rem;"></div>
-          </div>
+        <div class="admin-card">
+          <h3 id="formTitle">➕ Criar Novo Conteúdo</h3>
+          <br>
+          <form id="contentForm">
+            <input type="hidden" id="editId">
+            <input type="hidden" id="currentCoverUrl">
 
-          <div class="form-group">
-            <label>Corpo do Conteúdo</label>
-            <div class="toolbar">
-              <button type="button" class="btn btn-secondary" onclick="App.execEditorCmd('bold')"><b>B</b></button>
-              <button type="button" class="btn btn-secondary" onclick="App.execEditorCmd('italic')"><i>I</i></button>
-              <button type="button" class="btn btn-secondary" onclick="App.execEditorCmd('insertUnorderedList')">• Lista</button>
-              <button type="button" class="btn btn-secondary" onclick="App.triggerImageUpload()">🖼️ Add Imagem</button>
-              <input type="file" id="imageInput" style="display:none;" accept="image/*" onchange="App.handleImageUpload(event)">
+            <div class="form-group">
+              <label for="inputTitle">Título da Atividade / Card</label>
+              <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
             </div>
-            <div id="editorContent" class="editor-box" contenteditable="true"></div>
-          </div>
+            
+            <div class="form-group">
+              <label for="inputDesc">Descrição Curta (Aparece no Card)</label>
+              <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
+            </div>
 
-          <button type="submit" id="btnSubmitForm" class="btn">Salvar Conteúdo</button>
-          <button type="button" id="btnCancelEdit" class="btn btn-secondary" style="display:none;" onclick="App.resetForm()">Cancelar</button>
-        </form>
+            <div class="form-group">
+              <label for="inputStatus">Status</label>
+              <select id="inputStatus">
+                <option value="Publicado">Publicado</option>
+                <option value="Rascunho">Rascunho</option>
+              </select>
+            </div>
 
-        <h2 style="margin-top: 2.5rem;">Conteúdos Cadastrados</h2>
-        <table>
+            <div class="form-group">
+              <label for="coverInput">Imagem de Capa do Card</label>
+              <input type="file" id="coverInput" accept="image/*">
+              <div id="coverPreviewContainer" style="margin-top: 0.5rem;"></div>
+            </div>
+
+            <div class="form-group">
+              <label>Conteúdo Completo (Editor Visual)</label>
+              <div class="editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" onclick="App.execEditorCmd('bold')" title="Negrito">B</button>
+                  <button type="button" onclick="App.execEditorCmd('italic')" title="Itálico">I</button>
+                  <button type="button" onclick="App.execEditorCmd('underline')" title="Sublinhado">U</button>
+                  <button type="button" onclick="App.execEditorCmd('insertUnorderedList')" title="Lista">• Lista</button>
+                  <button type="button" onclick="App.triggerImageUpload()" title="Inserir Imagem">📷 Imagem</button>
+                  <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="App.handleImageUpload(event)">
+                </div>
+                <div id="editorContent" class="editor-content" contenteditable="true"></div>
+              </div>
+            </div>
+
+            <button type="submit" id="btnSubmitForm" class="btn-action">Salvar Conteúdo</button>
+            <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
+          </form>
+        </div>
+
+        <h3>Conteúdos Cadastrados</h3>
+        <br>
+        <table class="admin-table">
           <thead>
             <tr>
               <th>Capa</th>
@@ -117,193 +593,184 @@
         </table>
       </div>
     </section>
-
   </main>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getFirestore, 
-      collection, 
-      addDoc, 
-      updateDoc, 
-      deleteDoc, 
-      doc, 
-      onSnapshot 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { 
-      getStorage, 
-      ref, 
-      uploadBytes, 
-      getDownloadURL 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_PROJETO.firebaseapp.com",
-      projectId: "SEU_PROJETO",
-      storageBucket: "SEU_PROJETO.appspot.com",
-      messagingSenderId: "SEU_SENDER_ID",
-      appId: "SEU_APP_ID"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    const ADMIN_PASSWORD_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
-
-    async function hashPassword(str) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(str);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-    }
-
-    window.ContentRepository = {
-      subscribe(callback) {
-        return onSnapshot(collection(db, "contents"), (snapshot) => {
-          const list = snapshot.docs.map(docSnap => ({
-            id: docSnap.id,
-            ...docSnap.data()
-          }));
-          callback(list);
+  <script>
+    /* CAMADA DE DADOS E PERSISTÊNCIA */
+    const ContentRepository = {
+      defaultContents: [
+        {
+          id: '1',
+          title: 'Atividade 01 — Trabalho Digno',
+          desc: 'Aprenda a reconhecer situações de exploração e os conceitos básicos de trabalho escravo contemporâneo.',
+          status: 'Publicado',
+          coverUrl: '',
+          body: '<h2>Trabalho Digno</h2><p>Este é o conteúdo estruturado da Atividade 01. O editor visual permite formatar textos e adicionar imagens de apoio.</p>'
+        },
+        {
+          id: '2',
+          title: 'Atividade 02 — Direitos Humanos',
+          desc: 'Entenda como os direitos fundamentais garantem a dignidade no trabalho e na sociedade.',
+          status: 'Publicado',
+          coverUrl: '',
+          body: '<h2>Direitos Humanos</h2><p>Conteúdo da Atividade 02 em estrutura pronta para expansão.</p>'
+        }
+      ],
+      async getAll() {
+        const stored = localStorage.getItem('enp_contents');
+        return stored ? JSON.parse(stored) : this.defaultContents;
+      },
+      async saveAll(contents) {
+        localStorage.setItem('enp_contents', JSON.stringify(contents));
+      },
+      fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
         });
-      },
-      async create(data) {
-        return await addDoc(collection(db, "contents"), data);
-      },
-      async update(id, data) {
-        const docRef = doc(db, "contents", id);
-        return await updateDoc(docRef, data);
-      },
-      async delete(id) {
-        const docRef = doc(db, "contents", id);
-        return await deleteDoc(docRef);
-      },
-      async uploadFile(file, path) {
-        const fileRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(fileRef, file);
-        return await getDownloadURL(snapshot.ref);
       }
     };
 
-    let contents = [];
-    let filteredContents = [];
+    /* APLICAÇÃO PRINCIPAL */
+    const App = (() => {
+      let contents = [];
+      let filteredContents = [];
+      let isAdminAuthenticated = false;
 
-    function initFirebaseListener() {
-      ContentRepository.subscribe((data) => {
-        contents = data;
+      async function loadContents() {
+        contents = await ContentRepository.getAll();
         filteredContents = [...contents];
         renderCards();
         renderAdminTable();
         updateStats();
-      });
-    }
-
-    function navigateTo(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-
-      const targetPage = document.getElementById(pageId);
-      if (targetPage) targetPage.classList.add('active');
-
-      const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
-      if (navLink) navLink.classList.add('active');
-    }
-
-    function toggleTheme() {
-      const btnTheme = document.getElementById('btnToggleTheme');
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      btnTheme.textContent = next === 'light' ? 'Modo Escuro' : 'Modo Claro';
-    }
-
-    function handleSearch() {
-      const searchInput = document.getElementById('searchInput');
-      if (!searchInput) return;
-      const query = searchInput.value.toLowerCase().trim();
-      filteredContents = contents.filter(item => 
-        (item.title && item.title.toLowerCase().includes(query)) || 
-        (item.desc && item.desc.toLowerCase().includes(query))
-      );
-      renderCards();
-    }
-
-    function renderCards() {
-      const container = document.getElementById('cardsContainer');
-      if (!container) return;
-      container.innerHTML = '';
-
-      const published = filteredContents.filter(item => item.status === 'Publicado');
-
-      if (published.length === 0) {
-        container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum conteúdo publicado encontrado.</p>';
-        return;
       }
 
-      published.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'window-card';
+      async function persistContents() {
+        await ContentRepository.saveAll(contents);
+        handleSearch();
+        renderAdminTable();
+        updateStats();
+      }
+
+      function navigateTo(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) targetPage.classList.add('active');
+
+        const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
+        if (navLink) navLink.classList.add('active');
+
+        if (window.innerWidth <= 768) {
+          document.body.classList.remove('sidebar-open');
+        }
+      }
+
+      function initTheme() {
+        const btnTheme = document.getElementById('btnToggleTheme');
+        btnTheme.addEventListener('click', () => {
+          const current = document.documentElement.getAttribute('data-theme');
+          const next = current === 'light' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', next);
+          btnTheme.textContent = next === 'light' ? 'Modo Escuro' : 'Modo Claro';
+        });
+      }
+
+      function initSidebar() {
+        const btnToggle = document.getElementById('btnToggleSidebar');
+        btnToggle.addEventListener('click', toggleSidebar);
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.addEventListener('click', () => navigateTo(item.dataset.target));
+        });
+      }
+
+      function toggleSidebar() {
+        if (window.innerWidth <= 768) {
+          document.body.classList.toggle('sidebar-open');
+        } else {
+          document.body.classList.toggle('sidebar-collapsed');
+        }
+      }
+
+      function handleSearch() {
+        const searchInput = document.getElementById('searchInput');
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        filteredContents = contents.filter(item => 
+          item.title.toLowerCase().includes(query) || 
+          item.desc.toLowerCase().includes(query)
+        );
+        renderCards();
+      }
+
+      function renderCards() {
+        const container = document.getElementById('cardsContainer');
+        container.innerHTML = '';
+
+        const published = filteredContents.filter(item => item.status === 'Publicado');
+
+        if (published.length === 0) {
+          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum conteúdo encontrado.</p>';
+          return;
+        }
+
+        published.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'window-card';
+          
+          const coverHtml = item.coverUrl 
+            ? `<img src="${item.coverUrl}" alt="${item.title}" class="card-cover-img">`
+            : '';
+
+          card.innerHTML = `
+            <div class="window-header">
+              <span>Atividade</span>
+              <span>🗔</span>
+            </div>
+            ${coverHtml}
+            <div class="window-body">
+              <h3 class="window-title">${item.title}</h3>
+              <p class="window-desc">${item.desc}</p>
+            </div>
+          `;
+          card.onclick = () => openContent(item.id);
+          container.appendChild(card);
+        });
+      }
+
+      function openContent(id) {
+        const item = contents.find(c => c.id === id);
+        if (!item) return;
+
+        document.getElementById('viewTitle').textContent = item.title;
         
-        const coverHtml = item.coverUrl 
-          ? `<img src="${item.coverUrl}" alt="${item.title}" class="card-cover-img">`
-          : '';
+        const coverContainer = document.getElementById('viewCoverContainer');
+        if (item.coverUrl) {
+          coverContainer.innerHTML = `<img src="${item.coverUrl}" style="max-width:100%; height:auto; border-radius:8px; margin-top:1rem;">`;
+        } else {
+          coverContainer.innerHTML = '';
+        }
 
-        card.innerHTML = `
-          <div class="window-header">
-            <span>Atividade</span>
-            <span>🗔</span>
-          </div>
-          ${coverHtml}
-          <div class="window-body">
-            <h3 class="window-title">${item.title || ''}</h3>
-            <p class="window-desc">${item.desc || ''}</p>
-          </div>
-        `;
-        card.onclick = () => openContent(item.id);
-        container.appendChild(card);
-      });
-    }
-
-    function openContent(id) {
-      const item = contents.find(c => c.id === id);
-      if (!item) return;
-
-      document.getElementById('viewTitle').textContent = item.title || '';
-      
-      const coverContainer = document.getElementById('viewCoverContainer');
-      if (item.coverUrl) {
-        coverContainer.innerHTML = `<img src="${item.coverUrl}" style="max-width:100%; height:auto; border-radius:8px; margin-top:1rem;">`;
-      } else {
-        coverContainer.innerHTML = '';
+        document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo sem texto.</p>';
+        navigateTo('contentView');
       }
 
-      document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Conteúdo sem texto.</p>';
-      navigateTo('contentView');
-    }
+      function updateStats() {
+        document.getElementById('statTotal').textContent = contents.length;
+        document.getElementById('statPublished').textContent = contents.filter(c => c.status === 'Publicado').length;
+        document.getElementById('statDrafts').textContent = contents.filter(c => c.status === 'Rascunho').length;
+      }
 
-    function updateStats() {
-      const statTotal = document.getElementById('statTotal');
-      const statPublished = document.getElementById('statPublished');
-      const statDrafts = document.getElementById('statDrafts');
-
-      if (statTotal) statTotal.textContent = contents.length;
-      if (statPublished) statPublished.textContent = contents.filter(c => c.status === 'Publicado').length;
-      if (statDrafts) statDrafts.textContent = contents.filter(c => c.status === 'Rascunho').length;
-    }
-
-    function initAdmin() {
-      const loginForm = document.getElementById('loginForm');
-      if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
+      function initAdmin() {
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', (e) => {
           e.preventDefault();
-          const passInput = document.getElementById('inputPassword').value;
-          const hashedInput = await hashPassword(passInput);
-
-          if (hashedInput === ADMIN_PASSWORD_HASH) {
+          const pass = document.getElementById('inputPassword').value;
+          if (pass === 'admin123') {
+            isAdminAuthenticated = true;
             document.getElementById('adminLoginBox').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('inputPassword').value = '';
@@ -311,160 +778,155 @@
             alert('Senha incorreta!');
           }
         });
-      }
 
-      const form = document.getElementById('contentForm');
-      if (form) {
+        const form = document.getElementById('contentForm');
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const btnSubmit = document.getElementById('btnSubmitForm');
-          btnSubmit.disabled = true;
-          btnSubmit.textContent = 'Salvando...';
+          
+          const editId = document.getElementById('editId').value;
+          const title = document.getElementById('inputTitle').value;
+          const desc = document.getElementById('inputDesc').value;
+          const status = document.getElementById('inputStatus').value;
+          const body = document.getElementById('editorContent').innerHTML;
+          let coverUrl = document.getElementById('currentCoverUrl').value;
 
-          try {
-            const editId = document.getElementById('editId').value;
-            const title = document.getElementById('inputTitle').value;
-            const desc = document.getElementById('inputDesc').value;
-            const status = document.getElementById('inputStatus').value;
-            const body = document.getElementById('editorContent').innerHTML;
-            let coverUrl = document.getElementById('currentCoverUrl').value || '';
-
-            const coverInput = document.getElementById('coverInput');
-            if (coverInput.files && coverInput.files[0]) {
-              coverUrl = await ContentRepository.uploadFile(coverInput.files[0], 'covers');
-            }
-
-            const payload = { title, desc, status, body, coverUrl };
-
-            if (editId) {
-              await ContentRepository.update(editId, payload);
-            } else {
-              await ContentRepository.create(payload);
-            }
-
-            alert('Conteúdo salvo com sucesso!');
-            resetForm();
-          } catch (err) {
-            console.error(err);
-            alert('Erro ao salvar no banco de dados. Verifique a conexão e as regras do Firebase.');
-          } finally {
-            btnSubmit.disabled = false;
-            btnSubmit.textContent = 'Salvar Conteúdo';
+          const coverInput = document.getElementById('coverInput');
+          if (coverInput.files && coverInput.files[0]) {
+            coverUrl = await ContentRepository.fileToBase64(coverInput.files[0]);
           }
+
+          if (editId) {
+            const item = contents.find(c => c.id === editId);
+            if (item) {
+              item.title = title;
+              item.desc = desc;
+              item.status = status;
+              item.body = body;
+              item.coverUrl = coverUrl;
+            }
+          } else {
+            contents.push({
+              id: Date.now().toString(),
+              title,
+              desc,
+              status,
+              body,
+              coverUrl
+            });
+          }
+
+          await persistContents();
+          resetForm();
         });
       }
-    }
 
-    function logoutAdmin() {
-      document.getElementById('adminLoginBox').style.display = 'block';
-      document.getElementById('adminPanel').style.display = 'none';
-    }
-
-    function renderAdminTable() {
-      const tbody = document.getElementById('adminTableBody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      contents.forEach(item => {
-        const tr = document.createElement('tr');
-        const coverThumb = item.coverUrl 
-          ? `<img src="${item.coverUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">`
-          : '—';
-
-        tr.innerHTML = `
-          <td>${coverThumb}</td>
-          <td><strong>${item.title || ''}</strong></td>
-          <td>${item.status || ''}</td>
-          <td>
-            <button class="btn btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
-            <button class="btn btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function editItem(id) {
-      const item = contents.find(c => c.id === id);
-      if (!item) return;
-
-      document.getElementById('editId').value = item.id;
-      document.getElementById('inputTitle').value = item.title || '';
-      document.getElementById('inputDesc').value = item.desc || '';
-      document.getElementById('inputStatus').value = item.status || 'Publicado';
-      document.getElementById('editorContent').innerHTML = item.body || '';
-      document.getElementById('currentCoverUrl').value = item.coverUrl || '';
-
-      const preview = document.getElementById('coverPreviewContainer');
-      if (item.coverUrl) {
-        preview.innerHTML = `<img src="${item.coverUrl}" style="height:60px; border-radius:4px;">`;
-      } else {
-        preview.innerHTML = '';
+      function logoutAdmin() {
+        isAdminAuthenticated = false;
+        document.getElementById('adminLoginBox').style.display = 'block';
+        document.getElementById('adminPanel').style.display = 'none';
       }
 
-      document.getElementById('formTitle').textContent = '✏️ Editar Conteúdo';
-      document.getElementById('btnCancelEdit').style.display = 'inline-block';
-    }
+      function renderAdminTable() {
+        const tbody = document.getElementById('adminTableBody');
+        tbody.innerHTML = '';
 
-    async function deleteItem(id) {
-      if (confirm('Deseja realmente excluir este conteúdo permanentemente?')) {
-        try {
-          await ContentRepository.delete(id);
-        } catch (err) {
-          console.error(err);
-          alert('Erro ao excluir o item.');
+        contents.forEach(item => {
+          const tr = document.createElement('tr');
+          const coverThumb = item.coverUrl 
+            ? `<img src="${item.coverUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">`
+            : '—';
+
+          tr.innerHTML = `
+            <td>${coverThumb}</td>
+            <td><strong>${item.title}</strong></td>
+            <td>${item.status}</td>
+            <td>
+              <button class="btn-action btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
+              <button class="btn-action btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function editItem(id) {
+        const item = contents.find(c => c.id === id);
+        if (!item) return;
+
+        document.getElementById('editId').value = item.id;
+        document.getElementById('inputTitle').value = item.title;
+        document.getElementById('inputDesc').value = item.desc;
+        document.getElementById('inputStatus').value = item.status;
+        document.getElementById('editorContent').innerHTML = item.body || '';
+        document.getElementById('currentCoverUrl').value = item.coverUrl || '';
+
+        const preview = document.getElementById('coverPreviewContainer');
+        if (item.coverUrl) {
+          preview.innerHTML = `<img src="${item.coverUrl}" style="height:60px; border-radius:4px;">`;
+        } else {
+          preview.innerHTML = '';
+        }
+
+        document.getElementById('formTitle').textContent = '✏️ Editar Conteúdo';
+        document.getElementById('btnCancelEdit').style.display = 'inline-block';
+      }
+
+      async function deleteItem(id) {
+        if (confirm('Deseja realmente excluir este conteúdo?')) {
+          contents = contents.filter(c => c.id !== id);
+          await persistContents();
         }
       }
-    }
 
-    function resetForm() {
-      document.getElementById('contentForm').reset();
-      document.getElementById('editId').value = '';
-      document.getElementById('currentCoverUrl').value = '';
-      document.getElementById('coverPreviewContainer').innerHTML = '';
-      document.getElementById('editorContent').innerHTML = '';
-      document.getElementById('formTitle').textContent = '➕ Criar Novo Conteúdo';
-      document.getElementById('btnCancelEdit').style.display = 'none';
-    }
+      function resetForm() {
+        document.getElementById('contentForm').reset();
+        document.getElementById('editId').value = '';
+        document.getElementById('currentCoverUrl').value = '';
+        document.getElementById('coverPreviewContainer').innerHTML = '';
+        document.getElementById('editorContent').innerHTML = '';
+        document.getElementById('formTitle').textContent = '➕ Criar Novo Conteúdo';
+        document.getElementById('btnCancelEdit').style.display = 'none';
+      }
 
-    function execEditorCmd(command, value = null) {
-      document.execCommand(command, false, value);
-    }
+      function execEditorCmd(command, value = null) {
+        document.execCommand(command, false, value);
+      }
 
-    function triggerImageUpload() {
-      document.getElementById('imageInput').click();
-    }
+      function triggerImageUpload() {
+        document.getElementById('imageInput').click();
+      }
 
-    async function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        try {
-          const url = await ContentRepository.uploadFile(file, 'editor_images');
-          execEditorCmd('insertImage', url);
-        } catch (err) {
-          console.error(err);
-          alert('Erro ao enviar imagem no editor.');
+      async function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const base64 = await ContentRepository.fileToBase64(file);
+          execEditorCmd('insertImage', base64);
         }
       }
-    }
 
-    window.App = {
-      navigateTo,
-      toggleTheme,
-      handleSearch,
-      logoutAdmin,
-      editItem,
-      deleteItem,
-      resetForm,
-      execEditorCmd,
-      triggerImageUpload,
-      handleImageUpload
-    };
+      function init() {
+        initTheme();
+        initSidebar();
+        initAdmin();
+        loadContents();
+      }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      initAdmin();
-      initFirebaseListener();
-    });
+      return {
+        init,
+        navigateTo,
+        toggleSidebar,
+        logoutAdmin,
+        editItem,
+        deleteItem,
+        resetForm,
+        execEditorCmd,
+        triggerImageUpload,
+        handleImageUpload,
+        handleSearch
+      };
+    })();
+
+    document.addEventListener('DOMContentLoaded', App.init);
   </script>
 </body>
 </html>
