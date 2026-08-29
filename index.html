@@ -3,390 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escravo, Nem Pensar!</title>
+  <title>Painel de Atividades</title>
   <style>
     :root {
-      --fundo: #F4E7C8;
-      --fundo-claro: #FFF7E6;
-      --branco: #FFFFFF;
-      --terracota: #B94E2E;
-      --terracota-escuro: #963B24;
-      --laranja-terra: #D87532;
-      --azul-marinho: #142B3D;
-      --azul-marinho-claro: #1D3A4D;
-      --bege: #F5DDA5;
-      --bege-claro: #FFF1CC;
-      --texto: #142B3D;
-      --texto-secundario: #5C4635;
-      --ocre: #C58A35;
-      --amarelo-sol: #E6A83B;
-      --vermelho: #A63D2F;
-      --card-border: rgba(185, 78, 46, 0.2);
-      --sidebar-width: 260px;
-      --sidebar-collapsed-width: 70px;
-      --header-height: 60px;
+      --bg-principal: #f4f6f8;
+      --bg-card: #ffffff;
+      --texto-principal: #1a1a1a;
+      --texto-secundario: #666666;
+      --cor-primaria: #0066cc;
+      --cor-borda: #dddddd;
     }
 
     [data-theme="dark"] {
-      --fundo: #111820;
-      --fundo-claro: #18232C;
-      --branco: #FFFFFF;
-      --terracota: #D66A43;
-      --terracota-escuro: #B84E30;
-      --laranja-terra: #D98A45;
-      --azul-marinho: #E7D3A5;
-      --azul-marinho-claro: #F1DFC0;
-      --bege: #FFFFFF;
-      --bege-claro: #FFFFFF;
-      --texto: #FFFFFF;
-      --texto-secundario: #D8C9B5;
-      --ocre: #D49A43;
-      --amarelo-sol: #E5AE4A;
-      --card-border: rgba(214, 106, 67, 0.3);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+      --bg-principal: #121212;
+      --bg-card: #1e1e1e;
+      --texto-principal: #f4f6f8;
+      --texto-secundario: #aaa;
+      --cor-primaria: #3794ff;
+      --cor-borda: #333333;
     }
 
     body {
+      margin: 0;
       font-family: system-ui, -apple-system, sans-serif;
-      background-color: var(--fundo-claro);
-      color: var(--texto);
+      background-color: var(--bg-principal);
+      color: var(--texto-principal);
+      display: flex;
       min-height: 100vh;
-      display: flex;
     }
 
-    /* HEADER */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--header-height);
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.25rem;
-      z-index: 100;
+    .sidebar {
+      width: 250px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--cor-borda);
+      padding: 1rem;
+      box-sizing: border-box;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--bege-claro);
-      font-size: 1.4rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.3rem;
-      border-radius: 4px;
-    }
-
-    .icon-btn:hover, .icon-btn:focus-visible {
-      background-color: var(--terracota-escuro);
-      outline: 2px solid var(--bege-claro);
-    }
-
-    .header-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .theme-btn {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      border: 1px solid var(--laranja-terra);
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    /* SIDEBAR & OVERLAY */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 85;
-      display: none;
-    }
-
-    aside {
-      position: fixed;
-      top: var(--header-height);
-      bottom: 0;
-      left: 0;
-      width: var(--sidebar-width);
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      z-index: 90;
-      transition: width 0.25s ease, transform 0.25s ease;
-    }
-
-    body.sidebar-collapsed aside {
-      width: var(--sidebar-collapsed-width);
-    }
-
-    nav {
-      display: flex;
-      flex-direction: column;
-      padding-top: 1rem;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 0.85rem 1.25rem;
-      color: var(--bege-claro);
-      text-decoration: none;
-      cursor: pointer;
-      gap: 1rem;
-      white-space: nowrap;
-      border-left: 4px solid transparent;
-    }
-
-    .nav-item:hover, .nav-item.active {
-      background-color: var(--azul-marinho-claro);
-      border-left-color: var(--laranja-terra);
-    }
-
-    body.sidebar-collapsed .nav-text {
-      display: none;
-    }
-
-    /* MAIN */
-    main {
-      margin-top: var(--header-height);
-      margin-left: var(--sidebar-width);
+    .main-content {
+      flex: 1;
       padding: 2rem;
-      width: 100%;
-      transition: margin-left 0.25s ease;
-    }
-
-    body.sidebar-collapsed main {
-      margin-left: var(--sidebar-collapsed-width);
+      box-sizing: border-box;
     }
 
     .page { display: none; }
     .page.active { display: block; }
 
-    .hero-banner {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-    }
-
-    .hero-banner h1 {
-      color: var(--terracota);
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-    }
-
-    /* BARRA DE PESQUISA */
-    .search-bar {
-      margin-bottom: 1.5rem;
-      width: 100%;
-      max-width: 500px;
-    }
-
-    .search-bar input {
-      width: 100%;
+    .nav-item {
+      display: block;
       padding: 0.75rem 1rem;
+      color: var(--texto-principal);
+      text-decoration: none;
       border-radius: 6px;
-      border: 1px solid var(--card-border);
-      background-color: var(--fundo);
-      color: var(--texto);
-      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
     }
 
-    /* CARDS COMO JANELAS DE CONTEÚDO */
+    .nav-item.active, .nav-item:hover {
+      background-color: var(--cor-primaria);
+      color: white;
+    }
+
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1.5rem;
+      margin-top: 1rem;
     }
 
     .window-card {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
+      background: var(--bg-card);
+      border: 1px solid var(--cor-borda);
       border-radius: 8px;
       overflow: hidden;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.04);
-    }
-
-    .window-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--terracota);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     .window-header {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      padding: 0.6rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
+      background: #eee;
+      padding: 0.5rem 1rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      font-size: 0.85rem;
+      color: #333;
     }
 
     .card-cover-img {
       width: 100%;
       height: 160px;
       object-fit: cover;
-      border-bottom: 1px solid var(--card-border);
     }
 
-    .window-body {
-      padding: 1.25rem;
-      flex-grow: 1;
-    }
-
-    .window-title {
-      color: var(--terracota);
-      font-size: 1.15rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .window-desc {
-      color: var(--texto-secundario);
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
-    /* ÁREA DE EXIBIÇÃO DE CONTEÚDO ENRIQUECIDO */
-    .content-area {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 2rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-      line-height: 1.6;
-    }
-
-    .content-area img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 6px;
-      margin: 1rem 0;
-      display: block;
-    }
-
-    .btn-action {
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .btn-action:hover {
-      background-color: var(--terracota-escuro);
-    }
-
-    .btn-secondary {
-      background-color: transparent;
-      border: 1px solid var(--terracota);
-      color: var(--texto);
-    }
-
-    /* PAINEL DE ESTATÍSTICAS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-box {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 1.25rem;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--terracota);
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--texto-secundario);
-    }
-
-    /* EDITOR VISUAL DE TEXTO */
-    .editor-container {
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      overflow: hidden;
-      background-color: var(--fundo-claro);
-    }
-
-    .editor-toolbar {
-      background-color: var(--fundo);
-      border-bottom: 1px solid var(--card-border);
-      padding: 0.5rem;
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .editor-toolbar button {
-      background: var(--fundo-claro);
-      border: 1px solid var(--card-border);
-      color: var(--texto);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.85rem;
-    }
-
-    .editor-toolbar button:hover {
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-    }
-
-    .editor-content {
-      min-height: 200px;
-      padding: 1rem;
-      outline: none;
-      color: var(--texto);
-    }
-
-    /* LOGIN & TABELA ADMINISTRATIVA */
-    .admin-card {
-      background-color: var(--fundo);
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--card-border);
-    }
+    .window-body { padding: 1rem; }
+    .window-title { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+    .window-desc { margin: 0; color: var(--texto-secundario); font-size: 0.9rem; }
 
     .form-group {
       margin-bottom: 1rem;
@@ -394,213 +105,165 @@
 
     .form-group label {
       display: block;
-      margin-bottom: 0.3rem;
-      font-weight: 600;
-      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
     }
 
-    .form-group input, .form-group select {
+    .form-control {
       width: 100%;
-      padding: 0.6rem;
+      padding: 0.5rem;
+      border: 1px solid var(--cor-borda);
       border-radius: 4px;
-      border: 1px solid var(--card-border);
-      background-color: var(--fundo-claro);
-      color: var(--texto);
+      box-sizing: border-box;
+      background: var(--bg-card);
+      color: var(--texto-principal);
     }
 
-    .admin-table {
+    .editor-box {
+      min-height: 150px;
+      border: 1px solid var(--cor-borda);
+      padding: 0.75rem;
+      border-radius: 4px;
+      background: var(--bg-card);
+    }
+
+    .toolbar {
+      margin-bottom: 0.5rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      background: var(--cor-primaria);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary { background: #6c757d; }
+
+    table {
       width: 100%;
       border-collapse: collapse;
-      background-color: var(--fundo);
-      border-radius: 8px;
-      overflow: hidden;
+      margin-top: 1rem;
     }
 
-    .admin-table th, .admin-table td {
-      padding: 0.8rem 1rem;
+    th, td {
+      border: 1px solid var(--cor-borda);
+      padding: 0.75rem;
       text-align: left;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .admin-table th {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-    }
-
-    /* MOBILE ADJUSTMENTS */
-    @media (max-width: 768px) {
-      aside {
-        transform: translateX(-100%);
-        width: var(--sidebar-width) !important;
-      }
-      body.sidebar-open aside { transform: translateX(0); }
-      body.sidebar-open .overlay { display: block; }
-      main { margin-left: 0 !important; padding: 1.25rem 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="overlay" id="overlay" onclick="App.toggleSidebar()"></div>
-
-  <header>
-    <div class="header-left">
-      <button class="icon-btn" id="btnToggleSidebar" aria-label="Abrir ou recolher menu lateral" onclick="App.toggleSidebar()">☰</button>
-      <div class="header-title">Escravo, Nem Pensar!</div>
-    </div>
-    <button class="theme-btn" id="btnToggleTheme" aria-label="Alternar tema" onclick="App.toggleTheme()">Modo Escuro</button>
-  </header>
-
-  <aside aria-label="Menu principal">
+  <aside class="sidebar">
+    <h2>Painel</h2>
     <nav>
-      <a class="nav-item active" data-target="home" onclick="App.navigateTo('home')">
-        <span>🏠</span>
-        <span class="nav-text">Início</span>
-      </a>
-      <a class="nav-item" data-target="about" onclick="App.navigateTo('about')">
-        <span>📖</span>
-        <span class="nav-text">Sobre o projeto</span>
-      </a>
-      <a class="nav-item" data-target="admin" onclick="App.navigateTo('admin')">
-        <span>🔐</span>
-        <span class="nav-text">Administração</span>
-      </a>
+      <div class="nav-item active" data-target="homeView" onclick="App.navigateTo('homeView')">🏠 Início</div>
+      <div class="nav-item" data-target="adminView" onclick="App.navigateTo('adminView')">⚙️ Administração</div>
     </nav>
+    <br>
+    <button class="btn btn-secondary" id="btnToggleTheme" onclick="App.toggleTheme()">Modo Escuro</button>
   </aside>
 
-  <main>
-    <!-- PÁGINA INICIAL -->
-    <section id="home" class="page active">
-      <div class="hero-banner">
-        <h1>Projeto Escravo, Nem Pensar!</h1>
-        <p style="color: var(--texto-secundario);">
-          Plataforma de conteúdos educativos e informativos para a prevenção ao trabalho escravo e promoção dos direitos humanos.
-        </p>
-      </div>
-
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="🔎 Pesquisar atividades por título ou descrição..." oninput="App.handleSearch()">
-      </div>
-
-      <h2>Módulos e Atividades</h2>
-      <br>
-      <div class="cards-grid" id="cardsContainer"></div>
+  <main class="main-content">
+    
+    <!-- PÁGINA INICIAL / CARDS -->
+    <section id="homeView" class="page active">
+      <h1>Atividades e Conteúdos</h1>
+      <input type="text" id="searchInput" class="form-control" placeholder="Buscar conteúdos..." oninput="App.handleSearch()" style="max-width: 300px; margin-bottom: 1rem;">
+      <div id="cardsContainer" class="cards-grid"></div>
     </section>
 
-    <!-- SOBRE O PROJETO -->
-    <section id="about" class="page">
-      <h1>Sobre o projeto</h1>
-      <div class="content-area">
-        <p>O <strong>Escravo, Nem Pensar!</strong> é um programa de educação dedicado à prevenção do trabalho escravo no Brasil.</p>
-        <br>
-        <p>Esta plataforma foi desenvolvida de forma modular para organizar e disponibilizar atividades, textos de apoio, fotos e materiais interativos sobre direitos humanos e trabalho digno.</p>
-      </div>
-    </section>
-
-    <!-- VISUALIZADOR DE CONTEÚDO -->
+    <!-- PÁGINA VISUALIZAR CONTEÚDO -->
     <section id="contentView" class="page">
-      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar para o início</button>
-      <h1 id="viewTitle" style="margin-top: 1rem; color: var(--terracota);"></h1>
+      <button class="btn btn-secondary" onclick="App.navigateTo('homeView')">← Voltar</button>
+      <h1 id="viewTitle" style="margin-top: 1rem;"></h1>
       <div id="viewCoverContainer"></div>
-      <div class="content-area" id="viewBody"></div>
+      <div id="viewBody" style="margin-top: 1.5rem;"></div>
     </section>
 
-    <!-- ÁREA DO ADMINISTRADOR -->
-    <section id="admin" class="page">
-      <h1>🔐 Área do Administrador</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Gerencie o conteúdo exibido nos cards da tela inicial.</p>
+    <!-- PÁGINA DE ADMINISTRAÇÃO -->
+    <section id="adminView" class="page">
+      <h1>Administração de Conteúdo</h1>
 
-      <!-- PAINEL DE LOGIN -->
-      <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
+      <!-- LOGIN CAIXA -->
+      <div id="adminLoginBox" style="max-width: 350px; background: var(--bg-card); padding: 1.5rem; border: 1px solid var(--cor-borda); border-radius: 8px;">
         <h3>Acesso Restrito</h3>
-        <br>
         <form id="loginForm">
           <div class="form-group">
             <label for="inputPassword">Senha de Acesso</label>
-            <input type="password" id="inputPassword" required placeholder="Digite a senha (padrão: admin123)">
+            <!-- Tipo password para esconder os caracteres -->
+            <input type="password" id="inputPassword" class="form-control" required autocomplete="current-password">
           </div>
-          <button type="submit" class="btn-action">Entrar</button>
+          <button type="submit" class="btn">Entrar</button>
         </form>
       </div>
 
-      <!-- PAINEL ADMINISTRATIVO -->
+      <!-- PAINEL ADMIN (OCULTO INICIALMENTE) -->
       <div id="adminPanel" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <span>Sessão ativa como <strong>Administrador</strong></span>
-          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
+        <button class="btn btn-secondary" onclick="App.logoutAdmin()">Sair do Painel</button>
+        
+        <div style="display: flex; gap: 2rem; margin-top: 1rem;">
+          <p>Total: <strong id="statTotal">0</strong></p>
+          <p>Publicados: <strong id="statPublished">0</strong></p>
+          <p>Rascunhos: <strong id="statDrafts">0</strong></p>
         </div>
 
-        <!-- PAINEL DE ESTATÍSTICAS -->
-        <div class="stats-grid">
-          <div class="stat-box">
-            <div class="stat-number" id="statTotal">0</div>
-            <div class="stat-label">Total de Conteúdos</div>
+        <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--cor-borda);">
+
+        <!-- FORMULÁRIO DE CONTEÚDO -->
+        <h2 id="formTitle">➕ Criar Novo Conteúdo</h2>
+        <form id="contentForm">
+          <input type="hidden" id="editId">
+          <input type="hidden" id="currentCoverUrl">
+
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" id="inputTitle" class="form-control" required>
           </div>
-          <div class="stat-box">
-            <div class="stat-number" id="statPublished">0</div>
-            <div class="stat-label">Publicados</div>
+
+          <div class="form-group">
+            <label>Descrição Curta</label>
+            <input type="text" id="inputDesc" class="form-control" required>
           </div>
-          <div class="stat-box">
-            <div class="stat-number" id="statDrafts">0</div>
-            <div class="stat-label">Rascunhos</div>
+
+          <div class="form-group">
+            <label>Status</label>
+            <select id="inputStatus" class="form-control">
+              <option value="Publicado">Publicado</option>
+              <option value="Rascunho">Rascunho</option>
+            </select>
           </div>
-        </div>
 
-        <div class="admin-card">
-          <h3 id="formTitle">➕ Criar Novo Conteúdo</h3>
-          <br>
-          <form id="contentForm">
-            <input type="hidden" id="editId">
-            <div class="form-group">
-              <label for="inputTitle">Título da Atividade / Card</label>
-              <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
+          <div class="form-group">
+            <label>Imagem de Capa</label>
+            <input type="file" id="coverInput" class="form-control" accept="image/*">
+            <div id="coverPreviewContainer" style="margin-top: 0.5rem;"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Corpo do Conteúdo</label>
+            <div class="toolbar">
+              <button type="button" class="btn btn-secondary" onclick="App.execEditorCmd('bold')"><b>B</b></button>
+              <button type="button" class="btn btn-secondary" onclick="App.execEditorCmd('italic')"><i>I</i></button>
+              <button type="button" class="btn btn-secondary" onclick="App.execEditorCmd('insertUnorderedList')">• Lista</button>
+              <button type="button" class="btn btn-secondary" onclick="App.triggerImageUpload()">🖼️ Add Imagem</button>
+              <input type="file" id="imageInput" style="display:none;" accept="image/*" onchange="App.handleImageUpload(event)">
             </div>
-            <div class="form-group">
-              <label for="inputDesc">Descrição Curta (Aparece no Card)</label>
-              <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
-            </div>
+            <div id="editorContent" class="editor-box" contenteditable="true"></div>
+          </div>
 
-            <!-- UPLOAD DA IMAGEM DE CAPA DO CARD -->
-            <div class="form-group">
-              <label for="coverInput">Imagem de Capa do Card</label>
-              <input type="file" id="coverInput" accept="image/*">
-              <input type="hidden" id="currentCoverUrl">
-              <div id="coverPreviewContainer" style="margin-top: 0.5rem;"></div>
-            </div>
+          <button type="submit" id="btnSubmitForm" class="btn">Salvar Conteúdo</button>
+          <button type="button" id="btnCancelEdit" class="btn btn-secondary" style="display:none;" onclick="App.resetForm()">Cancelar</button>
+        </form>
 
-            <div class="form-group">
-              <label for="inputStatus">Status</label>
-              <select id="inputStatus">
-                <option value="Publicado">Publicado</option>
-                <option value="Rascunho">Rascunho</option>
-              </select>
-            </div>
-
-            <!-- EDITOR VISUAL RICH TEXT -->
-            <div class="form-group">
-              <label>Conteúdo Completo</label>
-              <div class="editor-container">
-                <div class="editor-toolbar">
-                  <button type="button" onclick="App.execEditorCmd('bold')" title="Negrito">B</button>
-                  <button type="button" onclick="App.execEditorCmd('italic')" title="Itálico">I</button>
-                  <button type="button" onclick="App.execEditorCmd('underline')" title="Sublinhado">U</button>
-                  <button type="button" onclick="App.execEditorCmd('formatBlock', 'H2')" title="Título">H2</button>
-                  <button type="button" onclick="App.execEditorCmd('formatBlock', 'P')" title="Parágrafo">P</button>
-                  <button type="button" onclick="App.triggerImageUpload()" title="Inserir Imagem">📷 Imagem</button>
-                  <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="App.handleImageUpload(event)">
-                </div>
-                <div id="editorContent" class="editor-content" contenteditable="true"></div>
-              </div>
-            </div>
-
-            <button type="submit" class="btn-action" id="btnSubmitForm">Salvar Conteúdo</button>
-            <button type="button" class="btn-action btn-secondary" id="btnCancelEdit" style="display:none;" onclick="App.resetForm()">Cancelar</button>
-          </form>
-        </div>
-
-        <h3>Conteúdos Cadastrados</h3>
-        <br>
-        <table class="admin-table">
+        <h2 style="margin-top: 2.5rem;">Conteúdos Cadastrados</h2>
+        <table>
           <thead>
             <tr>
               <th>Capa</th>
@@ -613,78 +276,82 @@
         </table>
       </div>
     </section>
+
   </main>
 
-  <!-- FIREBASE SDKs & LÓGICA DA APLICAÇÃO -->
+  <!-- SDK Firebase Versão 9+ via CDN (Nativo / Modular) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
-      getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      updateDoc, 
+      deleteDoc, 
+      doc, 
+      onSnapshot 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { 
-      getStorage, ref, uploadBytes, getDownloadURL 
+      getStorage, 
+      ref, 
+      uploadBytes, 
+      getDownloadURL 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
+    // INSIRA AS SUAS CONFIGURAÇÕES DO FIREBASE CONSOLE AQUI
     const firebaseConfig = {
-      apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
-      authDomain: "escravonempensar-d87c3.firebaseapp.com",
-      databaseURL: "https://escravonempensar-d87c3-default-rtdb.firebaseio.com",
-      projectId: "escravonempensar-d87c3",
-      storageBucket: "escravonempensar-d87c3.firebasestorage.app",
-      messagingSenderId: "132266908384",
-      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85",
-      measurementId: "G-7QJ9XL751E"
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_PROJETO.firebaseapp.com",
+      projectId: "SEU_PROJETO",
+      storageBucket: "SEU_PROJETO.appspot.com",
+      messagingSenderId: "SEU_SENDER_ID",
+      appId: "SEU_APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const storage = getStorage(app);
-    const contentsRef = collection(db, "contents");
 
-    /* REPOSITÓRIO FIRESTORE / STORAGE */
-    const ContentRepository = {
+    // Hash SHA-256 da senha 'admin123'
+    const ADMIN_PASSWORD_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
+
+    async function hashPassword(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    // Repositório de Dados
+    window.ContentRepository = {
       subscribe(callback) {
-        return onSnapshot(contentsRef, (snapshot) => {
-          const contents = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
+        return onSnapshot(collection(db, "contents"), (snapshot) => {
+          const list = snapshot.docs.map(docSnap => ({
+            id: docSnap.id,
+            ...docSnap.data()
           }));
-          callback(contents);
-        }, (error) => {
-          console.error("Erro na sincronização:", error);
+          callback(list);
         });
       },
-
-      async uploadFile(file, path) {
-        try {
-          const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-          await uploadBytes(storageRef, file);
-          return await getDownloadURL(storageRef);
-        } catch (err) {
-          console.error("Erro no upload do arquivo:", err);
-          throw err;
-        }
-      },
-
       async create(data) {
-        return await addDoc(contentsRef, {
-          ...data,
-          createdAt: serverTimestamp()
-        });
+        return await addDoc(collection(db, "contents"), data);
       },
-
       async update(id, data) {
         const docRef = doc(db, "contents", id);
         return await updateDoc(docRef, data);
       },
-
       async delete(id) {
         const docRef = doc(db, "contents", id);
-        return await deleteDoc(docRef);
+        return await deleteDoc(docRef, id);
+      },
+      async uploadFile(file, path) {
+        const fileRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
+        const snapshot = await uploadBytes(fileRef, file);
+        return await getDownloadURL(snapshot.ref);
       }
     };
 
-    /* ESTADO DA APLICAÇÃO E INTERFACE */
     let contents = [];
     let filteredContents = [];
 
@@ -707,10 +374,6 @@
 
       const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
       if (navLink) navLink.classList.add('active');
-
-      if (window.innerWidth <= 768) {
-        document.body.classList.remove('sidebar-open');
-      }
     }
 
     function toggleTheme() {
@@ -719,14 +382,6 @@
       const next = current === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', next);
       btnTheme.textContent = next === 'light' ? 'Modo Escuro' : 'Modo Claro';
-    }
-
-    function toggleSidebar() {
-      if (window.innerWidth <= 768) {
-        document.body.classList.toggle('sidebar-open');
-      } else {
-        document.body.classList.toggle('sidebar-collapsed');
-      }
     }
 
     function handleSearch() {
@@ -806,10 +461,12 @@
     function initAdmin() {
       const loginForm = document.getElementById('loginForm');
       if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const pass = document.getElementById('inputPassword').value;
-          if (pass === 'admin123') {
+          const passInput = document.getElementById('inputPassword').value;
+          const hashedInput = await hashPassword(passInput);
+
+          if (hashedInput === ADMIN_PASSWORD_HASH) {
             document.getElementById('adminLoginBox').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('inputPassword').value = '';
@@ -852,7 +509,7 @@
             resetForm();
           } catch (err) {
             console.error(err);
-            alert('Erro ao salvar no banco de dados. Verifique a conexão.');
+            alert('Erro ao salvar no banco de dados. Verifique a conexão e as regras do Firebase.');
           } finally {
             btnSubmit.disabled = false;
             btnSubmit.textContent = 'Salvar Conteúdo';
@@ -882,8 +539,8 @@
           <td><strong>${item.title || ''}</strong></td>
           <td>${item.status || ''}</td>
           <td>
-            <button class="btn-action btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
-            <button class="btn-action btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
+            <button class="btn btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
+            <button class="btn btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -954,11 +611,10 @@
       }
     }
 
-    /* VINCULAÇÃO GLOBAL PARA ACESSO VIA EVENTOS INLINE (onclick, oninput) */
+    // Exposição das funções para o escopo global (App)
     window.App = {
       navigateTo,
       toggleTheme,
-      toggleSidebar,
       handleSearch,
       logoutAdmin,
       editItem,
@@ -969,7 +625,7 @@
       handleImageUpload
     };
 
-    /* INICIALIZAÇÃO */
+    // Inicialização do painel
     document.addEventListener('DOMContentLoaded', () => {
       initAdmin();
       initFirebaseListener();
