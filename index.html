@@ -12,6 +12,8 @@
       --texto-secundario: #666666;
       --cor-primaria: #0066cc;
       --cor-borda: #dddddd;
+      --bg-header-card: #eeeeee;
+      --texto-header-card: #333333;
     }
 
     [data-theme="dark"] {
@@ -21,6 +23,8 @@
       --texto-secundario: #aaa;
       --cor-primaria: #3794ff;
       --cor-borda: #333333;
+      --bg-header-card: #2a2a2a;
+      --texto-header-card: #e0e0e0;
     }
 
     body {
@@ -30,6 +34,7 @@
       color: var(--texto-principal);
       display: flex;
       min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .sidebar {
@@ -57,6 +62,7 @@
       border-radius: 6px;
       margin-bottom: 0.5rem;
       cursor: pointer;
+      transition: background-color 0.2s;
     }
 
     .nav-item.active, .nav-item:hover {
@@ -78,15 +84,22 @@
       overflow: hidden;
       cursor: pointer;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .window-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .window-header {
-      background: #eee;
+      background: var(--bg-header-card);
       padding: 0.5rem 1rem;
       display: flex;
       justify-content: space-between;
       font-size: 0.85rem;
-      color: #333;
+      color: var(--texto-header-card);
+      border-bottom: 1px solid var(--cor-borda);
     }
 
     .card-cover-img {
@@ -125,6 +138,7 @@
       padding: 0.75rem;
       border-radius: 4px;
       background: var(--bg-card);
+      color: var(--texto-principal);
     }
 
     .toolbar {
@@ -140,8 +154,11 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-weight: 500;
+      transition: opacity 0.2s;
     }
 
+    .btn:hover { opacity: 0.9; }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: #6c757d; }
 
@@ -149,12 +166,18 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
+      background: var(--bg-card);
     }
 
     th, td {
       border: 1px solid var(--cor-borda);
       padding: 0.75rem;
       text-align: left;
+    }
+
+    th {
+      background-color: var(--bg-header-card);
+      color: var(--texto-header-card);
     }
   </style>
 </head>
@@ -197,7 +220,6 @@
         <form id="loginForm">
           <div class="form-group">
             <label for="inputPassword">Senha de Acesso</label>
-            <!-- Tipo password para esconder os caracteres -->
             <input type="password" id="inputPassword" class="form-control" required autocomplete="current-password">
           </div>
           <button type="submit" class="btn">Entrar</button>
@@ -279,7 +301,6 @@
 
   </main>
 
-  <!-- SDK Firebase Versão 9+ via CDN (Nativo / Modular) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -298,7 +319,6 @@
       getDownloadURL 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // INSIRA AS SUAS CONFIGURAÇÕES DO FIREBASE CONSOLE AQUI
     const firebaseConfig = {
       apiKey: "SUA_API_KEY",
       authDomain: "SEU_PROJETO.firebaseapp.com",
@@ -312,7 +332,6 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // Hash SHA-256 da senha 'admin123'
     const ADMIN_PASSWORD_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
 
     async function hashPassword(str) {
@@ -323,7 +342,6 @@
       return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
     }
 
-    // Repositório de Dados
     window.ContentRepository = {
       subscribe(callback) {
         return onSnapshot(collection(db, "contents"), (snapshot) => {
@@ -343,7 +361,7 @@
       },
       async delete(id) {
         const docRef = doc(db, "contents", id);
-        return await deleteDoc(docRef, id);
+        return await deleteDoc(docRef);
       },
       async uploadFile(file, path) {
         const fileRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
