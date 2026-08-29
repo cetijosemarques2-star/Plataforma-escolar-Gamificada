@@ -226,7 +226,7 @@
         </form>
       </div>
 
-      <!-- PAINEL ADMIN (OCULTO INICIALMENTE) -->
+      <!-- PAINEL ADMIN -->
       <div id="adminPanel" style="display: none;">
         <button class="btn btn-secondary" onclick="App.logoutAdmin()">Sair do Painel</button>
         
@@ -341,8 +341,7 @@
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
     }
-
-    window.ContentRepository = {
+        window.ContentRepository = {
       subscribe(callback) {
         return onSnapshot(collection(db, "contents"), (snapshot) => {
           const list = snapshot.docs.map(docSnap => ({
@@ -629,7 +628,6 @@
       }
     }
 
-    // Exposição das funções para o escopo global (App)
     window.App = {
       navigateTo,
       toggleTheme,
@@ -643,7 +641,6 @@
       handleImageUpload
     };
 
-    // Inicialização do painel
     document.addEventListener('DOMContentLoaded', () => {
       initAdmin();
       initFirebaseListener();
