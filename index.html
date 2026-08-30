@@ -671,7 +671,8 @@
                 <option value="Galeria de Fotos">Galeria de Fotos</option>
                 <option value="Apresentações">Apresentações</option>
                 <option value="Relatos dos estudantes">Relatos dos estudantes</option>
-                <option value="Trabalhos produzidos">Trabalhos produzidos</op              </select>
+                <option value="Trabalhos produzidos">Trabalhos produzidos</option>
+              </select>
             </div>
 
             <div class="form-group">
@@ -717,34 +718,31 @@
     </section>
   </main>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
+    import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
+      authDomain: "escravonempensar-d87c3.firebaseapp.com",
+      databaseURL: "https://escravonempensar-d87c3-default-rtdb.firebaseio.com",
+      projectId: "escravonempensar-d87c3",
+      storageBucket: "escravonempensar-d87c3.firebasestorage.app",
+      messagingSenderId: "132266908384",
+      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85",
+      measurementId: "G-7QJ9XL751E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+
     const App = (() => {
-      // Dados Iniciais (LocalStorage)
-      let items = JSON.parse(localStorage.getItem('enp_items')) || [
-        {
-          id: '1',
-          title: 'Atividade 01 — O que é Trabalho Escravo Contemporâneo?',
-          desc: 'Compreenda os conceitos fundamentais sobre trabalho análogo à escravidão e suas formas de manifestação.',
-          status: 'Publicado',
-          cover: '',
-          body: '<p>O trabalho escravo contemporâneo é uma violação grave dos direitos humanos. Ele se configura por quatro elementos principais:</p><ul><li>Trabalho forçado</li><li>Jornada exaustiva</li><li>Condições degradantes de trabalho</li><li>Restrição de locomoção por dívida</li></ul>'
-        }
-      ];
-
-      let practiceItems = JSON.parse(localStorage.getItem('enp_practice')) || [
-        {
-          id: 'p1',
-          title: 'Culminância do Projeto 2023',
-          category: 'Culminância',
-          desc: 'Apresentação dos trabalhos finais desenvolvidos por todas as turmas ao longo do ano letivo.',
-          cover: '',
-          body: '<p>A culminância reuniu alunos, professores e a comunidade escolar para apresentar cartazes, maquetes e apresentações culturais sobre o combate ao trabalho escravo.</p>'
-        }
-      ];
-
+      let items = [];
+      let practiceItems = [];
       let isAdminLoggedIn = localStorage.getItem('enp_admin_logged') === 'true';
 
-      // Seletores DOM
       const dom = {
         themeBtn: document.getElementById('btnToggleTheme'),
         sidebarBtn: document.getElementById('btnToggleSidebar'),
@@ -756,7 +754,6 @@
         practiceContainer: document.getElementById('practiceContainer'),
         searchInput: document.getElementById('searchInput'),
         
-        // Admin
         loginBox: document.getElementById('adminLoginBox'),
         loginForm: document.getElementById('loginForm'),
         inputPassword: document.getElementById('inputPassword'),
@@ -777,20 +774,28 @@
         btnSubmitForm: document.getElementById('btnSubmitForm'),
         btnCancelEdit: document.getElementById('btnCancelEdit'),
 
-        // Viewer
         viewTitle: document.getElementById('viewTitle'),
         viewMetaInfo: document.getElementById('viewMetaInfo'),
         viewCoverContainer: document.getElementById('viewCoverContainer'),
         viewBody: document.getElementById('viewBody')
       };
 
-      // Salvar dados
-      const saveData = () => {
-        localStorage.setItem('enp_items', JSON.stringify(items));
-        localStorage.setItem('enp_practice', JSON.stringify(practiceItems));
+      const syncWithFirebase = () => {
+        onValue(ref(db, 'activities'), (snapshot) => {
+          const data = snapshot.val();
+          items = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+          renderCards(dom.searchInput.value);
+          if (isAdminLoggedIn) renderAdminTables();
+        });
+
+        onValue(ref(db, 'practice'), (snapshot) => {
+          const data = snapshot.val();
+          practiceItems = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+          renderPracticeCards();
+          if (isAdminLoggedIn) renderAdminTables();
+        });
       };
 
-      // Navegação
       const navigateTo = (pageId) => {
         dom.pages.forEach(p => p.classList.remove('active'));
         const targetPage = document.getElementById(pageId);
@@ -809,11 +814,10 @@
         }
       };
 
-      // Renderização de Cards
       const renderCards = (filterText = '') => {
         const filtered = items.filter(item => 
-          item.title.toLowerCase().includes(filterText.toLowerCase()) || 
-          item.desc.toLowerCase().includes(filterText.toLowerCase())
+          (item.title && item.title.toLowerCase().includes(filterText.toLowerCase())) || 
+          (item.desc && item.desc.toLowerCase().includes(filterText.toLowerCase()))
         );
 
         const buildCardHtml = (item) => `
@@ -856,7 +860,6 @@
         `).join('');
       };
 
-      // Visualizar Conteúdo Detalhado
       const viewContent = (id, type) => {
         const item = type === 'activity' 
           ? items.find(i => i.id === id) 
@@ -872,7 +875,6 @@
         navigateTo('contentView');
       };
 
-      // Painel Administrativo
       const updateAdminState = () => {
         if (isAdminLoggedIn) {
           dom.loginBox.style.display = 'none';
@@ -888,7 +890,6 @@
         dom.statTotal.textContent = items.length;
         dom.statPractice.textContent = practiceItems.length;
 
-        // Tabela de Atividades
         dom.adminTableBody.innerHTML = items.map(item => `
           <tr>
             <td><strong>${item.title}</strong></td>
@@ -900,7 +901,6 @@
           </tr>
         `).join('');
 
-        // Tabela de Práticas
         dom.practiceTableBody.innerHTML = practiceItems.map(item => `
           <tr>
             <td><strong>${item.title}</strong></td>
@@ -912,7 +912,6 @@
         `).join('');
       };
 
-      // Leitura de imagem via FileReader
       const fileToBase64 = (file) => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -920,9 +919,7 @@
         reader.onerror = error => reject(error);
       });
 
-      // Eventos
       const setupEvents = () => {
-        // Toggle Sidebar
         dom.sidebarBtn.addEventListener('click', () => {
           if (window.innerWidth <= 768) {
             document.body.classList.toggle('sidebar-open');
@@ -935,7 +932,6 @@
           document.body.classList.remove('sidebar-open');
         });
 
-        // Alternar Tema
         dom.themeBtn.addEventListener('click', () => {
           const currentTheme = document.documentElement.getAttribute('data-theme');
           const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -943,7 +939,6 @@
           dom.themeBtn.textContent = newTheme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
         });
 
-        // Navegação pelos links
         dom.navItems.forEach(item => {
           item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -952,12 +947,10 @@
           });
         });
 
-        // Busca em tempo real
         dom.searchInput.addEventListener('input', (e) => {
           renderCards(e.target.value);
         });
 
-        // Login Admin
         dom.loginForm.addEventListener('submit', (e) => {
           e.preventDefault();
           if (dom.inputPassword.value === 'admin123') {
@@ -970,7 +963,6 @@
           }
         });
 
-        // Upload de Capa (Atividades)
         dom.coverInput.addEventListener('change', async (e) => {
           const file = e.target.files[0];
           if (file) {
@@ -980,7 +972,6 @@
           }
         });
 
-        // Upload de Imagem no Editor
         dom.imageInput.addEventListener('change', async (e) => {
           const file = e.target.files[0];
           if (file) {
@@ -989,8 +980,7 @@
           }
         });
 
-        // Salvar Atividade Form
-        dom.contentForm.addEventListener('submit', (e) => {
+        dom.contentForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           const id = dom.editId.value;
           const title = document.getElementById('inputTitle').value;
@@ -999,30 +989,18 @@
           const cover = dom.currentCoverUrl.value;
           const body = dom.editorContent.innerHTML;
 
+          const itemData = { title, desc, status, cover, body };
+
           if (id) {
-            const index = items.findIndex(i => i.id === id);
-            if (index !== -1) {
-              items[index] = { id, title, desc, status, cover, body };
-            }
+            await update(ref(db, `activities/${id}`), itemData);
           } else {
-            items.push({
-              id: Date.now().toString(),
-              title,
-              desc,
-              status,
-              cover,
-              body
-            });
+            await push(ref(db, 'activities'), itemData);
           }
 
-          saveData();
-          renderCards();
-          renderAdminTables();
           resetForm();
           alert('Atividade salva com sucesso!');
         });
 
-        // Salvar Projeto na Prática Form
         dom.practiceForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           const title = document.getElementById('practiceTitle').value;
@@ -1035,8 +1013,7 @@
             cover = await fileToBase64(fileInput.files[0]);
           }
 
-          practiceItems.push({
-            id: 'p_' + Date.now(),
+          await push(ref(db, 'practice'), {
             title,
             category,
             desc,
@@ -1044,15 +1021,11 @@
             body: `<p>${desc}</p>`
           });
 
-          saveData();
-          renderPracticeCards();
-          renderAdminTables();
           dom.practiceForm.reset();
           alert('Registro adicionado com sucesso!');
         });
       };
 
-      // Ações públicas para botões inline
       const execEditorCmd = (cmd) => {
         document.execCommand(cmd, false, null);
       };
@@ -1069,11 +1042,13 @@
         document.getElementById('inputTitle').value = item.title;
         document.getElementById('inputDesc').value = item.desc;
         document.getElementById('inputStatus').value = item.status;
-        dom.currentCoverUrl.value = item.cover;
-        dom.editorContent.innerHTML = item.body;
+        dom.currentCoverUrl.value = item.cover || '';
+        dom.editorContent.innerHTML = item.body || '';
 
         if (item.cover) {
           dom.coverPreviewContainer.innerHTML = `<img src="${item.cover}" style="max-height: 100px; border-radius: 4px;">`;
+        } else {
+          dom.coverPreviewContainer.innerHTML = '';
         }
 
         dom.formTitle.textContent = '✏️ Editar Atividade';
@@ -1092,21 +1067,15 @@
         dom.btnCancelEdit.style.display = 'none';
       };
 
-      const deleteItem = (id) => {
+      const deleteItem = async (id) => {
         if (confirm('Tem certeza que deseja excluir esta atividade?')) {
-          items = items.filter(i => i.id !== id);
-          saveData();
-          renderCards();
-          renderAdminTables();
+          await remove(ref(db, `activities/${id}`));
         }
       };
 
-      const deletePracticeItem = (id) => {
+      const deletePracticeItem = async (id) => {
         if (confirm('Tem certeza que deseja excluir este registro?')) {
-          practiceItems = practiceItems.filter(p => p.id !== id);
-          saveData();
-          renderPracticeCards();
-          renderAdminTables();
+          await remove(ref(db, `practice/${id}`));
         }
       };
 
@@ -1124,8 +1093,7 @@
 
       const init = () => {
         setupEvents();
-        renderCards();
-        renderPracticeCards();
+        syncWithFirebase();
         updateAdminState();
       };
 
@@ -1144,7 +1112,9 @@
       };
     })();
 
+    window.App = App;
     document.addEventListener('DOMContentLoaded', App.init);
   </script>
 </body>
-</html>
+  </html>
+  
