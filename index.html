@@ -479,9 +479,7 @@
     <div class="header-left">
       <button class="icon-btn" id="btnToggleSidebar" aria-label="Abrir ou recolher menu lateral">☰</button>
       <div class="header-logos">
-        <!-- Logo da Plataforma (Logo.png) -->
         <img src="Logo.png" alt="Logo Plataforma" class="header-logo" id="platformLogo" onerror="this.style.display='none'">
-        <!-- Logo da Escola (EscolaLogo.png) -->
         <img src="EscolaLogo.png" alt="Logo Escola" class="header-logo" id="schoolLogo" onerror="this.style.display='none'">
       </div>
       <div class="header-title" id="headerTitleText">Escravo, Nem Pensar!</div>
@@ -803,7 +801,27 @@
     </section>
   </main>
 
-  <script>
+  <!-- FIREBASE IMPORTS & APLICAÇÃO INTEGRADA -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
+    import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
+      authDomain: "escravonempensar-d87c3.firebaseapp.com",
+      databaseURL: "https://escravonempensar-d87c3-default-rtdb.firebaseio.com",
+      projectId: "escravonempensar-d87c3",
+      storageBucket: "escravonempensar-d87c3.firebasestorage.app",
+      messagingSenderId: "132266908384",
+      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85",
+      measurementId: "G-7QJ9XL751E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+
     const App = {
       state: {
         activities: [],
@@ -819,68 +837,50 @@
       },
 
       init() {
-        this.loadLocalStorage();
+        this.bindFirebaseListeners();
         this.bindEvents();
-        this.renderAll();
       },
 
-      loadLocalStorage() {
-        const savedActivities = localStorage.getItem('enp_activities');
-        const savedPractice = localStorage.getItem('enp_practice');
-        const savedSettings = localStorage.getItem('enp_settings');
+      bindFirebaseListeners() {
+        const actRef = ref(db, 'activities');
+        onValue(actRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            this.state.activities = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+          } else {
+            this.state.activities = [];
+          }
+          this.renderAll();
+        });
 
-        if (savedActivities) {
-          this.state.activities = JSON.parse(savedActivities);
-        } else {
-          // Dados iniciais de exemplo
-          this.state.activities = [
-            {
-              id: '1',
-              title: 'Atividade 01 — Trabalho Digno',
-              desc: 'Compreenda os conceitos fundamentais sobre direitos trabalhistas.',
-              status: 'Publicado',
-              cover: '',
-              content: '<p>Esta atividade explora as características do trabalho digno e os principais fatores que configuram a exploração e o trabalho análogo à escravidão.</p>'
-            }
-          ];
-          this.saveActivities();
-        }
+        const pracRef = ref(db, 'practice');
+        onValue(pracRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            this.state.practiceItems = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+          } else {
+            this.state.practiceItems = [];
+          }
+          this.renderAll();
+        });
 
-        if (savedPractice) {
-          this.state.practiceItems = JSON.parse(savedPractice);
-        } else {
-          this.state.practiceItems = [
-            {
-              id: '101',
-              title: 'Exposição de Cartazes nas Turmas',
-              category: 'Culminância',
-              desc: 'Alunos apresentaram pesquisas sobre Direitos Humanos.',
-              cover: '',
-              content: '<p>Durante a culminância do projeto, os alunos do ensino fundamental expuseram os cartazes e infográficos criados em sala.</p>'
-            }
-          ];
-          this.savePractice();
-        }
-
-        if (savedSettings) {
-          this.state.settings = JSON.parse(savedSettings);
-        }
-      },
-
-      saveActivities() {
-        localStorage.setItem('enp_activities', JSON.stringify(this.state.activities));
-      },
-
-      savePractice() {
-        localStorage.setItem('enp_practice', JSON.stringify(this.state.practiceItems));
-      },
-
-      saveSettings() {
-        localStorage.setItem('enp_settings', JSON.stringify(this.state.settings));
+        const setRef = ref(db, 'settings');
+        onValue(setRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            this.state.settings = { ...this.state.settings, ...data };
+          }
+          this.applySettings();
+        });
       },
 
       bindEvents() {
-        // Alternar tema escuro/claro
         document.getElementById('btnToggleTheme').addEventListener('click', () => {
           const currentTheme = document.documentElement.getAttribute('data-theme');
           const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -888,7 +888,6 @@
           document.getElementById('btnToggleTheme').textContent = nextTheme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
         });
 
-        // Alternar barra lateral
         const toggleBtn = document.getElementById('btnToggleSidebar');
         const overlay = document.getElementById('overlay');
         
@@ -904,9 +903,8 @@
           document.body.classList.remove('sidebar-open');
         });
 
-        // Navegação das abas/páginas
         document.querySelectorAll('nav .nav-item').forEach(item => {
-          item.addEventListener('click', (e) => {
+          item.addEventListener('click', () => {
             const target = item.getAttribute('data-target');
             this.navigateTo(target);
             if (window.innerWidth <= 768) {
@@ -915,50 +913,50 @@
           });
         });
 
-        // Campo de busca
         document.getElementById('searchInput').addEventListener('input', (e) => {
           this.renderCards(e.target.value);
         });
 
-        // Form Login Admin
         document.getElementById('loginForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const pass = document.getElementById('inputPassword').value;
-          if (pass === 'admin123') { // Senha padrão da aplicação
+          if (pass === 'admin123') {
             this.state.isAdmin = true;
             document.getElementById('adminLoginBox').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             this.populateSettingsForm();
             this.renderAdminTables();
           } else {
-            alert('Senha incorreta! (Dica padrão: admin123)');
+            alert('Senha incorreta!');
           }
         });
 
-        // Form Configurações Gerais
         document.getElementById('settingsForm').addEventListener('submit', (e) => {
           e.preventDefault();
-          this.state.settings.headerTitle = document.getElementById('inputHeaderTitle').value;
-          this.state.settings.aboutText = document.getElementById('aboutEditorContent').innerHTML;
-
+          const headerTitle = document.getElementById('inputHeaderTitle').value;
+          const aboutText = document.getElementById('aboutEditorContent').innerHTML;
           const schoolLogoFile = document.getElementById('inputSchoolLogo').files[0];
+
+          const saveSettingsFirebase = (logoUrl) => {
+            const updatedSettings = {
+              headerTitle,
+              aboutText,
+              schoolLogo: logoUrl !== undefined ? logoUrl : (this.state.settings.schoolLogo || '')
+            };
+            set(ref(db, 'settings'), updatedSettings)
+              .then(() => alert('Configurações salvas no Firebase!'))
+              .catch(err => alert('Erro ao salvar configurações: ' + err.message));
+          };
+
           if (schoolLogoFile) {
             const reader = new FileReader();
-            reader.onload = (evt) => {
-              this.state.settings.schoolLogo = evt.target.result;
-              this.saveSettings();
-              this.applySettings();
-              alert('Configurações salvas!');
-            };
+            reader.onload = (evt) => saveSettingsFirebase(evt.target.result);
             reader.readAsDataURL(schoolLogoFile);
           } else {
-            this.saveSettings();
-            this.applySettings();
-            alert('Configurações salvas!');
+            saveSettingsFirebase();
           }
         });
 
-        // Form Cadastro de Atividades
         document.getElementById('contentForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const editId = document.getElementById('editId').value;
@@ -969,22 +967,24 @@
           const coverFile = document.getElementById('inputCover').files[0];
 
           const processSave = (coverUrl) => {
+            const activityData = {
+              title, desc, status, content,
+              cover: coverUrl || ''
+            };
+
             if (editId) {
-              const idx = this.state.activities.findIndex(a => a.id === editId);
-              if (idx !== -1) {
-                this.state.activities[idx] = { id: editId, title, desc, status, content, cover: coverUrl };
-              }
+              update(ref(db, `activities/${editId}`), activityData)
+                .then(() => {
+                  alert('Atividade atualizada!');
+                  this.resetForm();
+                });
             } else {
-              const newItem = {
-                id: Date.now().toString(),
-                title, desc, status, content, cover: coverUrl
-              };
-              this.state.activities.push(newItem);
+              push(ref(db, 'activities'), activityData)
+                .then(() => {
+                  alert('Atividade criada!');
+                  this.resetForm();
+                });
             }
-            this.saveActivities();
-            this.resetForm();
-            this.renderAll();
-            alert('Atividade salva com sucesso!');
           };
 
           if (coverFile) {
@@ -996,7 +996,6 @@
           }
         });
 
-        // Form Cadastro Projeto na Prática
         document.getElementById('practiceForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const editId = document.getElementById('editPracticeId').value;
@@ -1007,22 +1006,24 @@
           const coverFile = document.getElementById('inputPracticeCover').files[0];
 
           const processSave = (coverUrl) => {
+            const practiceData = {
+              title, category, desc, content,
+              cover: coverUrl || ''
+            };
+
             if (editId) {
-              const idx = this.state.practiceItems.findIndex(p => p.id === editId);
-              if (idx !== -1) {
-                this.state.practiceItems[idx] = { id: editId, title, category, desc, content, cover: coverUrl };
-              }
+              update(ref(db, `practice/${editId}`), practiceData)
+                .then(() => {
+                  alert('Registro atualizado!');
+                  this.resetPracticeForm();
+                });
             } else {
-              const newItem = {
-                id: Date.now().toString(),
-                title, category, desc, content, cover: coverUrl
-              };
-              this.state.practiceItems.push(newItem);
+              push(ref(db, 'practice'), practiceData)
+                .then(() => {
+                  alert('Registro inserido com sucesso!');
+                  this.resetPracticeForm();
+                });
             }
-            this.savePractice();
-            this.resetPracticeForm();
-            this.renderAll();
-            alert('Registro do Projeto na Prática salvo!');
           };
 
           if (coverFile) {
@@ -1048,10 +1049,10 @@
       },
 
       applySettings() {
-        document.getElementById('docTitle').textContent = this.state.settings.headerTitle;
-        document.getElementById('headerTitleText').textContent = this.state.settings.headerTitle;
-        document.getElementById('heroTitleText').textContent = `Projeto ${this.state.settings.headerTitle}`;
-        document.getElementById('aboutPageContent').innerHTML = this.state.settings.aboutText;
+        document.getElementById('docTitle').textContent = this.state.settings.headerTitle || 'Escravo, Nem Pensar!';
+        document.getElementById('headerTitleText').textContent = this.state.settings.headerTitle || 'Escravo, Nem Pensar!';
+        document.getElementById('heroTitleText').textContent = `Projeto ${this.state.settings.headerTitle || 'Escravo, Nem Pensar!'}`;
+        document.getElementById('aboutPageContent').innerHTML = this.state.settings.aboutText || '';
 
         const schoolImg = document.getElementById('schoolLogo');
         if (this.state.settings.schoolLogo) {
@@ -1063,8 +1064,8 @@
       },
 
       populateSettingsForm() {
-        document.getElementById('inputHeaderTitle').value = this.state.settings.headerTitle;
-        document.getElementById('aboutEditorContent').innerHTML = this.state.settings.aboutText;
+        document.getElementById('inputHeaderTitle').value = this.state.settings.headerTitle || '';
+        document.getElementById('aboutEditorContent').innerHTML = this.state.settings.aboutText || '';
       },
 
       renderAll() {
@@ -1193,11 +1194,9 @@
       },
 
       renderAdminTables() {
-        // Estatísticas
         document.getElementById('statTotal').textContent = this.state.activities.length;
         document.getElementById('statPractice').textContent = this.state.practiceItems.length;
 
-        // Tabela Atividades
         const actBody = document.getElementById('adminTableBody');
         actBody.innerHTML = '';
         this.state.activities.forEach(item => {
@@ -1213,7 +1212,6 @@
           actBody.appendChild(tr);
         });
 
-        // Tabela Prática
         const prcBody = document.getElementById('practiceAdminTableBody');
         prcBody.innerHTML = '';
         this.state.practiceItems.forEach(item => {
@@ -1251,9 +1249,9 @@
 
       deleteActivity(id) {
         if (confirm('Tem certeza que deseja excluir esta atividade?')) {
-          this.state.activities = this.state.activities.filter(a => a.id !== id);
-          this.saveActivities();
-          this.renderAll();
+          remove(ref(db, `activities/${id}`))
+            .then(() => alert('Atividade removida!'))
+            .catch(err => alert('Erro ao excluir: ' + err.message));
         }
       },
 
@@ -1287,9 +1285,9 @@
 
       deletePractice(id) {
         if (confirm('Deseja excluir este registro da prática?')) {
-          this.state.practiceItems = this.state.practiceItems.filter(p => p.id !== id);
-          this.savePractice();
-          this.renderAll();
+          remove(ref(db, `practice/${id}`))
+            .then(() => alert('Registro removido!'))
+            .catch(err => alert('Erro ao excluir: ' + err.message));
         }
       },
 
@@ -1309,7 +1307,6 @@
         document.getElementById('inputPassword').value = '';
       },
 
-      // Funções dos Editores WYSIWYG
       execCmd(cmd, value = null) {
         document.execCommand(cmd, false, value);
       },
@@ -1349,7 +1346,8 @@
       }
     };
 
-    // Inicialização da aplicação ao carregar o DOM
+    window.App = App;
+
     document.addEventListener('DOMContentLoaded', () => {
       App.init();
     });
