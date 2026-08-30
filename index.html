@@ -578,7 +578,7 @@
         <form id="loginForm">
           <div class="form-group">
             <label for="inputPassword">Senha de Acesso</label>
-            <input type="password" id="inputPassword" required placeholder="Digite a senha (padrão: admin123)" autocomplete="current-password">
+            <input type="password" id="inputPassword" required autocomplete="current-password">
           </div>
           <button type="submit" class="btn-action">Entrar</button>
         </form>
@@ -671,42 +671,28 @@
                 <option value="Galeria de Fotos">Galeria de Fotos</option>
                 <option value="Apresentações">Apresentações</option>
                 <option value="Relatos dos estudantes">Relatos dos estudantes</option>
-                <option value<option value="Trabalhos produzidos">Trabalhos produzidos</option>
-                <option value="Vídeos">Vídeos</option>
-              </select>
-            </div>
-
-            <div style="display: flex; gap: 1rem;">
-              <div class="form-group" style="flex: 1;">
-                <label for="practiceDate">Data da Ação</label>
-                <input type="date" id="practiceDate" required>
-              </div>
-              <div class="form-group" style="flex: 1;">
-                <label for="practiceLocation">Local da Ação</label>
-                <input type="text" id="practiceLocation" placeholder="Ex: Auditório da Escola / Sala 03">
-              </div>
+                <option value="Trabalhos produzidos">Trabalhos produzidos</op              </select>
             </div>
 
             <div class="form-group">
-              <label for="practiceDesc">Descrição ou Relato</label>
-              <textarea id="practiceDesc" rows="4" placeholder="Detalhes do que foi realizado pelos estudantes..."></textarea>
+              <label for="practiceDesc">Descrição / Detalhes</label>
+              <textarea id="practiceDesc" rows="3" required placeholder="Descreva como foi realizada a atividade, turma participante e resultados..."></textarea>
             </div>
 
             <div class="form-group">
-              <label for="practiceMediaInput">Anexo de Mídia (Foto de Capa / Evidência)</label>
-              <input type="file" id="practiceMediaInput" accept="image/*">
+              <label for="practiceCoverInput">Imagem de Capa / Foto</label>
+              <input type="file" id="practiceCoverInput" accept="image/*" required>
             </div>
 
-            <button type="submit" class="btn-action">Salvar Registro na Prática</button>
+            <button type="submit" class="btn-action">Adicionar Registro</button>
           </form>
         </div>
 
-        <h3>Atividades Cadastradas</h3>
-        <br>
+        <!-- TABELA DE ATIVIDADES -->
+        <h3 style="margin-bottom: 1rem;">Gerenciar Atividades</h3>
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Capa</th>
               <th>Título</th>
               <th>Status</th>
               <th>Ações</th>
@@ -715,457 +701,445 @@
           <tbody id="adminTableBody"></tbody>
         </table>
 
-        <h3>Registros "Projeto na Prática" Cadastrados</h3>
-        <br>
+        <!-- TABELA DE PRÁTICAS -->
+        <h3 style="margin-bottom: 1rem;">Gerenciar Projeto na Prática</h3>
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Foto</th>
               <th>Título</th>
               <th>Categoria</th>
-              <th>Data</th>
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="adminPracticeTableBody"></tbody>
+          <tbody id="practiceTableBody"></tbody>
         </table>
       </div>
     </section>
   </main>
 
-  <!-- INTEGRACAO COM FIREBASE ENGINE -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
-      authDomain: "escravonempensar-d87c3.firebaseapp.com",
-      databaseURL: "https://escravonempensar-d87c3-default-rtdb.firebaseio.com",
-      projectId: "escravonempensar-d87c3",
-      storageBucket: "escravonempensar-d87c3.firebasestorage.app",
-      messagingSenderId: "132266908384",
-      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85",
-      measurementId: "G-7QJ9XL751E"
-    };
-
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getFirestore(firebaseApp);
-    const storage = getStorage(firebaseApp);
-
-    window.FirebaseRepo = {
-      async getContents() {
-        try {
-          const snapshot = await getDocs(collection(db, "contents"));
-          return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        } catch (e) {
-          console.warn("Retornando dados locais:", e);
-          const stored = localStorage.getItem('enp_contents');
-          return stored ? JSON.parse(stored) : [];
-        }
-      },
-      async saveContent(item) {
-        try {
-          if (item.id) {
-            const docRef = doc(db, "contents", item.id);
-            const { id, ...data } = item;
-            await updateDoc(docRef, data);
-          } else {
-            await addDoc(collection(db, "contents"), item);
-          }
-        } catch (e) {
-          console.error("Erro ao salvar no Firestore:", e);
-        }
-      },
-      async deleteContent(id) {
-        try {
-          await deleteDoc(doc(db, "contents", id));
-        } catch (e) {
-          console.error("Erro ao deletar no Firestore:", e);
-        }
-      },
-      async getPracticeRecords() {
-        try {
-          const snapshot = await getDocs(collection(db, "practice_records"));
-          return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        } catch (e) {
-          const stored = localStorage.getItem('enp_practice');
-          return stored ? JSON.parse(stored) : [];
-        }
-      },
-      async savePracticeRecord(item) {
-        try {
-          await addDoc(collection(db, "practice_records"), item);
-        } catch (e) {
-          console.error("Erro ao salvar prática no Firestore:", e);
-        }
-      },
-      async deletePracticeRecord(id) {
-        try {
-          await deleteDoc(doc(db, "practice_records", id));
-        } catch (e) {
-          console.error("Erro ao remover registro prática:", e);
-        }
-      },
-      async uploadFile(file) {
-        try {
-          const fileRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
-          const snapshot = await uploadBytes(fileRef, file);
-          return await getDownloadURL(snapshot.ref);
-        } catch (e) {
-          return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-          });
-        }
-      }
-    };
-  </script>
-
-  <!-- CONTROLLER DA APLICAÇÃO -->
   <script>
     const App = (() => {
-      let contents = [];
-      let practiceRecords = [];
-      let currentFilterCategory = 'Todos';
-
-      async function loadData() {
-        if (window.FirebaseRepo) {
-          contents = await window.FirebaseRepo.getContents();
-          practiceRecords = await window.FirebaseRepo.getPracticeRecords();
+      // Dados Iniciais (LocalStorage)
+      let items = JSON.parse(localStorage.getItem('enp_items')) || [
+        {
+          id: '1',
+          title: 'Atividade 01 — O que é Trabalho Escravo Contemporâneo?',
+          desc: 'Compreenda os conceitos fundamentais sobre trabalho análogo à escravidão e suas formas de manifestação.',
+          status: 'Publicado',
+          cover: '',
+          body: '<p>O trabalho escravo contemporâneo é uma violação grave dos direitos humanos. Ele se configura por quatro elementos principais:</p><ul><li>Trabalho forçado</li><li>Jornada exaustiva</li><li>Condições degradantes de trabalho</li><li>Restrição de locomoção por dívida</li></ul>'
         }
-        renderHomeCards();
-        renderActivitiesCards();
-        renderPracticeCards();
-        renderAdminTables();
-        updateStats();
-      }
+      ];
 
-      function navigateTo(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      let practiceItems = JSON.parse(localStorage.getItem('enp_practice')) || [
+        {
+          id: 'p1',
+          title: 'Culminância do Projeto 2023',
+          category: 'Culminância',
+          desc: 'Apresentação dos trabalhos finais desenvolvidos por todas as turmas ao longo do ano letivo.',
+          cover: '',
+          body: '<p>A culminância reuniu alunos, professores e a comunidade escolar para apresentar cartazes, maquetes e apresentações culturais sobre o combate ao trabalho escravo.</p>'
+        }
+      ];
 
+      let isAdminLoggedIn = localStorage.getItem('enp_admin_logged') === 'true';
+
+      // Seletores DOM
+      const dom = {
+        themeBtn: document.getElementById('btnToggleTheme'),
+        sidebarBtn: document.getElementById('btnToggleSidebar'),
+        overlay: document.getElementById('overlay'),
+        navItems: document.querySelectorAll('.nav-item'),
+        pages: document.querySelectorAll('.page'),
+        cardsContainer: document.getElementById('cardsContainer'),
+        activitiesContainer: document.getElementById('activitiesContainer'),
+        practiceContainer: document.getElementById('practiceContainer'),
+        searchInput: document.getElementById('searchInput'),
+        
+        // Admin
+        loginBox: document.getElementById('adminLoginBox'),
+        loginForm: document.getElementById('loginForm'),
+        inputPassword: document.getElementById('inputPassword'),
+        adminPanel: document.getElementById('adminPanel'),
+        contentForm: document.getElementById('contentForm'),
+        practiceForm: document.getElementById('practiceForm'),
+        adminTableBody: document.getElementById('adminTableBody'),
+        practiceTableBody: document.getElementById('practiceTableBody'),
+        statTotal: document.getElementById('statTotal'),
+        statPractice: document.getElementById('statPractice'),
+        editorContent: document.getElementById('editorContent'),
+        imageInput: document.getElementById('imageInput'),
+        coverInput: document.getElementById('coverInput'),
+        coverPreviewContainer: document.getElementById('coverPreviewContainer'),
+        editId: document.getElementById('editId'),
+        currentCoverUrl: document.getElementById('currentCoverUrl'),
+        formTitle: document.getElementById('formTitle'),
+        btnSubmitForm: document.getElementById('btnSubmitForm'),
+        btnCancelEdit: document.getElementById('btnCancelEdit'),
+
+        // Viewer
+        viewTitle: document.getElementById('viewTitle'),
+        viewMetaInfo: document.getElementById('viewMetaInfo'),
+        viewCoverContainer: document.getElementById('viewCoverContainer'),
+        viewBody: document.getElementById('viewBody')
+      };
+
+      // Salvar dados
+      const saveData = () => {
+        localStorage.setItem('enp_items', JSON.stringify(items));
+        localStorage.setItem('enp_practice', JSON.stringify(practiceItems));
+      };
+
+      // Navegação
+      const navigateTo = (pageId) => {
+        dom.pages.forEach(p => p.classList.remove('active'));
         const targetPage = document.getElementById(pageId);
         if (targetPage) targetPage.classList.add('active');
 
-        const navLink = document.querySelector(`.nav-item[data-target="${pageId}"]`);
-        if (navLink) navLink.classList.add('active');
+        dom.navItems.forEach(nav => {
+          if (nav.getAttribute('data-target') === pageId) {
+            nav.classList.add('active');
+          } else {
+            nav.classList.remove('active');
+          }
+        });
 
         if (window.innerWidth <= 768) {
           document.body.classList.remove('sidebar-open');
         }
-      }
+      };
 
-      function initTheme() {
-        const btnTheme = document.getElementById('btnToggleTheme');
-        btnTheme.addEventListener('click', () => {
-          const current = document.documentElement.getAttribute('data-theme');
-          const next = current === 'light' ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', next);
-          btnTheme.textContent = next === 'light' ? 'Modo Escuro' : 'Modo Claro';
-        });
-      }
+      // Renderização de Cards
+      const renderCards = (filterText = '') => {
+        const filtered = items.filter(item => 
+          item.title.toLowerCase().includes(filterText.toLowerCase()) || 
+          item.desc.toLowerCase().includes(filterText.toLowerCase())
+        );
 
-      function initSidebar() {
-        const btnToggle = document.getElementById('btnToggleSidebar');
-        const overlay = document.getElementById('overlay');
-        
-        btnToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
+        const buildCardHtml = (item) => `
+          <div class="window-card" onclick="App.viewContent('${item.id}', 'activity')">
+            <div class="window-header">
+              <span>Módulo</span>
+              <span>📌</span>
+            </div>
+            ${item.cover ? `<img src="${item.cover}" class="card-cover-img" alt="Capa">` : ''}
+            <div class="window-body">
+              <h3 class="window-title">${item.title}</h3>
+              <p class="window-desc">${item.desc}</p>
+              <span class="meta-tag">${item.status}</span>
+            </div>
+          </div>
+        `;
 
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.addEventListener('click', () => navigateTo(item.dataset.target));
-        });
-      }
+        dom.cardsContainer.innerHTML = filtered.map(buildCardHtml).join('');
+        dom.activitiesContainer.innerHTML = items.map(buildCardHtml).join('');
+      };
 
-      function toggleSidebar() {
-        if (window.innerWidth <= 768) {
-          document.body.classList.toggle('sidebar-open');
-        } else {
-          document.body.classList.toggle('sidebar-collapsed');
-        }
-      }
+      const renderPracticeCards = (categoryFilter = 'Todos') => {
+        const filtered = categoryFilter === 'Todos' 
+          ? practiceItems 
+          : practiceItems.filter(p => p.category === categoryFilter);
 
-      function renderHomeCards() {
-        const container = document.getElementById('cardsContainer');
-        container.innerHTML = '';
-        const published = contents.filter(item => item.status === 'Publicado');
-
-        if (published.length === 0) {
-          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhuma atividade cadastrada.</p>';
-          return;
-        }
-
-        published.slice(0, 6).forEach(item => container.appendChild(createCardElement(item)));
-      }
-
-      function renderActivitiesCards() {
-        const container = document.getElementById('activitiesContainer');
-        container.innerHTML = '';
-        const published = contents.filter(item => item.status === 'Publicado');
-
-        if (published.length === 0) {
-          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhuma atividade disponível.</p>';
-          return;
-        }
-
-        published.forEach(item => container.appendChild(createCardElement(item)));
-      }
-
-      function filterPractice(category, btn) {
-        currentFilterCategory = category;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-        renderPracticeCards();
-      }
-
-      function renderPracticeCards() {
-        const container = document.getElementById('practiceContainer');
-        container.innerHTML = '';
-
-        const list = currentFilterCategory === 'Todos' 
-          ? practiceRecords 
-          : practiceRecords.filter(r => r.category === currentFilterCategory);
-
-        if (list.length === 0) {
-          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum registro nesta categoria.</p>';
-          return;
-        }
-
-        list.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'window-card';
-          const coverHtml = item.mediaUrl ? `<img src="${item.mediaUrl}" class="card-cover-img">` : '';
-
-          card.innerHTML = `
+        dom.practiceContainer.innerHTML = filtered.map(item => `
+          <div class="window-card" onclick="App.viewContent('${item.id}', 'practice')">
             <div class="window-header">
               <span>${item.category}</span>
               <span>📸</span>
             </div>
-            ${coverHtml}
+            ${item.cover ? `<img src="${item.cover}" class="card-cover-img" alt="Foto">` : ''}
             <div class="window-body">
               <h3 class="window-title">${item.title}</h3>
               <p class="window-desc">${item.desc}</p>
-              <span class="meta-tag">📅 ${item.date || 'Data não informada'}</span>
-              ${item.location ? `<span class="meta-tag" style="background:var(--azul-marinho);">📍 ${item.location}</span>` : ''}
+              <span class="meta-tag">${item.category}</span>
             </div>
-          `;
-          container.appendChild(card);
-        });
-      }
-
-      function createCardElement(item) {
-        const card = document.createElement('div');
-        card.className = 'window-card';
-        const coverHtml = item.coverUrl ? `<img src="${item.coverUrl}" class="card-cover-img">` : '';
-
-        card.innerHTML = `
-          <div class="window-header">
-            <span>Atividade</span>
-            <span>🗔</span>
           </div>
-          ${coverHtml}
-          <div class="window-body">
-            <h3 class="window-title">${item.title}</h3>
-            <p class="window-desc">${item.desc}</p>
-          </div>
-        `;
-        card.onclick = () => openContent(item.id);
-        return card;
-      }
+        `).join('');
+      };
 
-      function openContent(id) {
-        const item = contents.find(c => c.id === id);
+      // Visualizar Conteúdo Detalhado
+      const viewContent = (id, type) => {
+        const item = type === 'activity' 
+          ? items.find(i => i.id === id) 
+          : practiceItems.find(p => p.id === id);
+
         if (!item) return;
 
-        document.getElementById('viewTitle').textContent = item.title;
-        document.getElementById('viewMetaInfo').textContent = '';
-        
-        const coverContainer = document.getElementById('viewCoverContainer');
-        if (item.coverUrl) {
-          coverContainer.innerHTML = `<img src="${item.coverUrl}" style="max-width:100%; height:auto; border-radius:8px; margin-top:1rem;">`;
-        } else {
-          coverContainer.innerHTML = '';
-        }
+        dom.viewTitle.textContent = item.title;
+        dom.viewMetaInfo.textContent = type === 'activity' ? `Status: ${item.status}` : `Categoria: ${item.category}`;
+        dom.viewCoverContainer.innerHTML = item.cover ? `<img src="${item.cover}" style="max-height: 400px; width: 100%; object-fit: cover; border-radius: 8px; margin-top: 1rem;">` : '';
+        dom.viewBody.innerHTML = item.body || `<p>${item.desc}</p>`;
 
-        document.getElementById('viewBody').innerHTML = item.body || '<p style="color:var(--texto-secundario)">Sem conteúdo detalhado.</p>';
         navigateTo('contentView');
-      }
+      };
 
-      function updateStats() {
-        document.getElementById('statTotal').textContent = contents.length;
-        document.getElementById('statPractice').textContent = practiceRecords.length;
-      }
+      // Painel Administrativo
+      const updateAdminState = () => {
+        if (isAdminLoggedIn) {
+          dom.loginBox.style.display = 'none';
+          dom.adminPanel.style.display = 'block';
+          renderAdminTables();
+        } else {
+          dom.loginBox.style.display = 'block';
+          dom.adminPanel.style.display = 'none';
+        }
+      };
 
-      function initAdmin() {
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+      const renderAdminTables = () => {
+        dom.statTotal.textContent = items.length;
+        dom.statPractice.textContent = practiceItems.length;
+
+        // Tabela de Atividades
+        dom.adminTableBody.innerHTML = items.map(item => `
+          <tr>
+            <td><strong>${item.title}</strong></td>
+            <td>${item.status}</td>
+            <td>
+              <button class="btn-action btn-secondary" onclick="App.editItem('${item.id}')">Editar</button>
+              <button class="btn-action" style="background-color: var(--vermelho);" onclick="App.deleteItem('${item.id}')">Excluir</button>
+            </td>
+          </tr>
+        `).join('');
+
+        // Tabela de Práticas
+        dom.practiceTableBody.innerHTML = practiceItems.map(item => `
+          <tr>
+            <td><strong>${item.title}</strong></td>
+            <td>${item.category}</td>
+            <td>
+              <button class="btn-action" style="background-color: var(--vermelho);" onclick="App.deletePracticeItem('${item.id}')">Excluir</button>
+            </td>
+          </tr>
+        `).join('');
+      };
+
+      // Leitura de imagem via FileReader
+      const fileToBase64 = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+
+      // Eventos
+      const setupEvents = () => {
+        // Toggle Sidebar
+        dom.sidebarBtn.addEventListener('click', () => {
+          if (window.innerWidth <= 768) {
+            document.body.classList.toggle('sidebar-open');
+          } else {
+            document.body.classList.toggle('sidebar-collapsed');
+          }
+        });
+
+        dom.overlay.addEventListener('click', () => {
+          document.body.classList.remove('sidebar-open');
+        });
+
+        // Alternar Tema
+        dom.themeBtn.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          dom.themeBtn.textContent = newTheme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
+        });
+
+        // Navegação pelos links
+        dom.navItems.forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = item.getAttribute('data-target');
+            navigateTo(target);
+          });
+        });
+
+        // Busca em tempo real
+        dom.searchInput.addEventListener('input', (e) => {
+          renderCards(e.target.value);
+        });
+
+        // Login Admin
+        dom.loginForm.addEventListener('submit', (e) => {
           e.preventDefault();
-          if (document.getElementById('inputPassword').value === 'admin123') {
-            document.getElementById('adminLoginBox').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
+          if (dom.inputPassword.value === 'admin123') {
+            isAdminLoggedIn = true;
+            localStorage.setItem('enp_admin_logged', 'true');
+            dom.inputPassword.value = '';
+            updateAdminState();
           } else {
             alert('Senha incorreta!');
           }
         });
 
-        document.getElementById('contentForm').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const coverFile = document.getElementById('coverInput').files[0];
-          let coverUrl = document.getElementById('currentCoverUrl').value;
-
-          if (coverFile && window.FirebaseRepo) {
-            coverUrl = await window.FirebaseRepo.uploadFile(coverFile);
-          }
-
-          const itemData = {
-            id: document.getElementById('editId').value || undefined,
-            title: document.getElementById('inputTitle').value,
-            desc: document.getElementById('inputDesc').value,
-            status: document.getElementById('inputStatus').value,
-            body: document.getElementById('editorContent').innerHTML,
-            coverUrl
-          };
-
-          await window.FirebaseRepo.saveContent(itemData);
-          await loadData();
-          resetForm();
-        });
-
-        document.getElementById('practiceForm').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const file = document.getElementById('practiceMediaInput').files[0];
-          let mediaUrl = '';
-          if (file && window.FirebaseRepo) {
-            mediaUrl = await window.FirebaseRepo.uploadFile(file);
-          }
-
-          const practiceItem = {
-            title: document.getElementById('practiceTitle').value,
-            category: document.getElementById('practiceCategory').value,
-            date: document.getElementById('practiceDate').value,
-            location: document.getElementById('practiceLocation').value,
-            desc: document.getElementById('practiceDesc').value,
-            mediaUrl
-          };
-
-          await window.FirebaseRepo.savePracticeRecord(practiceItem);
-          await loadData();
-          document.getElementById('practiceForm').reset();
-        });
-
-        document.getElementById('imageInput').addEventListener('change', async (e) => {
+        // Upload de Capa (Atividades)
+        dom.coverInput.addEventListener('change', async (e) => {
           const file = e.target.files[0];
-          if (file && window.FirebaseRepo) {
-            const url = await window.FirebaseRepo.uploadFile(file);
-            execEditorCmd('insertImage', url);
+          if (file) {
+            const base64 = await fileToBase64(file);
+            dom.currentCoverUrl.value = base64;
+            dom.coverPreviewContainer.innerHTML = `<img src="${base64}" style="max-height: 100px; border-radius: 4px;">`;
           }
         });
-      }
 
-      function logoutAdmin() {
-        document.getElementById('adminLoginBox').style.display = 'block';
-        document.getElementById('adminPanel').style.display = 'none';
-      }
-
-      function renderAdminTables() {
-        const tbody = document.getElementById('adminTableBody');
-        tbody.innerHTML = '';
-        contents.forEach(item => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item.coverUrl ? `<img src="${item.coverUrl}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">` : '—'}</td>
-            <td><strong>${item.title}</strong></td>
-            <td>${item.status}</td>
-            <td>
-              <button class="btn-action btn-secondary" onclick="App.editItem('${item.id}')">✏️ Editar</button>
-              <button class="btn-action btn-secondary" onclick="App.deleteItem('${item.id}')">🗑️ Excluir</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
+        // Upload de Imagem no Editor
+        dom.imageInput.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const base64 = await fileToBase64(file);
+            document.execCommand('insertImage', false, base64);
+          }
         });
 
-        const practiceTbody = document.getElementById('adminPracticeTableBody');
-        practiceTbody.innerHTML = '';
-        practiceRecords.forEach(item => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item.mediaUrl ? `<img src="${item.mediaUrl}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">` : '—'}</td>
-            <td><strong>${item.title}</strong></td>
-            <td>${item.category}</td>
-            <td>${item.date}</td>
-            <td>
-              <button class="btn-action btn-secondary" onclick="App.deletePractice('${item.id}')">🗑️ Excluir</button>
-            </td>
-          `;
-          practiceTbody.appendChild(tr);
-        });
-      }
+        // Salvar Atividade Form
+        dom.contentForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const id = dom.editId.value;
+          const title = document.getElementById('inputTitle').value;
+          const desc = document.getElementById('inputDesc').value;
+          const status = document.getElementById('inputStatus').value;
+          const cover = dom.currentCoverUrl.value;
+          const body = dom.editorContent.innerHTML;
 
-      function editItem(id) {
-        const item = contents.find(c => c.id === id);
+          if (id) {
+            const index = items.findIndex(i => i.id === id);
+            if (index !== -1) {
+              items[index] = { id, title, desc, status, cover, body };
+            }
+          } else {
+            items.push({
+              id: Date.now().toString(),
+              title,
+              desc,
+              status,
+              cover,
+              body
+            });
+          }
+
+          saveData();
+          renderCards();
+          renderAdminTables();
+          resetForm();
+          alert('Atividade salva com sucesso!');
+        });
+
+        // Salvar Projeto na Prática Form
+        dom.practiceForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const title = document.getElementById('practiceTitle').value;
+          const category = document.getElementById('practiceCategory').value;
+          const desc = document.getElementById('practiceDesc').value;
+          const fileInput = document.getElementById('practiceCoverInput');
+          
+          let cover = '';
+          if (fileInput.files[0]) {
+            cover = await fileToBase64(fileInput.files[0]);
+          }
+
+          practiceItems.push({
+            id: 'p_' + Date.now(),
+            title,
+            category,
+            desc,
+            cover,
+            body: `<p>${desc}</p>`
+          });
+
+          saveData();
+          renderPracticeCards();
+          renderAdminTables();
+          dom.practiceForm.reset();
+          alert('Registro adicionado com sucesso!');
+        });
+      };
+
+      // Ações públicas para botões inline
+      const execEditorCmd = (cmd) => {
+        document.execCommand(cmd, false, null);
+      };
+
+      const triggerImageUpload = () => {
+        dom.imageInput.click();
+      };
+
+      const editItem = (id) => {
+        const item = items.find(i => i.id === id);
         if (!item) return;
 
-        document.getElementById('editId').value = item.id;
+        dom.editId.value = item.id;
         document.getElementById('inputTitle').value = item.title;
         document.getElementById('inputDesc').value = item.desc;
         document.getElementById('inputStatus').value = item.status;
-        document.getElementById('editorContent').innerHTML = item.body || '';
-        document.getElementById('currentCoverUrl').value = item.coverUrl || '';
-        document.getElementById('formTitle').textContent = '✏️ Editar Atividade';
-        document.getElementById('btnCancelEdit').style.display = 'inline-block';
-      }
+        dom.currentCoverUrl.value = item.cover;
+        dom.editorContent.innerHTML = item.body;
 
-      async function deleteItem(id) {
-        if (confirm('Deseja excluir esta atividade?')) {
-          await window.FirebaseRepo.deleteContent(id);
-          await loadData();
+        if (item.cover) {
+          dom.coverPreviewContainer.innerHTML = `<img src="${item.cover}" style="max-height: 100px; border-radius: 4px;">`;
         }
-      }
 
-      async function deletePractice(id) {
-        if (confirm('Deseja excluir este registro da prática?')) {
-          await window.FirebaseRepo.deletePracticeRecord(id);
-          await loadData();
+        dom.formTitle.textContent = '✏️ Editar Atividade';
+        dom.btnSubmitForm.textContent = 'Atualizar Atividade';
+        dom.btnCancelEdit.style.display = 'inline-block';
+      };
+
+      const resetForm = () => {
+        dom.editId.value = '';
+        dom.currentCoverUrl.value = '';
+        dom.contentForm.reset();
+        dom.editorContent.innerHTML = '';
+        dom.coverPreviewContainer.innerHTML = '';
+        dom.formTitle.textContent = '➕ Criar Nova Atividade';
+        dom.btnSubmitForm.textContent = 'Salvar Atividade';
+        dom.btnCancelEdit.style.display = 'none';
+      };
+
+      const deleteItem = (id) => {
+        if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+          items = items.filter(i => i.id !== id);
+          saveData();
+          renderCards();
+          renderAdminTables();
         }
-      }
+      };
 
-      function resetForm() {
-        document.getElementById('contentForm').reset();
-        document.getElementById('editId').value = '';
-        document.getElementById('currentCoverUrl').value = '';
-        document.getElementById('editorContent').innerHTML = '';
-        document.getElementById('formTitle').textContent = '➕ Criar Nova Atividade';
-        document.getElementById('btnCancelEdit').style.display = 'none';
-      }
+      const deletePracticeItem = (id) => {
+        if (confirm('Tem certeza que deseja excluir este registro?')) {
+          practiceItems = practiceItems.filter(p => p.id !== id);
+          saveData();
+          renderPracticeCards();
+          renderAdminTables();
+        }
+      };
 
-      function execEditorCmd(cmd, val = null) {
-        document.execCommand(cmd, false, val);
-      }
+      const logoutAdmin = () => {
+        isAdminLoggedIn = false;
+        localStorage.setItem('enp_admin_logged', 'false');
+        updateAdminState();
+      };
 
-      function triggerImageUpload() {
-        document.getElementById('imageInput').click();
-      }
+      const filterPractice = (category, btnElement) => {
+        document.querySelectorAll('.tabs-header .tab-btn').forEach(btn => btn.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
+        renderPracticeCards(category);
+      };
 
-      function init() {
-        initTheme();
-        initSidebar();
-        initAdmin();
-        setTimeout(loadData, 500);
-      }
+      const init = () => {
+        setupEvents();
+        renderCards();
+        renderPracticeCards();
+        updateAdminState();
+      };
 
       return {
         init,
         navigateTo,
-        toggleSidebar,
-        logoutAdmin,
-        editItem,
-        deleteItem,
-        deletePractice,
-        resetForm,
+        viewContent,
         execEditorCmd,
         triggerImageUpload,
+        editItem,
+        resetForm,
+        deleteItem,
+        deletePracticeItem,
+        logoutAdmin,
         filterPractice
       };
     })();
