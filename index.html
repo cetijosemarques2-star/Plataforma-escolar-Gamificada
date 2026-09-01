@@ -3,733 +3,200 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projeto Escravo, Nem Pensar! — CETI José Marques</title>
+  <title>Projeto Escravo, Nem Pensar!</title>
   <style>
     :root {
-      --terracota: #C85A32;
-      --laranja-terra: #E06D3B;
-      --terracota-escuro: #8C3B1E;
-      --bege-suave: #FBF8F5;
-      --creme-card: #FFFFFF;
-      --texto-escuro: #2D2421;
-      --texto-suave: #665A55;
-      --cinza-linhas: #E5DDD8;
-      --vermelho-danger: #D93838;
-      --verde-sucesso: #2E7D32;
-      --sombra: 0 8px 24px rgba(140, 59, 30, 0.08);
-      --sombra-forte: 0 12px 32px rgba(140, 59, 30, 0.15);
-      --raio-borda: 12px;
-      --sidebar-width: 260px;
-      --sidebar-collapsed-width: 70px;
-      --transition-speed: 0.3s;
+      --terracota-escuro: #8B3A2B;
+      --terracota: #C05621;
+      --fundo: #F7FAFC;
+      --card-bg: #FFFFFF;
+      --texto: #2D3748;
+      --texto-suave: #718096;
+      --borda: #E2E8F0;
+      --sidebar-width: 250px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--fundo); color: var(--texto); display: flex; min-height: 100vh; }
 
-    body {
-      background-color: var(--bege-suave);
-      color: var(--texto-escuro);
-      line-height: 1.6;
-      display: flex;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ASIDE / SIDEBAR */
-    aside.sidebar {
+    /* Layout Principal */
+    .app-container { display: flex; width: 100%; min-height: 100vh; position: relative; }
+    
+    /* Sidebar Responsiva */
+    sidebar {
       width: var(--sidebar-width);
-      background: linear-gradient(180deg, var(--terracota-escuro), #6A2C15);
+      background: var(--terracota-escuro);
       color: white;
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 1000;
-      transition: width var(--transition-speed) ease;
-      box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-    }
-
-    body.sidebar-collapsed aside.sidebar {
-      width: var(--sidebar-collapsed-width);
-    }
-
-    .sidebar-header {
-      padding: 20px 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .brand-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .brand-badge {
-      background-color: var(--laranja-terra);
-      color: white;
-      font-weight: bold;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      min-width: 40px;
-      text-align: center;
-    }
-
-    .brand-text h1 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #FFF;
-      line-height: 1.2;
-    }
-
-    .brand-text p {
-      font-size: 0.75rem;
-      opacity: 0.8;
-    }
-
-    .toggle-btn {
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: white;
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .toggle-btn:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    .sidebar-menu {
-      list-style: none;
       padding: 20px 10px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .sidebar-menu button {
-      width: 100%;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.85);
-      padding: 12px 15px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .sidebar-menu button:hover, .sidebar-menu button.active {
-      background-color: var(--laranja-terra);
-      color: white;
-      transform: translateX(4px);
-    }
-
-    body.sidebar-collapsed .sidebar-menu button:hover {
-      transform: none;
-    }
-
-    .sidebar-menu button svg {
-      min-width: 22px;
-      height: 22px;
-      fill: currentColor;
-    }
-
-    body.sidebar-collapsed .brand-text,
-    body.sidebar-collapsed .sidebar-menu button span {
-      display: none;
-    }
-
-    /* CONTAINER PRINCIPAL */
-    .app-container {
-      flex: 1;
-      margin-left: var(--sidebar-width);
-      transition: margin-left var(--transition-speed) ease;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    body.sidebar-collapsed .app-container {
-      margin-left: var(--sidebar-collapsed-width);
-    }
-
-    /* BANNER HERO */
-    .hero-banner {
-      background: linear-gradient(135deg, var(--terracota-escuro), var(--laranja-terra));
-      color: white;
-      padding: 50px 40px;
-      border-radius: var(--raio-borda);
-      margin-bottom: 30px;
-      box-shadow: var(--sombra);
-      position: relative;
-      overflow: hidden;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .hero-banner h2 {
-      font-size: 2.2rem;
-      margin-bottom: 12px;
-      font-weight: 800;
-    }
-
-    .hero-banner p {
-      font-size: 1.1rem;
-      max-width: 750px;
-      opacity: 0.95;
-      margin-bottom: 20px;
-    }
-
-    .school-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.2);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      backdrop-filter: blur(4px);
-    }
-
-    /* MAIN CONTENT */
-    main {
-      padding: 40px;
-      flex: 1;
-      max-width: 1300px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .page-section {
-      display: none;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .page-section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-title {
-      font-size: 1.6rem;
-      color: var(--terracota-escuro);
-      margin-bottom: 25px;
-      position: relative;
-      padding-bottom: 10px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 60px;
-      height: 4px;
-      background-color: var(--laranja-terra);
-      border-radius: 2px;
-    }
-
-    /* CAMPO DE BUSCA */
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: white;
-      border: 1px solid var(--cinza-linhas);
-      border-radius: 20px;
-      padding: 6px 16px;
-      width: 100%;
-      max-width: 320px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .search-box input {
-      border: none;
-      outline: none;
-      padding: 6px;
-      width: 100%;
-      font-size: 0.9rem;
-    }
-
-    /* ESTATÍSTICAS DO DASHBOARD */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: white;
-      padding: 20px;
-      border-radius: var(--raio-borda);
-      border: 1px solid var(--cinza-linhas);
-      box-shadow: var(--sombra);
-      text-align: center;
-    }
-
-    .stat-card h4 {
-      color: var(--texto-suave);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-
-    .stat-card .number {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--terracota-escuro);
-    }
-
-    /* GRID & CARDS */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 25px;
-    }
-
-    .card {
-      background: var(--creme-card);
-      border: 1px solid var(--cinza-linhas);
-      border-radius: var(--raio-borda);
-      overflow: hidden;
-      box-shadow: var(--sombra);
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
+      z-index: 100;
     }
 
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--sombra-forte);
+    .app-container.sidebar-collapsed sidebar {
+      width: 60px;
     }
 
-    .card-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      background-color: var(--cinza-linhas);
-    }
-
-    .card-body {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .card-body h3 {
-      color: var(--terracota-escuro);
-      margin-bottom: 10px;
-      font-size: 1.15rem;
-    }
-
-    .card-body p {
-      color: var(--texto-suave);
-      font-size: 0.92rem;
-      margin-bottom: 20px;
-      flex: 1;
-    }
-
-    .meta-tag {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      width: fit-content;
-    }
-
-    .tag-concluido { background: rgba(46, 125, 50, 0.15); color: #2E7D32; }
-    .tag-andamento { background: rgba(224, 109, 59, 0.15); color: #E06D3B; }
-    .tag-planejado { background: rgba(25, 118, 210, 0.15); color: #1976D2; }
-
-    /* BOTÕES */
-    .btn-action {
-      background-color: var(--terracota);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 0.9rem;
-    }
-
-    .btn-action:hover {
-      background-color: var(--terracota-escuro);
-    }
-
-    .btn-secondary {
-      background-color: var(--laranja-terra);
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--terracota);
-    }
-
-    .btn-danger {
-      background-color: var(--vermelho-danger);
-    }
-
-    .btn-danger:hover {
-      background-color: #B02A2A;
-    }
-
-    /* FORMULÁRIOS E ADMIN */
-    .admin-box {
-      background: white;
-      border-radius: var(--raio-borda);
-      padding: 25px;
-      border: 1px solid var(--cinza-linhas);
-      box-shadow: var(--sombra);
-      margin-bottom: 30px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: var(--texto-escuro);
-      font-size: 0.9rem;
-    }
-
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--cinza-linhas);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus, .form-group textarea:focus {
-      outline: none;
-      border-color: var(--terracota);
-    }
-
-    /* TOOLBAR DO EDITOR RICHO */
-    .editor-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      background: #F4EFEA;
-      padding: 8px;
-      border: 1px solid var(--cinza-linhas);
-      border-bottom: none;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
-
-    .editor-toolbar button, .editor-toolbar select {
-      background: white;
-      border: 1px solid var(--cinza-linhas);
-      border-radius: 4px;
-      padding: 5px 8px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .editor-content {
-      min-height: 180px;
-      border: 1px solid var(--cinza-linhas);
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-      padding: 15px;
-      background: white;
-      overflow-y: auto;
-    }
-
-    .editor-content img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      margin: 10px 0;
-    }
-
-    /* TABELAS */
-    .table-container {
-      overflow-x: auto;
-      margin-top: 15px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid var(--cinza-linhas);
-      font-size: 0.9rem;
-    }
-
-    th {
-      background-color: rgba(200, 90, 50, 0.08);
-      color: var(--terracota-escuro);
-      font-weight: 700;
-    }
-
-    .table-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    /* RODAPÉ */
-    footer {
-      background-color: var(--terracota-escuro);
-      color: white;
-      text-align: center;
-      padding: 20px;
-      margin-top: auto;
-      font-size: 0.85rem;
-    }
-
-    /* MENSAGEM DE NOTIFICAÇÃO (TOAST) */
-    .toast-msg {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #2E7D32;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      font-weight: 600;
-      z-index: 2000;
+    .app-container.sidebar-collapsed .sidebar-text {
       display: none;
-      animation: fadeIn 0.3s ease;
     }
 
-    /* ADAPTAÇÕES MOBILE */
+    sidebar h2 { font-size: 1.2rem; margin-bottom: 20px; padding: 0 10px; }
+    .nav-btn {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 12px; border: none;
+      background: none; color: white; text-align: left;
+      cursor: pointer; border-radius: 6px; font-size: 1rem;
+      margin-bottom: 5px;
+    }
+    .nav-btn:hover, .nav-btn.active { background-color: var(--terracota); }
+
+    /* Área de Conteúdo */
+    main { flex: 1; padding: 20px; overflow-x: hidden; }
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* Painel e Formatação */
+    .admin-box { background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--borda); margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-weight: 600; font-size: 0.9rem; }
+    input[type="text"], input[type="password"], select, textarea {
+      width: 100%; padding: 10px; border: 1px solid var(--borda); border-radius: 6px; font-size: 1rem;
+    }
+    .editor-content { min-height: 120px; border: 1px solid var(--borda); padding: 10px; border-radius: 6px; background: white; margin-top: 5px; }
+    
+    /* Botões */
+    .btn-action {
+      background: var(--terracota); color: white; border: none;
+      padding: 10px 18px; border-radius: 6px; cursor: pointer;
+      font-weight: 600; transition: background 0.2s;
+    }
+    .btn-action:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--texto-suave); }
+    .btn-danger { background: #E53E3E; }
+    .editor-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
+    .editor-toolbar button { padding: 5px 10px; cursor: pointer; border: 1px solid var(--borda); background: white; border-radius: 4px; }
+
+    /* Cards e Grids */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 15px; }
+    .card { background: white; border-radius: 8px; border: 1px solid var(--borda); overflow: hidden; display: flex; flex-direction: column; }
+    .card-img { width: 100%; height: 180px; object-fit: cover; }
+    .card-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+    /* Tabela */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
+    th, td { padding: 12px; border-bottom: 1px solid var(--borda); }
+    th { background: #EDF2F7; }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed; bottom: 20px; right: 20px; background: #2B6CB0; color: white;
+      padding: 12px 24px; border-radius: 6px; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .toast-msg.show { display: block; }
+
+    /* RESPONSIVIDADE (MOBILE) */
     @media (max-width: 768px) {
-      aside.sidebar {
-        width: var(--sidebar-collapsed-width);
-      }
-      body:not(.sidebar-expanded) .brand-text, 
-      body:not(.sidebar-expanded) .sidebar-menu button span {
-        display: none;
-      }
-      body.sidebar-expanded aside.sidebar {
-        width: var(--sidebar-width);
-      }
-      .app-container {
-        margin-left: var(--sidebar-collapsed-width);
-      }
-      main {
-        padding: 20px 15px;
-      }
-      .hero-banner {
-        padding: 25px 18px;
-      }
-      .hero-banner h2 {
-        font-size: 1.5rem;
-      }
-      .section-title {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .search-box {
-        max-width: 100%;
-      }
+      .app-container { flex-direction: column; }
+      sidebar { width: 100% !important; height: auto; padding: 10px; }
+      .app-container.sidebar-collapsed sidebar { width: 100% !important; }
+      .app-container.sidebar-collapsed .sidebar-text { display: inline; }
+      .nav-btn { justify-content: flex-start; }
+      main { padding: 10px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      th, td { padding: 8px; font-size: 0.85rem; }
+      .btn-action { width: 100%; margin-bottom: 5px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- MENU LATERAL -->
-  <aside class="sidebar" id="appSidebar">
-    <div class="sidebar-header">
-      <div class="brand-info">
-        <div class="brand-badge">JM</div>
-        <div class="brand-text">
-          <h1>Projeto ENP</h1>
-          <p id="sidebarSchoolLabel">CETI José Marques</p>
-        </div>
-      </div>
-      <button class="toggle-btn" id="toggleSidebarBtn" title="Recolher Menu">
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-      </button>
-    </div>
-    <ul class="sidebar-menu">
-      <li>
-        <button class="nav-btn active" data-page="home">
-          <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-          <span>Início</span>
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" data-page="about">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-          <span>Sobre o Projeto</span>
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" data-page="activities">
-          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-          <span>Atividades Pedagógicas</span>
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" data-page="materials">
-          <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
-          <span>Materiais de Apoio</span>
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" data-page="admin">
-          <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-          <span>Painel Admin</span>
-        </button>
-      </li>
-    </ul>
-  </aside>
+  <div class="app-container" id="appContainer">
+    <!-- SIDEBAR -->
+    <sidebar id="appSidebar">
+      <button class="btn-action btn-secondary" id="toggleSidebarBtn" style="margin-bottom: 15px;">☰ <span class="sidebar-text">Menu</span></button>
+      <h2 class="sidebar-text" id="sidebarSchoolLabel">CETI José Marques</h2>
+      
+      <button class="nav-btn active" data-page="home">🏠 <span class="sidebar-text">Início</span></button>
+      <button class="nav-btn" data-page="about">ℹ️ <span class="sidebar-text">Sobre</span></button>
+      <button class="nav-btn" data-page="activities">📚 <span class="sidebar-text">Atividades</span></button>
+      <button class="nav-btn" data-page="materials">📁 <span class="sidebar-text">Materiais</span></button>
+      <button class="nav-btn" data-page="admin">⚙️ <span class="sidebar-text">Administração</span></button>
+    </sidebar>
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <div class="app-container">
+    <!-- ÁREA PRINCIPAL -->
     <main>
+      <!-- HEADER / HERO -->
+      <header style="margin-bottom: 20px;">
+        <h1 id="heroTitleDisplay">Projeto Escravo, Nem Pensar!</h1>
+        <p style="color: var(--texto-suave);" id="heroSchoolDisplay">CETI José Marques</p>
+      </header>
 
-      <!-- HOME -->
+      <!-- PÁGINA INICIAL -->
       <section id="homePage" class="page-section active">
-        <div class="hero-banner">
-          <div class="school-pill">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
-            <span id="heroSchoolDisplay">CETI José Marques</span>
-          </div>
-          <h2 id="heroTitleDisplay" style="margin-top: 15px;">Projeto Escravo, Nem Pensar!</h2>
-          <p>Conscientização, Direitos Humanos e Erradicação do Trabalho Escravo Contemporâneo na Educação Pública.</p>
+        <div class="admin-box">
+          <input type="text" id="homeSearchInput" placeholder="🔍 Pesquisar atividades...">
+          <h3 style="margin-top: 15px;">Destaques</h3>
+          <div class="cards-grid" id="recentActivitiesGrid"></div>
         </div>
-
-        <div class="section-title">
-          <span>Últimas Atividades em Destaque</span>
-          <div class="search-box">
-            <input type="text" id="homeSearchInput" placeholder="Buscar atividade...">
-          </div>
-        </div>
-        <div id="recentActivitiesGrid" class="grid"></div>
       </section>
 
-      <!-- SOBRE -->
+      <!-- PÁGINA SOBRE -->
       <section id="aboutPage" class="page-section">
-        <h2 class="section-title">Sobre o Projeto</h2>
-        <div class="admin-box">
-          <div id="aboutContentDisplay"></div>
-        </div>
+        <div class="admin-box" id="aboutContentDisplay"></div>
       </section>
 
-      <!-- ATIVIDADES -->
+      <!-- PÁGINA ATIVIDADES -->
       <section id="activitiesPage" class="page-section">
-        <div class="section-title">
-          <span>Atividades Pedagógicas</span>
-          <div class="search-box">
-            <input type="text" id="actSearchInput" placeholder="Buscar atividade...">
-          </div>
-        </div>
-        <div id="activitiesGrid" class="grid"></div>
-      </section>
-
-      <!-- MATERIAIS -->
-      <section id="materialsPage" class="page-section">
-        <h2 class="section-title">Materiais de Apoio</h2>
-        <div id="materialsGrid" class="grid"></div>
-      </section>
-
-      <!-- VISUALIZAÇÃO DE DETALHES -->
-      <section id="contentViewPage" class="page-section">
-        <button class="btn-action btn-secondary" style="margin-bottom: 20px;" id="backBtn">← Voltar</button>
         <div class="admin-box">
-          <h2 id="viewTitle" style="color: var(--terracota-escuro); margin-bottom: 15px;"></h2>
-          <div id="viewCover"></div>
-          <div id="viewBody" style="font-size: 1.05rem; line-height: 1.8;"></div>
+          <input type="text" id="actSearchInput" placeholder="🔍 Pesquisar em atividades...">
+          <div class="cards-grid" id="activitiesGrid"></div>
         </div>
       </section>
 
-      <!-- PAINEL ADMIN -->
-      <section id="adminPage" class="page-section">
-        <h2 class="section-title">Painel Administrativo</h2>
+      <!-- PÁGINA MATERIAIS -->
+      <section id="materialsPage" class="page-section">
+        <div class="admin-box">
+          <div class="cards-grid" id="materialsGrid"></div>
+        </div>
+      </section>
 
-        <!-- LOGIN FORM -->
-        <div id="adminLoginBox" class="admin-box" style="max-width: 400px; margin: 40px auto;">
-          <h3 style="margin-bottom: 20px; color: var(--terracota-escuro); text-align: center;">Acesso Restrito</h3>
+      <!-- PÁGINA DETALHES DO ITEM -->
+      <section id="contentViewPage" class="page-section">
+        <button class="btn-action btn-secondary" id="backBtn" style="margin-bottom: 15px;">← Voltar</button>
+        <div class="admin-box">
+          <h2 id="viewTitle"></h2>
+          <div id="viewCover"></div>
+          <div id="viewBody"></div>
+        </div>
+      </section>
+
+      <!-- PÁGINA ADMIN -->
+      <section id="adminPage" class="page-section">
+        <!-- LOGIN ADMIN -->
+        <div class="admin-box" id="adminLoginBox" style="max-width: 400px; margin: 40px auto;">
+          <h3>🔒 Acesso Restrito</h3>
           <form id="adminLoginForm">
             <div class="form-group">
               <label>Senha de Acesso:</label>
-              <input type="password" id="adminPassword" required placeholder="Digite sua senha">
+              <input type="password" id="adminPassword" required placeholder="Digite a senha...">
             </div>
-            <button type="submit" class="btn-action" style="width: 100%;">Entrar no Painel</button>
+            <button type="submit" class="btn-action" style="width: 100%;">Entrar</button>
           </form>
         </div>
 
-        <!-- PAINEL LOGADO -->
+        <!-- PAINEL ADMIN (OCULTO INICIALMENTE) -->
         <div id="adminPanel" style="display: none;">
-          
-          <!-- ESTATÍSTICAS / DASHBOARD -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <h4>Atividades Criadas</h4>
-              <div class="number" id="statActivitiesCount">0</div>
-            </div>
-            <div class="stat-card">
-              <h4>Materiais de Apoio</h4>
-              <div class="number" id="statMaterialsCount">0</div>
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h3>Gerenciamento Geral de Conteúdos</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Painel de Controle</h2>
             <button class="btn-action btn-danger" id="logoutAdminBtn">Sair do Painel</button>
           </div>
 
-          <!-- CONFIGURAÇÕES GERAIS -->
+          <!-- CONFIGURAÇÕES -->
           <div class="admin-box">
-            <h3 style="color: var(--terracota-escuro); margin-bottom: 20px;">⚙️ Configurações Gerais</h3>
+            <h3>⚙️ Configurações Gerais</h3>
             <div class="form-group">
               <label>Título do Projeto:</label>
               <input type="text" id="inputHeaderTitle">
@@ -738,16 +205,13 @@
               <label>Nome da Escola:</label>
               <input type="text" id="inputSchoolName">
             </div>
-                <button class="btn-action" id="btnSaveConfig">Salvar Configurações Gerais</button>
+            <button class="btn-action" id="btnSaveConfig">Salvar Configurações Gerais</button>
           </div>
 
           <!-- EDITOR DA PÁGINA SOBRE -->
           <div class="admin-box">
-            <h3 style="color: var(--terracota-escuro); margin-bottom: 20px;">📝 Editar Conteúdo "Sobre o Projeto"</h3>
+            <h3>📝 Editar Conteúdo "Sobre o Projeto"</h3>
             <div class="form-group">
-              <label>Conteúdo Principal:</label>
-              
-              <!-- Toolbar Editor -->
               <div class="editor-toolbar">
                 <button type="button" onclick="execCmd('bold')"><b>B</b></button>
                 <button type="button" onclick="execCmd('italic')"><i>I</i></button>
@@ -756,19 +220,20 @@
                 <button type="button" onclick="execCmd('justifyCenter')">Centralizar</button>
                 <button type="button" onclick="execCmd('justifyRight')">Direita</button>
                 <button type="button" onclick="execCmd('insertUnorderedList')">• Lista</button>
-                <button type="button" onclick="insertImagePrompt()">🖼️ Inserir Imagem (URL)</button>
+                <label class="btn-action btn-secondary" style="padding: 2px 8px; cursor: pointer; display: inline-block;">
+                  🖼️ Inserir Imagem <input type="file" accept="image/*" style="display:none;" onchange="insertLocalImageEditor(event, 'aboutEditor')">
+                </label>
               </div>
               <div id="aboutEditor" class="editor-content" contenteditable="true"></div>
             </div>
             <button class="btn-action" id="btnSaveAbout">Salvar Página Sobre</button>
           </div>
 
-          <!-- FORMULÁRIO DE CADASTRO DE ATIVIDADES E MATERIAIS -->
+          <!-- FORMULÁRIO DE CADASTRO -->
           <div class="admin-box">
-            <h3 style="color: var(--terracota-escuro); margin-bottom: 20px;" id="formContentTitle">➕ Cadastrar Nova Atividade / Material</h3>
+            <h3 id="formContentTitle">➕ Cadastrar Nova Atividade / Material</h3>
             <form id="contentForm">
               <input type="hidden" id="contentId">
-              
               <div class="form-group">
                 <label>Tipo de Item:</label>
                 <select id="contentType" required>
@@ -779,7 +244,7 @@
 
               <div class="form-group">
                 <label>Título:</label>
-                <input type="text" id="contentTitle" required placeholder="Ex: Oficina sobre Direitos Trabalhistas">
+                <input type="text" id="contentTitle" required placeholder="Ex: Oficina de Leitura">
               </div>
 
               <div class="form-group">
@@ -792,27 +257,29 @@
               </div>
 
               <div class="form-group">
-                <label>URL da Imagem de Capa (Opcional):</label>
-                <input type="url" id="contentCover" placeholder="https://exemplo.com/imagem.jpg">
+                <label>Imagem de Capa (Galeria):</label>
+                <input type="file" id="contentCoverFile" accept="image/*">
+                <input type="hidden" id="contentCoverBase64">
+                <div id="coverPreview" style="margin-top: 10px;"></div>
               </div>
 
               <div class="form-group">
                 <label>Resumo / Descrição Curta:</label>
-                <textarea id="contentSummary" rows="3" required placeholder="Breve resumo da atividade..."></textarea>
+                <textarea id="contentSummary" rows="3" required placeholder="Resumo do item..."></textarea>
               </div>
 
               <div class="form-group">
                 <label>Conteúdo Detalhado:</label>
-                
-                <!-- Toolbar Editor Conteúdo -->
                 <div class="editor-toolbar">
-                  <button type="button" onclick="execCmdContent('bold')"><b>B</b></button>
-                  <button type="button" onclick="execCmdContent('italic')"><i>I</i></button>
-                  <button type="button" onclick="execCmdContent('underline')"><u>U</u></button>
-                  <button type="button" onclick="execCmdContent('justifyLeft')">Esquerda</button>
-                  <button type="button" onclick="execCmdContent('justifyCenter')">Centralizar</button>
-                  <button type="button" onclick="execCmdContent('insertUnorderedList')">• Lista</button>
-                  <button type="button" onclick="insertImagePromptContent()">🖼️ Inserir Imagem (URL)</button>
+                  <button type="button" onclick="execCmd('bold')"><b>B</b></button>
+                  <button type="button" onclick="execCmd('italic')"><i>I</i></button>
+                  <button type="button" onclick="execCmd('underline')"><u>U</u></button>
+                  <button type="button" onclick="execCmd('justifyLeft')">Esquerda</button>
+                  <button type="button" onclick="execCmd('justifyCenter')">Centralizar</button>
+                  <button type="button" onclick="execCmd('insertUnorderedList')">• Lista</button>
+                  <label class="btn-action btn-secondary" style="padding: 2px 8px; cursor: pointer; display: inline-block;">
+                    🖼️ Inserir Imagem <input type="file" accept="image/*" style="display:none;" onchange="insertLocalImageEditor(event, 'contentBodyEditor')">
+                  </label>
                 </div>
                 <div id="contentBodyEditor" class="editor-content" contenteditable="true"></div>
               </div>
@@ -824,9 +291,9 @@
             </form>
           </div>
 
-          <!-- TABELA DE GERENCIAMENTO -->
+          <!-- TABELA ADMIN -->
           <div class="admin-box">
-            <h3 style="color: var(--terracota-escuro); margin-bottom: 15px;">📋 Itens Cadastrados</h3>
+            <h3>📋 Itens Cadastrados</h3>
             <div class="table-container">
               <table>
                 <thead>
@@ -837,69 +304,39 @@
                     <th>Ações</th>
                   </tr>
                 </thead>
-                <tbody id="adminContentTable">
-                  <!-- Inserido dinamicamente via JS -->
-                </tbody>
+                <tbody id="adminContentTable"></tbody>
               </table>
             </div>
           </div>
-
         </div>
       </section>
-
     </main>
-
-    <!-- RODAPÉ -->
-    <footer>
-      <p>&copy; <span id="footerYear"></span> Projeto Escravo, Nem Pensar! — <span id="footerSchoolLabel">CETI José Marques</span>. Todos os direitos reservados.</p>
-    </footer>
   </div>
 
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast-msg">Operação realizada com sucesso!</div>
 
   <script>
-    /* ==========================================================================
-       1. ESTRUTURA DE DADOS E ESTADO INICIAL (LOCALSTORAGE)
-       ========================================================================== */
+    /* 1. DADOS INICIAIS DA APLICAÇÃO */
     const defaultData = {
       config: {
         title: "Projeto Escravo, Nem Pensar!",
         school: "CETI José Marques"
       },
-      about: `<h3>Sobre a Iniciativa</h3><p>O programa <strong>Escravo, Nem Pensar!</strong> é uma iniciativa pioneira de prevenção ao trabalho escravo no Brasil, promovendo ações educativas em escolas públicas para garantir direitos humanos e a erradicação do trabalho análogo à escravidão.</p><p>No <strong>CETI José Marques</strong>, desenvolvemos oficinas, pesquisas e projetos interdisciplinares para conscientizar nossos estudantes e a comunidade local.</p>`,
+      about: `<h3>Sobre a Iniciativa</h3><p>O programa <strong>Escravo, Nem Pensar!</strong> é uma iniciativa pioneira de prevenção ao trabalho escravo.</p>`,
       items: [
         {
           id: "1",
           type: "activity",
           title: "Cine-Debate: Trabalho Escravo Contemporâneo",
           status: "concluido",
-          cover: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=600&q=80",
-          summary: "Exibição do documentário seguida de mesa redonda com debate entre alunos sobre vulnerabilidade e direitos sociais.",
-          body: "<p>Realizamos no auditório da escola a exibição de um documentário reflexivo abordando o trabalho escravo em zonas rurais e urbanas. Após a exibição, os estudantes participaram de um debate produtivo levantando propostas de conscientização para a comunidade.</p>"
-        },
-        {
-          id: "2",
-          type: "activity",
-          title: "Oficina de Cartazes e Arte Protesto",
-          status: "andamento",
-          cover: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=600&q=80",
-          summary: "Criação de material visual educativo pelos alunos para exposição nos corredores e redes sociais.",
-          body: "<p>Os alunos do Ensino Médio estão desenvolvendo cartazes artísticos abordando a dignidade no trabalho e os canais de denúncia (Disque 100).</p>"
-        },
-        {
-          id: "3",
-          type: "material",
-          title: "Cartilha Educativa - Caderno do Professor",
-          status: "concluido",
-          cover: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=600&q=80",
-          summary: "Material de apoio pedagógico com orientações de atividades para sala de aula.",
-          body: "<p>Faça o download ou consulte a estrutura básica de propostas interdisciplinares para trabalhar o tema Trabalho Escravo nas disciplinas de História, Geografia e Sociologia.</p>"
+          cover: "",
+          summary: "Exibição de documentário com mesa redonda.",
+          body: "<p>Realizamos no auditório da escola a exibição de um documentário reflexivo.</p>"
         }
       ]
     };
 
-    // Inicialização dos Dados
     function getAppData() {
       const data = localStorage.getItem('enp_app_data');
       return data ? JSON.parse(data) : defaultData;
@@ -912,30 +349,25 @@
 
     let previousPage = 'home';
 
-    /* ==========================================================================
-       2. NAVEGAÇÃO E INTERFACE (ROUTING SIMPLE)
-       ========================================================================== */
-    const sidebar = document.getElementById('appSidebar');
+    /* 2. MENU RETRÁTIL E NAVEGAÇÃO */
+    const appContainer = document.getElementById('appContainer');
     const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
     const navButtons = document.querySelectorAll('.nav-btn');
     const sections = document.querySelectorAll('.page-section');
     const backBtn = document.getElementById('backBtn');
 
-    // Sidebar Toggle
+    // Botão de recolher/expandir menu corrigido
     toggleSidebarBtn.addEventListener('click', () => {
-      document.body.classList.toggle('sidebar-collapsed');
+      appContainer.classList.toggle('sidebar-collapsed');
     });
 
-    // Navegação entre Páginas
     function navigateTo(pageId) {
       sections.forEach(sec => sec.classList.remove('active'));
       const targetSection = document.getElementById(pageId + 'Page') || document.getElementById(pageId);
-      
       if (targetSection) {
         targetSection.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-
       navButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.page === pageId);
       });
@@ -949,43 +381,53 @@
       });
     });
 
-    backBtn.addEventListener('click', () => {
-      navigateTo(previousPage);
+    backBtn.addEventListener('click', () => navigateTo(previousPage));
+
+    /* 3. UPLOAD DE IMAGEM LOCAL (SEM URL) */
+    document.getElementById('contentCoverFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('contentCoverBase64').value = evt.target.result;
+          document.getElementById('coverPreview').innerHTML = `<img src="${evt.target.result}" style="max-height:100px; border-radius:4px;">`;
+        };
+        reader.readAsDataURL(file);
+      }
     });
 
-    /* ==========================================================================
-       3. RENDERIZAÇÃO DE CONTEÚDOS
-       ========================================================================== */
+    function insertLocalImageEditor(event, editorId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgHtml = `<img src="${e.target.result}" style="max-width:100%; height:auto; border-radius:4px; margin: 10px 0;">`;
+          document.getElementById(editorId).focus();
+          document.execCommand('insertHTML', false, imgHtml);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    /* 4. RENDERIZAÇÃO DE CONTEÚDO */
     function renderApp() {
       const data = getAppData();
-      document.getElementById('footerYear').textContent = new Date().getFullYear();
 
-      // Configurações e Cabeçalhos
       document.getElementById('heroTitleDisplay').textContent = data.config.title;
       document.getElementById('heroSchoolDisplay').textContent = data.config.school;
       document.getElementById('sidebarSchoolLabel').textContent = data.config.school;
-      document.getElementById('footerSchoolLabel').textContent = data.config.school;
-
-      // Página Sobre
       document.getElementById('aboutContentDisplay').innerHTML = data.about;
 
-      // Inputs do Admin Config
       document.getElementById('inputHeaderTitle').value = data.config.title;
       document.getElementById('inputSchoolName').value = data.config.school;
       document.getElementById('aboutEditor').innerHTML = data.about;
 
-      // Estatísticas
       const activities = data.items.filter(i => i.type === 'activity');
       const materials = data.items.filter(i => i.type === 'material');
-      document.getElementById('statActivitiesCount').textContent = activities.length;
-      document.getElementById('statMaterialsCount').textContent = materials.length;
 
-      // Renderizar Grids
       renderGrid('recentActivitiesGrid', activities.slice(0, 3));
       renderGrid('activitiesGrid', activities);
       renderGrid('materialsGrid', materials);
-
-      // Renderizar Tabela Admin
       renderAdminTable(data.items);
     }
 
@@ -994,21 +436,16 @@
       container.innerHTML = '';
 
       if (items.length === 0) {
-        container.innerHTML = '<p style="grid-column: 1/-1; color: var(--texto-suave);">Nenhum item cadastrado nesta seção.</p>';
+        container.innerHTML = '<p style="color: var(--texto-suave);">Nenhum item cadastrado.</p>';
         return;
       }
 
       items.forEach(item => {
         const card = document.createElement('div');
         card.className = 'card';
-
-        const statusClass = item.status === 'concluido' ? 'tag-concluido' : item.status === 'andamento' ? 'tag-andamento' : 'tag-planejado';
-        const statusText = item.status === 'concluido' ? 'Concluído' : item.status === 'andamento' ? 'Em Andamento' : 'Planejado';
-
         card.innerHTML = `
           ${item.cover ? `<img src="${item.cover}" class="card-img" alt="${item.title}">` : ''}
           <div class="card-body">
-            ${item.type === 'activity' ? `<span class="meta-tag ${statusClass}">${statusText}</span>` : ''}
             <h3>${item.title}</h3>
             <p>${item.summary}</p>
             <button class="btn-action" onclick="viewDetail('${item.id}')">Ver Detalhes</button>
@@ -1030,26 +467,17 @@
       navigateTo('contentViewPage');
     }
 
-    /* ==========================================================================
-       4. BUSCA EM TEMPO REAL
-       ========================================================================== */
-    document.getElementById('homeSearchInput').addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      const data = getAppData();
-      const filtered = data.items.filter(i => i.type === 'activity' && (i.title.toLowerCase().includes(query) || i.summary.toLowerCase().includes(query)));
-      renderGrid('recentActivitiesGrid', filtered);
-    });
+    /* 5. BUSCA EM TEMPO REAL */
+    document.getElementById('homeSearchInput').addEventListener('input', (e) => filterList(e.target.value, 'activity', 'recentActivitiesGrid'));
+    document.getElementById('actSearchInput').addEventListener('input', (e) => filterList(e.target.value, 'activity', 'activitiesGrid'));
 
-    document.getElementById('actSearchInput').addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
+    function filterList(query, type, containerId) {
       const data = getAppData();
-      const filtered = data.items.filter(i => i.type === 'activity' && (i.title.toLowerCase().includes(query) || i.summary.toLowerCase().includes(query)));
-      renderGrid('activitiesGrid', filtered);
-    });
+      const filtered = data.items.filter(i => i.type === type && (i.title.toLowerCase().includes(query.toLowerCase()) || i.summary.toLowerCase().includes(query.toLowerCase())));
+      renderGrid(containerId, filtered);
+    }
 
-    /* ==========================================================================
-       5. PAINEL ADMIN, AUTENTICAÇÃO E EDITOR RICHO
-       ========================================================================== */
+    /* 6. ADMIN E AUTENTICAÇÃO COM SENHA 'admin123' */
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminLoginBox = document.getElementById('adminLoginBox');
     const adminPanel = document.getElementById('adminPanel');
@@ -1058,12 +486,12 @@
     adminLoginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const pass = document.getElementById('adminPassword').value;
-      if (pass === 'admin' || pass === '1234') { // Senha simples de acesso
+      if (pass === 'admin123') { 
         adminLoginBox.style.display = 'none';
         adminPanel.style.display = 'block';
         showToast('Acesso concedido!');
       } else {
-        alert('Senha incorreta! (Senha padrão: admin)');
+        alert('Senha incorreta! Tente novamente.');
       }
     });
 
@@ -1073,25 +501,10 @@
       document.getElementById('adminPassword').value = '';
     });
 
-    // Editor de texto simples (Rich Text)
     function execCmd(command, value = null) {
       document.execCommand(command, false, value);
     }
-    function execCmdContent(command, value = null) {
-      document.execCommand(command, false, value);
-    }
 
-    function insertImagePrompt() {
-      const url = prompt("Digite a URL da imagem:");
-      if (url) execCmd('insertImage', url);
-    }
-
-    function insertImagePromptContent() {
-      const url = prompt("Digite a URL da imagem:");
-      if (url) execCmdContent('insertImage', url);
-    }
-
-    // Salvar Configurações Gerais
     document.getElementById('btnSaveConfig').addEventListener('click', () => {
       const data = getAppData();
       data.config.title = document.getElementById('inputHeaderTitle').value;
@@ -1100,7 +513,6 @@
       showToast('Configurações salvas!');
     });
 
-    // Salvar Página Sobre
     document.getElementById('btnSaveAbout').addEventListener('click', () => {
       const data = getAppData();
       data.about = document.getElementById('aboutEditor').innerHTML;
@@ -1108,9 +520,7 @@
       showToast('Conteúdo "Sobre" atualizado!');
     });
 
-    /* ==========================================================================
-       6. CRUD DE ITENS (ATIVIDADES E MATERIAIS)
-       ========================================================================== */
+    /* 7. CRUD DE ITENS */
     const contentForm = document.getElementById('contentForm');
     const btnCancelEdit = document.getElementById('btnCancelEdit');
 
@@ -1124,7 +534,7 @@
         type: document.getElementById('contentType').value,
         title: document.getElementById('contentTitle').value,
         status: document.getElementById('contentStatus').value,
-        cover: document.getElementById('contentCover').value,
+        cover: document.getElementById('contentCoverBase64').value,
         summary: document.getElementById('contentSummary').value,
         body: document.getElementById('contentBodyEditor').innerHTML
       };
@@ -1152,10 +562,8 @@
           <td>${item.title}</td>
           <td>${item.type === 'activity' ? item.status : '-'}</td>
           <td>
-            <div class="table-actions">
-              <button class="btn-action btn-secondary" style="padding: 4px 8px; font-size: 0.8rem;" onclick="editItem('${item.id}')">Editar</button>
-              <button class="btn-action btn-danger" style="padding: 4px 8px; font-size: 0.8rem;" onclick="deleteItem('${item.id}')">Excluir</button>
-            </div>
+            <button class="btn-action btn-secondary" style="padding: 4px 8px; font-size: 0.8rem;" onclick="editItem('${item.id}')">Editar</button>
+            <button class="btn-action btn-danger" style="padding: 4px 8px; font-size: 0.8rem;" onclick="deleteItem('${item.id}')">Excluir</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -1171,19 +579,20 @@
       document.getElementById('contentType').value = item.type;
       document.getElementById('contentTitle').value = item.title;
       document.getElementById('contentStatus').value = item.status;
-      document.getElementById('contentCover').value = item.cover || '';
+      document.getElementById('contentCoverBase64').value = item.cover || '';
+      document.getElementById('coverPreview').innerHTML = item.cover ? `<img src="${item.cover}" style="max-height:100px;">` : '';
       document.getElementById('contentSummary').value = item.summary;
       document.getElementById('contentBodyEditor').innerHTML = item.body || '';
 
       document.getElementById('formContentTitle').textContent = "✏️ Editar Item";
       btnCancelEdit.style.display = 'inline-block';
-      window.scrollTo({ top: contentForm.offsetTop - 100, behavior: 'smooth' });
+      window.scrollTo({ top: contentForm.offsetTop - 50, behavior: 'smooth' });
     }
 
     function deleteItem(id) {
       if (confirm('Tem certeza que deseja excluir este item?')) {
         const data = getAppData();
-               data.items = data.items.filter(i => i.id !== id);
+        data.items = data.items.filter(i => i.id !== id);
         saveAppData(data);
         showToast('Item excluído com sucesso!');
       }
@@ -1192,6 +601,8 @@
     function resetForm() {
       document.getElementById('contentId').value = '';
       contentForm.reset();
+      document.getElementById('contentCoverBase64').value = '';
+      document.getElementById('coverPreview').innerHTML = '';
       document.getElementById('contentBodyEditor').innerHTML = '';
       document.getElementById('formContentTitle').textContent = "➕ Cadastrar Nova Atividade / Material";
       btnCancelEdit.style.display = 'none';
@@ -1199,9 +610,7 @@
 
     btnCancelEdit.addEventListener('click', resetForm);
 
-    /* ==========================================================================
-       7. NOTIFICAÇÕES (TOAST)
-       ========================================================================== */
+    /* 8. TOAST NOTIFICAÇÃO */
     function showToast(message) {
       const toast = document.getElementById('toast');
       toast.textContent = message;
@@ -1211,9 +620,7 @@
       }, 3000);
     }
 
-    /* ==========================================================================
-       8. INICIALIZAÇÃO DO APLICATIVO
-       ========================================================================== */
+    /* INICIALIZAÇÃO DA APLICAÇÃO */
     document.addEventListener('DOMContentLoaded', () => {
       renderApp();
     });
