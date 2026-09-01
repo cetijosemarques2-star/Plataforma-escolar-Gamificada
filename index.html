@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projeto Escravo, Nem Pensar!</title>
+  <title>Projeto Escravo, Nem Pensar! — CETI José Marques</title>
   <style>
     :root {
       --terracota: #C85A32;
@@ -15,15 +15,19 @@
       --texto-suave: #665A55;
       --cinza-linhas: #E5DDD8;
       --vermelho-danger: #D93838;
-      --sombra: 0 4px 12px rgba(140, 59, 30, 0.08);
-      --raio-borda: 10px;
+      --sombra: 0 8px 24px rgba(140, 59, 30, 0.08);
+      --sombra-forte: 0 12px 32px rgba(140, 59, 30, 0.15);
+      --raio-borda: 12px;
+      --sidebar-width: 260px;
+      --sidebar-collapsed-width: 70px;
+      --transition-speed: 0.3s;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
@@ -31,103 +35,235 @@
       color: var(--texto-escuro);
       line-height: 1.6;
       display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* MENU LATERAL RESPONSIVO */
+    aside.sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, var(--terracota-escuro), #6A2C15);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      transition: width var(--transition-speed) ease;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    }
+
+    body.sidebar-collapsed aside.sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    .sidebar-header {
+      padding: 20px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .brand-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      background-color: var(--laranja-terra);
+      color: white;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .brand-text h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #FFF;
+      line-height: 1.2;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .toggle-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .toggle-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 20px 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-menu button {
+      width: 100%;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.85);
+      padding: 12px 15px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .sidebar-menu button:hover, .sidebar-menu button.active {
+      background-color: var(--laranja-terra);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    body.sidebar-collapsed .sidebar-menu button:hover {
+      transform: none;
+    }
+
+    .sidebar-menu button svg {
+      min-width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    body.sidebar-collapsed .brand-text,
+    body.sidebar-collapsed .sidebar-menu button span {
+      display: none;
+    }
+
+    /* CONTAINER PRINCIPAL DA PÁGINA */
+    .app-container {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    /* CABEÇALHO */
-    header {
-      background: linear-gradient(135deg, var(--terracota-escuro), var(--terracota));
+    body.sidebar-collapsed .app-container {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* BANNER HERO NA HOME */
+    .hero-banner {
+      background: linear-gradient(135deg, var(--terracota-escuro), var(--laranja-terra));
       color: white;
-      padding: 20px;
+      padding: 60px 40px;
+      border-radius: var(--raio-borda);
+      margin-bottom: 30px;
       box-shadow: var(--sombra);
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.6s ease;
     }
 
-    .header-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
+    .hero-banner h2 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .hero-banner p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      opacity: 0.95;
+      margin-bottom: 20px;
+    }
+
+    .school-pill {
+      display: inline-flex;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .header-title h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .header-title p {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
-    /* NAVEGAÇÃO */
-    nav {
-      background-color: white;
-      border-bottom: 2px solid var(--cinza-linhas);
-    }
-
-    .nav-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      gap: 5px;
-      overflow-x: auto;
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      padding: 15px 20px;
-      font-size: 0.95rem;
+      gap: 8px;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
       font-weight: 600;
-      color: var(--texto-suave);
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s ease;
-      white-space: nowrap;
+      backdrop-filter: blur(4px);
     }
 
-    .nav-btn:hover, .nav-btn.active {
-      color: var(--terracota);
-      border-bottom-color: var(--terracota);
-      background-color: rgba(200, 90, 50, 0.04);
-    }
-
-    /* CONTEÚDO PRINCIPAL */
+    /* MAIN CONTENT */
     main {
+      padding: 40px;
       flex: 1;
-      max-width: 1100px;
+      max-width: 1300px;
       width: 100%;
-      margin: 30px auto;
-      padding: 0 20px;
+      margin: 0 auto;
     }
 
     .page-section {
       display: none;
+      animation: fadeIn 0.4s ease;
     }
 
     .page-section.active {
       display: block;
     }
 
-    .section-title {
-      font-size: 1.5rem;
-      color: var(--terracota-escuro);
-      margin-bottom: 20px;
-      border-bottom: 2px solid var(--laranja-terra);
-      padding-bottom: 8px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* GRID DE CARDS */
+    .section-title {
+      font-size: 1.6rem;
+      color: var(--terracota-escuro);
+      margin-bottom: 25px;
+      position: relative;
+      padding-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background-color: var(--laranja-terra);
+      border-radius: 2px;
+    }
+
+    /* GRID & CARDS */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
     }
 
     .card {
@@ -136,17 +272,18 @@
       border-radius: var(--raio-borda);
       overflow: hidden;
       box-shadow: var(--sombra);
-      transition: transform 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       display: flex;
       flex-direction: column;
     }
 
     .card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-6px);
+      box-shadow: var(--sombra-forte);
     }
 
     .card-body {
-      padding: 20px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -154,25 +291,26 @@
 
     .card-body h3 {
       color: var(--terracota-escuro);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      font-size: 1.2rem;
     }
 
     .card-body p {
       color: var(--texto-suave);
       font-size: 0.95rem;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       flex: 1;
     }
 
     .meta-tag {
       display: inline-block;
-      background-color: rgba(224, 109, 59, 0.15);
+      background-color: rgba(224, 109, 59, 0.12);
       color: var(--terracota-escuro);
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 10px;
+      font-weight: 700;
+      margin-bottom: 12px;
       width: fit-content;
     }
 
@@ -181,18 +319,19 @@
       background-color: var(--terracota);
       color: white;
       border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
+      padding: 12px 18px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
-      transition: background 0.2s;
-      width: 100%;
+      transition: all 0.2s ease;
       text-align: center;
       text-decoration: none;
+      display: inline-block;
     }
 
     .btn-action:hover {
       background-color: var(--terracota-escuro);
+      box-shadow: 0 4px 10px rgba(140, 59, 30, 0.2);
     }
 
     .btn-secondary {
@@ -208,50 +347,93 @@
     }
 
     .btn-danger:hover {
-      background-color: #b02a2a;
+      background-color: #B02A2A;
     }
 
-    /* PAINEL ADMINISTRATIVO */
+    /* FORMULÁRIOS E EDITOR ADMIN */
     .admin-box {
       background: white;
       border-radius: var(--raio-borda);
-      padding: 25px;
+      padding: 30px;
       border: 1px solid var(--cinza-linhas);
       box-shadow: var(--sombra);
       margin-bottom: 30px;
     }
 
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       font-weight: 600;
       color: var(--texto-escuro);
     }
 
     .form-group input, .form-group textarea, .form-group select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: 1px solid var(--cinza-linhas);
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--terracota);
+    }
+
+    /* TOOLBAR DO EDITOR DE TEXTO */
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: #F4EFEA;
+      padding: 8px;
+      border: 1px solid var(--cinza-linhas);
+      border-bottom: none;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .editor-toolbar button, .editor-toolbar select {
+      background: white;
+      border: 1px solid var(--cinza-linhas);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .editor-toolbar button:hover {
+      background: var(--bege-suave);
+      border-color: var(--terracota);
     }
 
     .editor-content {
-      min-height: 150px;
+      min-height: 200px;
       border: 1px solid var(--cinza-linhas);
-      border-radius: 6px;
-      padding: 12px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      padding: 15px;
       background: white;
+      overflow-y: auto;
+    }
+
+    .editor-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 10px 0;
     }
 
     /* TABELAS ADMIN */
     .table-container {
       overflow-x: auto;
-      margin-top: 15px;
+      margin-top: 20px;
     }
 
     table {
@@ -261,18 +443,19 @@
     }
 
     th, td {
-      padding: 12px;
+      padding: 14px;
       border-bottom: 1px solid var(--cinza-linhas);
     }
 
     th {
       background-color: rgba(200, 90, 50, 0.08);
       color: var(--terracota-escuro);
+      font-weight: 700;
     }
 
     .table-actions {
       display: flex;
-      gap: 5px;
+      gap: 8px;
     }
 
     /* RODAPÉ */
@@ -280,625 +463,554 @@
       background-color: var(--terracota-escuro);
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 25px;
       margin-top: auto;
       font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      aside.sidebar {
+        width: var(--sidebar-collapsed-width);
+      }
+      .brand-text, .sidebar-menu button span {
+        display: none;
+      }
+      .app-container {
+        margin-left: var(--sidebar-collapsed-width);
+      }
+      main {
+        padding: 20px 15px;
+      }
+      .hero-banner {
+        padding: 30px 20px;
+      }
+      .hero-banner h2 {
+        font-size: 1.6rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- CABEÇALHO -->
-  <header>
-    <div class="header-container">
-      <div class="header-title">
-        <h1 id="headerTitleDisplay">Projeto Escravo, Nem Pensar!</h1>
-        <p>Promovendo os Direitos Humanos e o Trabalho Digno na Educação</p>
+  <!-- MENU LATERAL RESPONSIVO -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-info">
+        <div class="brand-badge">JM</div>
+        <div class="brand-text">
+          <h1>Projeto ENP</h1>
+          <p id="sidebarSchoolLabel">CETI José Marques</p>
+        </div>
       </div>
+      <button class="toggle-btn" onclick="App.toggleSidebar()" title="Recolher Menu">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
     </div>
-  </header>
+    <ul class="sidebar-menu">
+      <li>
+        <button class="nav-btn active" onclick="App.navigateTo('home')">
+          <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Início</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="App.navigateTo('about')">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <span>Sobre o Projeto</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="App.navigateTo('activities')">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <span>Atividades Pedagógicas</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="App.navigateTo('materials')">
+          <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+          <span>Materiais de Apoio</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="App.navigateTo('admin')">
+          <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+          <span>Painel Admin</span>
+        </button>
+      </li>
+    </ul>
+  </aside>
 
-  <!-- NAVEGAÇÃO -->
-  <nav>
-    <div class="nav-container">
-      <button class="nav-btn active" onclick="App.navigateTo('home')">Início</button>
-      <button class="nav-btn" onclick="App.navigateTo('about')">Sobre o Projeto</button>
-      <button class="nav-btn" onclick="App.navigateTo('activities')">Atividades Pedagógicas</button>
-      <button class="nav-btn" onclick="App.navigateTo('practice')">Ações na Prática</button>
-      <button class="nav-btn" onclick="App.navigateTo('materials')">Materiais de Apoio</button>
-      <button class="nav-btn" onclick="App.navigateTo('admin')">Área Administrativa</button>
-    </div>
-  </nav>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main>
-
-    <!-- PÁGINA INICIAL -->
-    <section id="homePage" class="page-section active">
-      <h2 class="section-title">Atividades Recentes</h2>
-      <div id="recentActivitiesGrid" class="grid"></div>
-    </section>
-
-    <!-- SOBRE O PROJETO -->
-    <section id="aboutPage" class="page-section">
-      <h2 class="section-title">Sobre o Projeto</h2>
-      <div class="admin-box">
-        <div id="aboutContentDisplay"></div>
-      </div>
-    </section>
-
-    <!-- ATIVIDADES PEDAGÓGICAS -->
-    <section id="activitiesPage" class="page-section">
-      <h2 class="section-title">Atividades Pedagógicas</h2>
-      <div id="activitiesGrid" class="grid"></div>
-    </section>
-
-    <!-- AÇÕES NA PRÁTICA -->
-    <section id="practicePage" class="page-section">
-      <h2 class="section-title">Ações do Projeto na Prática</h2>
-      <div id="practiceGrid" class="grid"></div>
-    </section>
-
-    <!-- MATERIAIS DE APOIO -->
-    <section id="materialsPage" class="page-section">
-      <h2 class="section-title">Materiais de Apoio</h2>
-      <div id="materialsGrid" class="grid"></div>
-    </section>
-
-    <!-- DETALHES DE CONTEÚDO -->
-    <section id="contentViewPage" class="page-section">
-      <button class="btn-action btn-secondary" style="width: auto; margin-bottom: 20px;" onclick="App.goBack()">← Voltar</button>
-      <div class="admin-box">
-        <h2 id="viewTitle" style="color: var(--terracota-escuro); margin-bottom: 15px;"></h2>
-        <div id="viewCover"></div>
-        <div id="viewBody"></div>
-      </div>
-    </section>
-
-    <!-- ÁREA ADMINISTRATIVA -->
-    <section id="adminPage" class="page-section">
-      <h2 class="section-title">Painel Administrativo</h2>
-
-      <!-- LOGIN -->
-      <div id="adminLoginBox" class="admin-box" style="max-width: 400px; margin: 0 auto;">
-        <h3 style="margin-bottom: 15px; color: var(--terracota-escuro);">Acesso Restrito</h3>
-        <form id="adminLoginForm">
-          <div class="form-group">
-            <label>Senha de Acesso:</label>
-            <input type="password" id="adminPassword" required placeholder="Digite sua senha">
+  <!-- CONTEÚDO DA APLICAÇÃO -->
+  <div class="app-container">
+    <main>
+      <!-- PÁGINA INICIAL COM BANNER -->
+      <section id="homePage" class="page-section active">
+        <div class="hero-banner">
+          <div class="school-pill">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+            <span id="heroSchoolDisplay">CETI José Marques</span>
           </div>
-          <button type="submit" class="btn-action">Entrar no Painel</button>
-        </form>
-      </div>
-
-      <!-- PAINEL DE CONTROLE (QUANDO LOGADO) -->
-      <div id="adminPanel" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h3>Bem-vindo ao Gerenciador de Conteúdo</h3>
-          <button class="btn-action btn-danger" style="width: auto;" onclick="App.logoutAdmin()">Sair</button>
+          <h2 id="heroTitleDisplay" style="margin-top: 15px;">Projeto Escravo, Nem Pensar!</h2>
+          <p>Conscientização, Direitos Humanos e Erradicação do Trabalho Escravo Contemporâneo na Educação Pública.</p>
         </div>
 
-        <!-- CONFIGURAÇÕES GERAIS E RODAPÉ -->
-        <div class="admin-box">
-          <h3 style="color: var(--terracota-escuro); margin-bottom: 15px;">⚙️ Configurações Gerais do Site</h3>
-          <div class="form-group">
-            <label>Título do Cabeçalho:</label>
-            <input type="text" id="inputHeaderTitle">
-          </div>
-          <div class="form-group">
-            <label>Nome da Escola (Exibido no Rodapé):</label>
-            <input type="text" id="inputSchoolName">
-          </div>
-          <div class="form-group">
-            <label>Texto da Página "Sobre o Projeto":</label>
-            <div id="aboutEditorContent" class="editor-content" contenteditable="true"></div>
-          </div>
-          <button class="btn-action" onclick="App.saveSettings()">Salvar Configurações Gerais</button>
-        </div>
+        <h3 class="section-title">Últimas Atividades em Destaque</h3>
+        <div id="recentActivitiesGrid" class="grid"></div>
+      </section>
 
-        <!-- GERENCIAR ATIVIDADES -->
+      <!-- SOBRE O PROJETO -->
+      <section id="aboutPage" class="page-section">
+        <h2 class="section-title">Sobre o Projeto</h2>
         <div class="admin-box">
-          <h3 style="color: var(--terracota-escuro); margin-bottom: 15px;">📌 Atividades Pedagógicas</h3>
-          <form id="activityForm" onsubmit="event.preventDefault(); App.saveActivity();">
-            <input type="hidden" id="editActivityId">
-            <input type="hidden" id="currentActivityCoverUrl">
+          <div id="aboutContentDisplay"></div>
+        </div>
+      </section>
+
+      <!-- ATIVIDADES PEDAGÓGICAS -->
+      <section id="activitiesPage" class="page-section">
+        <h2 class="section-title">Atividades Pedagógicas</h2>
+        <div id="activitiesGrid" class="grid"></div>
+      </section>
+
+      <!-- MATERIAIS DE APOIO -->
+      <section id="materialsPage" class="page-section">
+        <h2 class="section-title">Materiais de Apoio</h2>
+        <div id="materialsGrid" class="grid"></div>
+      </section>
+
+      <!-- DETALHES DO CONTEÚDO -->
+      <section id="contentViewPage" class="page-section">
+        <button class="btn-action btn-secondary" style="margin-bottom: 20px;" onclick="App.goBack()">← Voltar</button>
+        <div class="admin-box">
+          <h2 id="viewTitle" style="color: var(--terracota-escuro); margin-bottom: 20px;"></h2>
+          <div id="viewCover"></div>
+          <div id="viewBody" style="font-size: 1.05rem; line-height: 1.8;"></div>
+        </div>
+      </section>
+
+      <!-- ÁREA ADMINISTRATIVA -->
+      <section id="adminPage" class="page-section">
+        <h2 class="section-title">Painel Administrativo</h2>
+
+        <!-- LOGIN -->
+        <div id="adminLoginBox" class="admin-box" style="max-width: 400px; margin: 40px auto;">
+          <h3 style="margin-bottom: 20px; color: var(--terracota-escuro); text-align: center;">Acesso Restrito</h3>
+          <form id="adminLoginForm">
             <div class="form-group">
-              <label>Título:</label>
-              <input type="text" id="inputActivityTitle" required>
+              <label>Senha de Acesso:</label>
+              <input type="password" id="adminPassword" required placeholder="Digite sua senha">
             </div>
-            <div class="form-group">
-              <label>Descrição Curta:</label>
-              <textarea id="inputActivityDesc" rows="2" required></textarea>
-            </div>
-            <div class="form-group">
-              <label>Status/Categoria:</label>
-              <input type="text" id="inputActivityStatus" placeholder="Ex: Em Andamento, Concluído">
-            </div>
-            <div class="form-group">
-              <label>Imagem de Capa:</label>
-              <input type="file" id="inputActivityCover" accept="image/*">
-            </div>
-            <div class="form-group">
-              <label>Conteúdo Detalhado:</label>
-              <div id="activityEditorContent" class="editor-content" contenteditable="true"></div>
-            </div>
-            <button type="submit" class="btn-action">Salvar Atividade</button>
+            <button type="submit" class="btn-action" style="width: 100%;">Entrar no Painel</button>
           </form>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="adminTableBody"></tbody>
-            </table>
-          </div>
         </div>
 
-        <!-- GERENCIAR PRÁTICAS -->
-        <div class="admin-box">
-          <h3 style="color: var(--terracota-escuro); margin-bottom: 15px;">🚀 Ações na Prática</h3>
-          <form id="practiceForm" onsubmit="event.preventDefault(); App.savePractice();">
-            <input type="hidden" id="editPracticeId">
-            <input type="hidden" id="currentPracticeCoverUrl">
-            <div class="form-group">
-              <label>Título:</label>
-              <input type="text" id="inputPracticeTitle" required>
-            </div>
-            <div class="form-group">
-              <label>Categoria:</label>
-              <input type="text" id="inputPracticeCategory" required>
-            </div>
-            <div class="form-group">
-              <label>Descrição Curta:</label>
-              <textarea id="inputPracticeDesc" rows="2" required></textarea>
-            </div>
-            <div class="form-group">
-              <label>Imagem de Capa:</label>
-              <input type="file" id="inputPracticeCover" accept="image/*">
-            </div>
-            <div class="form-group">
-              <label>Conteúdo Detalhado:</label>
-              <div id="practiceEditorContent" class="editor-content" contenteditable="true"></div>
-            </div>
-            <button type="submit" class="btn-action btn-secondary">Salvar Ação</button>
-          </form>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Categoria</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="adminPracticeTableBody"></tbody>
-            </table>
+        <!-- PAINEL DE CONTROLE (LOGADO) -->
+        <div id="adminPanel" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h3>Gerenciamento Geral de Conteúdos</h3>
+            <button class="btn-action btn-danger" onclick="App.logoutAdmin()">Sair</button>
           </div>
-        </div>
 
-        <!-- GERENCIAR MATERIAIS DE APOIO -->
-        <div class="admin-box">
-          <h3 style="color: var(--terracota-escuro); margin-bottom: 15px;">📚 Materiais de Apoio</h3>
-          <form id="materialForm" onsubmit="event.preventDefault(); App.saveMaterial();">
-            <input type="hidden" id="editMaterialId">
+          <!-- CONFIGURAÇÕES GERAIS -->
+          <div class="admin-box">
+            <h3 style="color: var(--terracota-escuro); margin-bottom: 20px;">⚙️ Configurações Gerais da Escola</h3>
             <div class="form-group">
-              <label>Título do Material:</label>
-              <input type="text" id="inputMaterialTitle" required>
+              <label>Título do Projeto:</label>
+              <input type="text" id="inputHeaderTitle">
             </div>
             <div class="form-group">
-              <label>Tipo (Ex: Cartilha, Vídeo, PDF):</label>
-              <input type="text" id="inputMaterialType" required>
+              <label>Nome da Escola:</label>
+              <input type="text" id="inputSchoolName">
             </div>
             <div class="form-group">
-              <label>Link de Acesso:</label>
-              <input type="url" id="inputMaterialLink" required placeholder="https://...">
+              <label>Texto da Página "Sobre o Projeto":</label>
+              <div class="editor-toolbar">
+                <button type="button" onclick="App.execCmd('bold')"><b>B</b></button>
+                <button type="button" onclick="App.execCmd('italic')"><i>I</i></button>
+                <button type="button" onclick="App.execCmd('underline')"><u>U</u></button>
+                <select onchange="App.execCmd('fontName', this.value)">
+                  <option value="Segoe UI">Segoe UI</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                </select>
+              </div>
+              <div id="aboutEditorContent" class="editor-content" contenteditable="true"></div>
             </div>
-            <div class="form-group">
-              <label>Descrição:</label>
-              <textarea id="inputMaterialDesc" rows="2" required></textarea>
-            </div>
-            <button type="submit" class="btn-action">Salvar Material</button>
-          </form>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Tipo</th>
-                  <th>Link</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="adminMaterialsTableBody"></tbody>
-            </table>
+            <button class="btn-action" onclick="App.saveSettings()">Salvar Configurações Gerais</button>
           </div>
+
+          <!-- GERENCIAR ATIVIDADES -->
+          <div class="admin-box">
+            <h3 style="color: var(--terracota-escuro); margin-bottom: 20px;">📌 Atividades Pedagógicas</h3>
+            <form id="activityForm" onsubmit="event.preventDefault(); App.saveActivity();">
+              <input type="hidden" id="editActivityId">
+              <input type="hidden" id="currentActivityCoverUrl">
+              <div class="form-group">
+                <label>Título:</label>
+                <input type="text" id="inputActivityTitle" required>
+              </div>
+              <div class="form-group">
+                <label>Descrição Curta:</label>
+                <textarea id="inputActivityDesc" rows="2" required></textarea>
+              </div>
+              <div class="form-group">
+                <label>Status / Categoria:</label>
+                <input type="text" id="inputActivityStatus" placeholder="Ex: Concluído, Em Andamento">
+              </div>
+              <div class="form-group">
+                <label>Imagem de Capa:</label>
+                <input type="file" id="inputActivityCover" accept="image/*">
+              </div>
+              
+              <!-- EDITOR RICO COM OPÇÕES DE FONTE E IMAGEM DENTRO DO TEXTO -->
+              <div class="form-group">
+                <label>Conteúdo Detalhado (Texto e Imagens Internas):</label>
+                <div class="editor-toolbar">
+                  <button type="button" onclick="App.execCmd('bold')"><b>B</b></button>
+                  <button type="button" onclick="App.execCmd('italic')"><i>I</i></button>
+                  <button type="button" onclick="App.execCmd('underline')"><u>U</u></button>
+                  <select onchange="App.execCmd('fontName', this.value)">
+                    <option value="Segoe UI">Segoe UI</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                  </select>
+                  <select onchange="App.execCmd('fontSize', this.value)">
+                    <option value="3">Normal</option>
+                    <option value="1">Pequeno</option>
+                    <option value="5">Grande</option>
+                    <option value="7">Muito Grande</option>
+                  </select>
+                  <button type="button" onclick="App.triggerInlineImageUpload('activityEditorContent')">📷 Inserir Imagem no Texto</button>
+                  <input type="file" id="inlineImageInput" accept="image/*" style="display:none;" onchange="App.insertInlineImage(event)">
+                </div>
+                <div id="activityEditorContent" class="editor-content" contenteditable="true"></div>
+              </div>
+
+              <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn-action">Salvar Atividade</button>
+                <button type="button" class="btn-action btn-secondary" onclick="App.resetActivityForm()">Cancelar</button>
+              </div>
+            </form>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="adminActivitiesTable"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- GERENCIAR MATERIAIS -->
+          <div class="admin-box">
+            <h3 style="color: var(--terracota-escuro); margin-bottom: 20px;">📚 Materiais de Apoio</h3>
+            <form id="materialForm" onsubmit="event.preventDefault(); App.saveMaterial();">
+              <input type="hidden" id="editMaterialId">
+              <div class="form-group">
+                <label>Título do Material:</label>
+                <input type="text" id="inputMaterialTitle" required>
+              </div>
+              <div class="form-group">
+                <label>Descrição:</label>
+                <textarea id="inputMaterialDesc" rows="2" required></textarea>
+              </div>
+              <div class="form-group">
+                <label>Link de Download ou Visualização (PDF/Drive):</label>
+                <input type="url" id="inputMaterialLink" placeholder="https://..." required>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn-action">Salvar Material</button>
+                <button type="button" class="btn-action btn-secondary" onclick="App.resetMaterialForm()">Cancelar</button>
+              </div>
+            </form>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Link</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="adminMaterialsTable"></tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
+      </section>
+    </main>
 
-      </div>
-    </section>
+    <!-- RODAPÉ -->
+    <footer>
+      <p id="footerText">CETI José Marques — Projeto Escravo, Nem Pensar! &copy; Todos os direitos reservados.</p>
+    </footer>
+  </div>
 
-  </main>
+  <!-- SCRIPT DE FUNCIONAMENTO (LÓGICA E BANCO DE DADOS LOCAL) -->
+  <script>
+    const App = {
+      activeEditorTarget: null,
+      previousPage: 'home',
 
-  <!-- RODAPÉ -->
-  <footer>
-    <p>&copy; Projeto Escravo, Nem Pensar! — CETI José Marques — Promovendo o Trabalho Digno na Educação Pública.</p>
-  </footer>
-
-  <!-- INTEGRACAO COM FIREBASE BASE DE DADOS -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAuk38nS6xqUjz-6sYL9Tkaf5iGYqMs-sA",
-      authDomain: "escravonempensar-d87c3.firebaseapp.com",
-      databaseURL: "https://escravonempensar-d87c3-default-rtdb.firebaseio.com",
-      projectId: "escravonempensar-d87c3",
-      storageBucket: "escravonempensar-d87c3.firebasestorage.app",
-      messagingSenderId: "132266908384",
-      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85",
-      measurementId: "G-7QJ9XL751E"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.App = {
-      state: {
-        currentPage: 'home',
-        previousPage: null,
-        isAdminLoggedIn: false,
+      // Dados Iniciais Padrão (LocalStorage)
+      data: {
         settings: {
-          headerTitle: 'Projeto Escravo, Nem Pensar!',
-          schoolName: 'CETI José Marques',
-          aboutText: 'O projeto busca conscientizar e prevenir o trabalho escravo contemporâneo por meio da educação pública.'
+          headerTitle: "Projeto Escravo, Nem Pensar!",
+          schoolName: "CETI José Marques",
+          aboutText: "O Projeto Escravo, Nem Pensar! é uma iniciativa voltada para a prevenção e erradicação do trabalho escravo contemporâneo por meio da educação pública. No CETI José Marques, desenvolvemos ações integradas com a comunidade escolar para promover o conhecimento sobre Direitos Humanos, legislação trabalhista e dignidade humana."
         },
-        activities: [],
-        practice: [],
-        materials: []
+        activities: [
+          {
+            id: '1',
+            title: "Oficina sobre Trabalho Análogo à Escravidão",
+            description: "Debates e produções textuais sobre os conceitos e marcas do trabalho escravo na sociedade contemporânea.",
+            status: "Concluído",
+            coverUrl: "",
+            body: "<p>Realizamos uma oficina pedagógica interativa abordando as definições legais e históricas do trabalho escravo no Brasil. Os alunos produziram cartazes e resumos reflexivos sobre o tema.</p>"
+          }
+        ],
+        materials: [
+          {
+            id: '1',
+            title: "Cartilha Educativa - Erradicação do Trabalho Escravo",
+            description: "Material de apoio pedagógico desenvolvido para orientar professores e alunos sobre a denúncia e prevenção.",
+            link: "https://escravonempensar.org.br/"
+          }
+        ]
       },
 
       init() {
-        this.bindEvents();
-        this.listenToFirebase();
+        this.loadData();
+        this.renderAll();
       },
 
-      listenToFirebase() {
-        const appDataRef = ref(db, 'appData');
-        onValue(appDataRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            this.state.settings = data.settings || this.state.settings;
-            this.state.activities = data.activities || [];
-            this.state.practice = data.practice || [];
-            this.state.materials = data.materials || [];
+      loadData() {
+        const stored = localStorage.getItem('enp_app_data');
+        if (stored) {
+          try {
+            this.data = JSON.parse(stored);
+          } catch (e) {
+            console.error("Erro ao carregar os dados:", e);
           }
-          this.renderAll();
-        });
-      },
-
-      saveStateToFirebase() {
-        set(ref(db, 'appData'), {
-          settings: this.state.settings,
-          activities: this.state.activities,
-          practice: this.state.practice,
-          materials: this.state.materials
-        }).catch((error) => {
-          console.error("Erro ao salvar:", error);
-          alert("Erro ao conectar com o banco de dados.");
-        });
-      },
-
-      bindEvents() {
-        const loginForm = document.getElementById('adminLoginForm');
-        if (loginForm) {
-          loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const passInput = document.getElementById('adminPassword');
-            if (passInput && (passInput.value === 'admin123' || passInput.value === 'admin')) {
-              this.state.isAdminLoggedIn = true;
-              passInput.value = '';
-              this.renderAdmin();
-            } else {
-              alert('Senha incorreta!');
-            }
-          });
         }
       },
 
-      navigateTo(page, prev = null) {
-        this.state.previousPage = prev || this.state.currentPage;
-        this.state.currentPage = page;
+      saveData() {
+        localStorage.setItem('enp_app_data', JSON.stringify(this.data));
+        this.renderAll();
+      },
 
+      toggleSidebar() {
+        document.body.classList.toggle('sidebar-collapsed');
+      },
+
+      navigateTo(pageId) {
         document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
 
-        const target = document.getElementById(page + 'Page');
+        const target = document.getElementById(pageId + 'Page');
         if (target) target.classList.add('active');
 
-        // Marca botão ativo na barra
-        const activeNavBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick')?.includes(page));
+        const activeNavBtn = Array.from(document.querySelectorAll('.sidebar-menu button')).find(b => b.getAttribute('onclick')?.includes(pageId));
         if (activeNavBtn) activeNavBtn.classList.add('active');
 
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+
+      goBack() {
+        this.navigateTo(this.previousPage || 'home');
       },
 
       renderAll() {
-        this.renderHeaderAndFooter();
-        this.renderHome();
-        this.renderAbout();
+        // Renderizar Informações da Escola e Título
+        document.getElementById('sidebarSchoolLabel').textContent = this.data.settings.schoolName;
+        document.getElementById('heroSchoolDisplay').textContent = this.data.settings.schoolName;
+        document.getElementById('heroTitleDisplay').textContent = this.data.settings.headerTitle;
+        document.getElementById('footerText').textContent = `${this.data.settings.schoolName} — ${this.data.settings.headerTitle} © Todos os direitos reservados.`;
+        document.getElementById('aboutContentDisplay').innerHTML = this.data.settings.aboutText;
+
+        // Preencher Campos de Configurações do Admin
+        document.getElementById('inputHeaderTitle').value = this.data.settings.headerTitle;
+        document.getElementById('inputSchoolName').value = this.data.settings.schoolName;
+        document.getElementById('aboutEditorContent').innerHTML = this.data.settings.aboutText;
+
+        // Renderizar Atividades
         this.renderActivities();
-        this.renderPractice();
+        // Renderizar Materiais
         this.renderMaterials();
-        this.renderAdmin();
-      },
-
-      renderHeaderAndFooter() {
-        const titleEl = document.getElementById('headerTitleDisplay');
-        if (titleEl) titleEl.textContent = this.state.settings.headerTitle;
-
-        const footerEl = document.querySelector('footer p');
-        if (footerEl) {
-          const school = this.state.settings.schoolName || 'CETI José Marques';
-          footerEl.innerHTML = `&copy; ${this.state.settings.headerTitle} — ${school} — Promovendo o Trabalho Digno na Educação Pública.`;
-            }
-      },
-
-      renderHome() {
-        const container = document.getElementById('recentActivitiesGrid');
-        if (!container) return;
-        container.innerHTML = '';
-        const recent = this.state.activities.slice(0, 3);
-
-        if (recent.length === 0) {
-          container.innerHTML = '<p>Nenhuma atividade cadastrada no momento.</p>';
-          return;
-        }
-
-        recent.forEach(act => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            ${act.cover ? `<img src="${act.cover}" alt="${act.title}" style="width:100%; height:180px; object-fit:cover;">` : ''}
-            <div class="card-body">
-              <h3>${act.title}</h3>
-              <p>${act.desc}</p>
-              <button class="btn-action btn-secondary" onclick="App.viewDetail('activity', '${act.id}')">Ver Detalhes</button>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      },
-
-      renderAbout() {
-        const container = document.getElementById('aboutContentDisplay');
-        if (container) {
-          container.innerHTML = this.state.settings.aboutText || '<p>Informações em breve.</p>';
-        }
       },
 
       renderActivities() {
-        const container = document.getElementById('activitiesGrid');
-        if (!container) return;
-        container.innerHTML = '';
+        const homeGrid = document.getElementById('recentActivitiesGrid');
+        const actGrid = document.getElementById('activitiesGrid');
+        const adminTable = document.getElementById('adminActivitiesTable');
 
-        this.state.activities.forEach(act => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            ${act.cover ? `<img src="${act.cover}" alt="${act.title}" style="width:100%; height:180px; object-fit:cover;">` : ''}
-            <div class="card-body">
-              <span class="meta-tag">${act.status || 'Atividade'}</span>
-              <h3>${act.title}</h3>
-              <p>${act.desc}</p>
-              <button class="btn-action btn-secondary" onclick="App.viewDetail('activity', '${act.id}')">Ver Mais</button>
+        homeGrid.innerHTML = '';
+        actGrid.innerHTML = '';
+        adminTable.innerHTML = '';
+
+        this.data.activities.forEach(item => {
+          const cardHtml = `
+            <div class="card">
+              <div class="card-body">
+                ${item.status ? `<span class="meta-tag">${item.status}</span>` : ''}
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+                <button class="btn-action" onclick="App.viewContent('activity', '${item.id}')">Ler mais</button>
+              </div>
             </div>
           `;
-          container.appendChild(card);
-        });
-      },
 
-      renderPractice() {
-        const container = document.getElementById('practiceGrid');
-        if (!container) return;
-        container.innerHTML = '';
+          homeGrid.innerHTML += cardHtml;
+          actGrid.innerHTML += cardHtml;
 
-        this.state.practice.forEach(prac => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            ${prac.cover ? `<img src="${prac.cover}" alt="${prac.title}" style="width:100%; height:180px; object-fit:cover;">` : ''}
-            <div class="card-body">
-              <span class="meta-tag">${prac.category}</span>
-              <h3>${prac.title}</h3>
-              <p>${prac.desc}</p>
-              <button class="btn-action btn-secondary" onclick="App.viewDetail('practice', '${prac.id}')">Ver Mais</button>
-            </div>
+          adminTable.innerHTML += `
+            <tr>
+              <td><strong>${item.title}</strong></td>
+              <td>${item.status || '-'}</td>
+              <td class="table-actions">
+                <button class="btn-action btn-secondary" onclick="App.editActivity('${item.id}')">Editar</button>
+                <button class="btn-action btn-danger" onclick="App.deleteActivity('${item.id}')">Excluir</button>
+              </td>
+            </tr>
           `;
-          container.appendChild(card);
         });
       },
 
       renderMaterials() {
-        const container = document.getElementById('materialsGrid');
-        if (!container) return;
-        container.innerHTML = '';
+        const matGrid = document.getElementById('materialsGrid');
+        const adminTable = document.getElementById('adminMaterialsTable');
 
-        this.state.materials.forEach(mat => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <div class="card-body">
-              <span class="meta-tag">${mat.type}</span>
-              <h3>${mat.title}</h3>
-              <p>${mat.desc}</p>
-              <a href="${mat.link}" target="_blank" class="btn-action btn-secondary">Acessar Material</a>
+        matGrid.innerHTML = '';
+        adminTable.innerHTML = '';
+
+        this.data.materials.forEach(item => {
+          matGrid.innerHTML += `
+            <div class="card">
+              <div class="card-body">
+                <span class="meta-tag">Material Pedagógico</span>
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-action btn-secondary">Acessar Material</a>
+              </div>
             </div>
           `;
-          container.appendChild(card);
+
+          adminTable.innerHTML += `
+            <tr>
+              <td><strong>${item.title}</strong></td>
+              <td><a href="${item.link}" target="_blank">Acessar Link</a></td>
+              <td class="table-actions">
+                <button class="btn-action btn-secondary" onclick="App.editMaterial('${item.id}')">Editar</button>
+                <button class="btn-action btn-danger" onclick="App.deleteMaterial('${item.id}')">Excluir</button>
+              </td>
+            </tr>
+          `;
         });
       },
 
-      viewDetail(type, id) {
-        let item = null;
-        if (type === 'activity') item = this.state.activities.find(a => a.id === id);
-        if (type === 'practice') item = this.state.practice.find(p => p.id === id);
+      viewContent(type, id) {
+        if (type === 'activity') {
+          const item = this.data.activities.find(a => a.id === id);
+          if (item) {
+            this.previousPage = 'activities';
+            document.getElementById('viewTitle').textContent = item.title;
+            
+            const coverContainer = document.getElementById('viewCover');
+            if (item.coverUrl) {
+              coverContainer.innerHTML = `<img src="${item.coverUrl}" style="max-width:100%; height:auto; border-radius:12px; margin-bottom:20px;">`;
+            } else {
+              coverContainer.innerHTML = '';
+            }
 
-        if (!item) return;
-
-        document.getElementById('viewTitle').textContent = item.title;
-        const coverContainer = document.getElementById('viewCover');
-        
-        if (item.cover) {
-          coverContainer.innerHTML = `<img src="${item.cover}" alt="${item.title}" style="max-width: 100%; height: auto; border-radius: var(--raio-borda); margin-bottom: 20px;">`;
-        } else {
-          coverContainer.innerHTML = '';
-        }
-
-        document.getElementById('viewBody').innerHTML = item.body || '<p>Nenhum conteúdo detalhado cadastrado.</p>';
-        this.navigateTo('contentView', this.state.currentPage);
-      },
-
-      goBack() {
-        this.navigateTo(this.state.previousPage || 'home');
-      },
-
-      renderAdmin() {
-        const loginBox = document.getElementById('adminLoginBox');
-        const adminPanel = document.getElementById('adminPanel');
-
-        if (this.state.isAdminLoggedIn) {
-          if (loginBox) loginBox.style.display = 'none';
-          if (adminPanel) adminPanel.style.display = 'block';
-
-          document.getElementById('inputHeaderTitle').value = this.state.settings.headerTitle || '';
-          document.getElementById('inputSchoolName').value = this.state.settings.schoolName || 'CETI José Marques';
-          document.getElementById('aboutEditorContent').innerHTML = this.state.settings.aboutText || '';
-
-          this.renderAdminTables();
-        } else {
-          if (loginBox) loginBox.style.display = 'block';
-          if (adminPanel) adminPanel.style.display = 'none';
+            document.getElementById('viewBody').innerHTML = item.body || item.description;
+            this.navigateTo('contentView');
+          }
         }
       },
 
+      /* AUTENTICAÇÃO E ADMIN */
       logoutAdmin() {
-        this.state.isAdminLoggedIn = false;
-        this.renderAdmin();
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('adminLoginBox').style.display = 'block';
+        document.getElementById('adminPassword').value = '';
       },
 
       saveSettings() {
-        const headerTitle = document.getElementById('inputHeaderTitle').value;
-        const schoolName = document.getElementById('inputSchoolName').value;
-        const aboutText = document.getElementById('aboutEditorContent').innerHTML;
-
-        this.state.settings = { headerTitle, schoolName, aboutText };
-        this.saveStateToFirebase();
-        alert('Configurações salvas!');
+        this.data.settings.headerTitle = document.getElementById('inputHeaderTitle').value;
+        this.data.settings.schoolName = document.getElementById('inputSchoolName').value;
+        this.data.settings.aboutText = document.getElementById('aboutEditorContent').innerHTML;
+        this.saveData();
+        alert('Configurações salvas com sucesso!');
       },
 
-      renderAdminTables() {
-        // Tabela Atividades
-        const tbodyAct = document.getElementById('adminTableBody');
-        tbodyAct.innerHTML = '';
-        this.state.activities.forEach(act => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td><strong>${act.title}</strong></td>
-            <td><span class="meta-tag">${act.status || 'Atividade'}</span></td>
-            <td class="table-actions">
-              <button class="btn-action btn-secondary" onclick="App.editActivity('${act.id}')">Editar</button>
-              <button class="btn-action btn-danger" onclick="App.deleteActivity('${act.id}')">Excluir</button>
-            </td>
-          `;
-          tbodyAct.appendChild(tr);
-        });
-
-        // Tabela Práticas
-        const tbodyPrac = document.getElementById('adminPracticeTableBody');
-        tbodyPrac.innerHTML = '';
-        this.state.practice.forEach(prac => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td><strong>${prac.title}</strong></td>
-            <td>${prac.category}</td>
-            <td class="table-actions">
-              <button class="btn-action btn-secondary" onclick="App.editPractice('${prac.id}')">Editar</button>
-              <button class="btn-action btn-danger" onclick="App.deletePractice('${prac.id}')">Excluir</button>
-            </td>
-          `;
-          tbodyPrac.appendChild(tr);
-        });
-
-        // Tabela Materiais
-        const tbodyMat = document.getElementById('adminMaterialsTableBody');
-        tbodyMat.innerHTML = '';
-        this.state.materials.forEach(mat => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td><strong>${mat.title}</strong></td>
-            <td>${mat.type}</td>
-            <td><a href="${mat.link}" target="_blank">Abrir</a></td>
-            <td class="table-actions">
-              <button class="btn-action btn-secondary" onclick="App.editMaterial('${mat.id}')">Editar</button>
-              <button class="btn-action btn-danger" onclick="App.deleteMaterial('${mat.id}')">Excluir</button>
-            </td>
-          `;
-          tbodyMat.appendChild(tr);
-        });
-      },
-
+      /* ATIVIDADES - SALVAR / EDITAR / EXCLUIR */
       saveActivity() {
         const id = document.getElementById('editActivityId').value;
         const title = document.getElementById('inputActivityTitle').value;
-        const desc = document.getElementById('inputActivityDesc').value;
+        const description = document.getElementById('inputActivityDesc').value;
         const status = document.getElementById('inputActivityStatus').value;
         const body = document.getElementById('activityEditorContent').innerHTML;
         const coverInput = document.getElementById('inputActivityCover');
-        const currentCover = document.getElementById('currentActivityCoverUrl').value;
 
         const processSave = (coverUrl) => {
           if (id) {
-            const index = this.state.activities.findIndex(a => a.id === id);
-            if (index !== -1) this.state.activities[index] = { id, title, desc, status, body, cover: coverUrl };
+            const index = this.data.activities.findIndex(a => a.id === id);
+            if (index !== -1) {
+              this.data.activities[index] = { id, title, description, status, body, coverUrl: coverUrl || this.data.activities[index].coverUrl };
+            }
           } else {
-            const newId = 'act_' + Date.now();
-            this.state.activities.push({ id: newId, title, desc, status, body, cover: coverUrl });
+            const newActivity = {
+              id: Date.now().toString(),
+              title,
+              description,
+              status,
+              body,
+              coverUrl
+            };
+            this.data.activities.unshift(newActivity);
           }
-          this.saveStateToFirebase();
+          this.saveData();
           this.resetActivityForm();
-          alert('Atividade salva!');
+          alert('Atividade salva com sucesso!');
         };
 
         if (coverInput.files && coverInput.files[0]) {
           const reader = new FileReader();
-          reader.onload = (e) => processSave(e.target.result);
+          reader.onload = function(e) {
+            processSave(e.target.result);
+          };
           reader.readAsDataURL(coverInput.files[0]);
         } else {
-          processSave(currentCover);
+          processSave(document.getElementById('currentActivityCoverUrl').value);
         }
       },
 
       editActivity(id) {
-        const act = this.state.activities.find(a => a.id === id);
-        if (!act) return;
-
-        document.getElementById('editActivityId').value = act.id;
-        document.getElementById('inputActivityTitle').value = act.title;
-        document.getElementById('inputActivityDesc').value = act.desc;
-        document.getElementById('inputActivityStatus').value = act.status || '';
-        document.getElementById('currentActivityCoverUrl').value = act.cover || '';
-        document.getElementById('activityEditorContent').innerHTML = act.body || '';
+        const item = this.data.activities.find(a => a.id === id);
+        if (item) {
+          document.getElementById('editActivityId').value = item.id;
+          document.getElementById('inputActivityTitle').value = item.title;
+          document.getElementById('inputActivityDesc').value = item.description;
+          document.getElementById('inputActivityStatus').value = item.status;
+          document.getElementById('activityEditorContent').innerHTML = item.body || '';
+          document.getElementById('currentActivityCoverUrl').value = item.coverUrl || '';
+          window.scrollTo({ top: document.getElementById('activityForm').offsetTop - 20, behavior: 'smooth' });
+        }
       },
 
       deleteActivity(id) {
-        if (confirm('Deseja excluir esta atividade?')) {
-          this.state.activities = this.state.activities.filter(a => a.id !== id);
-          this.saveStateToFirebase();
+        if (confirm('Deseja realmente excluir esta atividade?')) {
+          this.data.activities = this.data.activities.filter(a => a.id !== id);
+          this.saveData();
         }
       },
 
@@ -909,109 +1021,96 @@
         document.getElementById('activityEditorContent').innerHTML = '';
       },
 
-      savePractice() {
-        const id = document.getElementById('editPracticeId').value;
-        const title = document.getElementById('inputPracticeTitle').value;
-        const desc = document.getElementById('inputPracticeDesc').value;
-        const category = document.getElementById('inputPracticeCategory').value;
-        const body = document.getElementById('practiceEditorContent').innerHTML;
-        const coverInput = document.getElementById('inputPracticeCover');
-        const currentCover = document.getElementById('currentPracticeCoverUrl').value;
-
-        const processSave = (coverUrl) => {
-          if (id) {
-            const index = this.state.practice.findIndex(p => p.id === id);
-            if (index !== -1) this.state.practice[index] = { id, title, desc, category, body, cover: coverUrl };
-          } else {
-            const newId = 'prac_' + Date.now();
-            this.state.practice.push({ id: newId, title, desc, category, body, cover: coverUrl });
-          }
-          this.saveStateToFirebase();
-          this.resetPracticeForm();
-          alert('Ação salva!');
-        };
-
-        if (coverInput.files && coverInput.files[0]) {
-          const reader = new FileReader();
-          reader.onload = (e) => processSave(e.target.result);
-          reader.readAsDataURL(coverInput.files[0]);
-        } else {
-          processSave(currentCover);
-        }
-      },
-
-      editPractice(id) {
-        const prac = this.state.practice.find(p => p.id === id);
-        if (!prac) return;
-
-        document.getElementById('editPracticeId').value = prac.id;
-        document.getElementById('inputPracticeTitle').value = prac.title;
-        document.getElementById('inputPracticeDesc').value = prac.desc;
-        document.getElementById('inputPracticeCategory').value = prac.category;
-        document.getElementById('currentPracticeCoverUrl').value = prac.cover || '';
-        document.getElementById('practiceEditorContent').innerHTML = prac.body || '';
-      },
-
-      deletePractice(id) {
-        if (confirm('Deseja excluir esta ação?')) {
-          this.state.practice = this.state.practice.filter(p => p.id !== id);
-          this.saveStateToFirebase();
-        }
-      },
-
-      resetPracticeForm() {
-        document.getElementById('editPracticeId').value = '';
-        document.getElementById('currentPracticeCoverUrl').value = '';
-        document.getElementById('practiceForm').reset();
-        document.getElementById('practiceEditorContent').innerHTML = '';
-      },
-
+      /* MATERIAIS - SALVAR / EDITAR / EXCLUIR */
       saveMaterial() {
         const id = document.getElementById('editMaterialId').value;
         const title = document.getElementById('inputMaterialTitle').value;
-        const desc = document.getElementById('inputMaterialDesc').value;
-        const type = document.getElementById('inputMaterialType').value;
+        const description = document.getElementById('inputMaterialDesc').value;
         const link = document.getElementById('inputMaterialLink').value;
 
         if (id) {
-          const index = this.state.materials.findIndex(m => m.id === id);
-          if (index !== -1) this.state.materials[index] = { id, title, desc, type, link };
+          const index = this.data.materials.findIndex(m => m.id === id);
+          if (index !== -1) {
+            this.data.materials[index] = { id, title, description, link };
+          }
         } else {
-          const newId = 'mat_' + Date.now();
-          this.state.materials.push({ id: newId, title, desc, type, link });
+          this.data.materials.unshift({
+            id: Date.now().toString(),
+            title,
+            description,
+            link
+          });
         }
 
-        this.saveStateToFirebase();
+        this.saveData();
         this.resetMaterialForm();
-        alert('Material salvo!');
+        alert('Material salvo com sucesso!');
       },
 
       editMaterial(id) {
-        const mat = this.state.materials.find(m => m.id === id);
-        if (!mat) return;
-
-        document.getElementById('editMaterialId').value = mat.id;
-        document.getElementById('inputMaterialTitle').value = mat.title;
-        document.getElementById('inputMaterialDesc').value = mat.desc;
-        document.getElementById('inputMaterialType').value = mat.type;
-        document.getElementById('inputMaterialLink').value = mat.link;
+        const item = this.data.materials.find(m => m.id === id);
+        if (item) {
+          document.getElementById('editMaterialId').value = item.id;
+          document.getElementById('inputMaterialTitle').value = item.title;
+          document.getElementById('inputMaterialDesc').value = item.description;
+          document.getElementById('inputMaterialLink').value = item.link;
+          window.scrollTo({ top: document.getElementById('materialForm').offsetTop - 20, behavior: 'smooth' });
+        }
       },
 
       deleteMaterial(id) {
-        if (confirm('Deseja excluir este material?')) {
-          this.state.materials = this.state.materials.filter(m => m.id !== id);
-          this.saveStateToFirebase();
+        if (confirm('Deseja realmente excluir este material?')) {
+          this.data.materials = this.data.materials.filter(m => m.id !== id);
+          this.saveData();
         }
       },
 
       resetMaterialForm() {
         document.getElementById('editMaterialId').value = '';
         document.getElementById('materialForm').reset();
+      },
+
+      /* EDITOR DE TEXTO RICO (WYSIWYG) */
+      execCmd(command, value = null) {
+        document.execCommand(command, false, value);
+      },
+
+      triggerInlineImageUpload(editorId) {
+        this.activeEditorTarget = editorId;
+        document.getElementById('inlineImageInput').click();
+      },
+
+      insertInlineImage(event) {
+        const file = event.target.files[0];
+        if (file && this.activeEditorTarget) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const imgHtml = `<img src="${e.target.result}" style="max-width:100%; border-radius:8px; margin:10px 0;">`;
+            const editor = document.getElementById(this.activeEditorTarget);
+            editor.focus();
+            document.execCommand('insertHTML', false, imgHtml);
+          };
+          reader.readAsDataURL(file);
+        }
+        event.target.value = '';
       }
     };
 
+    // Evento de Login no Painel Admin
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const pass = document.getElementById('adminPassword').value;
+      if (pass === 'admin123' || pass === 'admin') { // Senha padrão simples
+        document.getElementById('adminLoginBox').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+      } else {
+        alert('Senha incorreta! Tente novamente.');
+      }
+    });
+
+    // Inicialização da Aplicação
     document.addEventListener('DOMContentLoaded', () => {
-      window.App.init();
+      App.init();
     });
   </script>
 </body>
