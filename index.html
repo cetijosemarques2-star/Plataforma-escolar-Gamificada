@@ -4,903 +4,423 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="docTitle">Escravo, Nem Pensar! — CETI José Marques</title>
+  
   <style>
     :root {
-      --fundo: #F4E7C8;
-      --fundo-claro: #FFF7E6;
-      --branco: #FFFFFF;
-      --terracota: #B94E2E;
-      --terracota-escuro: #963B24;
-      --laranja-terra: #D87532;
-      --azul-marinho: #142B3D;
-      --azul-marinho-claro: #1D3A4D;
-      --bege: #F5DDA5;
-      --bege-claro: #FFF1CC;
-      --texto: #142B3D;
-      --texto-secundario: #5C4635;
-      --ocre: #C58A35;
-      --amarelo-sol: #E6A83B;
-      --vermelho: #A63D2F;
-      --card-border: rgba(185, 78, 46, 0.2);
-      --sidebar-width: 260px;
-      --sidebar-collapsed-width: 70px;
-      --header-height: 60px;
+      --bg-principal: #f4f6f9;
+      --bg-card: #ffffff;
+      --texto-principal: #1f2937;
+      --texto-secundario: #4b5563;
+      --cor-primaria: #2563eb;
+      --cor-hover: #1d4ed8;
+      --borda: #e5e7eb;
+      --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --largura-sidebar: 260px;
     }
 
     [data-theme="dark"] {
-      --fundo: #111820;
-      --fundo-claro: #18232C;
-      --branco: #FFFFFF;
-      --terracota: #D66A43;
-      --terracota-escuro: #B84E30;
-      --laranja-terra: #D98A45;
-      --azul-marinho: #101B24;
-      --azul-marinho-claro: #1A2834;
-      --bege: #FFFFFF;
-      --bege-claro: #FFFFFF;
-      --texto: #F0F4F8;
-      --texto-secundario: #C2D1D0;
-      --ocre: #D49A43;
-      --amarelo-sol: #E5AE4A;
-      --card-border: rgba(214, 106, 67, 0.3);
+      --bg-principal: #0f172a;
+      --bg-card: #1e293b;
+      --texto-principal: #f8fafc;
+      --texto-secundario: #94a3b8;
+      --cor-primaria: #3b82f6;
+      --cor-hover: #60a5fa;
+      --borda: #334155;
+      --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.25s, color 0.25s, border-color 0.25s;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s; display: flex; min-height: 100vh; overflow-x: hidden; }
 
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: var(--fundo-claro);
-      color: var(--texto);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+    body.sidebar-open #overlay { display: block; }
 
-    .app-layout {
-      display: flex;
-      min-height: 100vh;
-      width: 100%;
-    }
-
-    /* HEADER */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--header-height);
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.25rem;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .header-logos {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .header-logo {
-      height: 38px;
-      max-width: 100px;
-      object-fit: contain;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--bege-claro);
-      font-size: 1.4rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.3rem;
-      border-radius: 4px;
-    }
-
-    .icon-btn:hover, .icon-btn:focus-visible {
-      background-color: var(--terracota-escuro);
-      outline: 2px solid var(--bege-claro);
-    }
-
-    .header-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .theme-btn {
-      background-color: var(--azul-marinho);
-      color: #FFFFFF;
-      border: 1px solid var(--laranja-terra);
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    /* SIDEBAR & OVERLAY */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 85;
-      display: none;
-    }
-
+    /* SIDEBAR */
     aside {
+      width: var(--largura-sidebar);
+      background-color: var(--bg-card);
+      border-right: 1px solid var(--borda);
+      display: flex;
+      flex-direction: column;
       position: fixed;
-      top: var(--header-height);
-      bottom: 0;
-      left: 0;
-      width: var(--sidebar-width);
-      background-color: var(--azul-marinho);
-      color: #FFFFFF;
-      z-index: 90;
-      transition: width 0.25s ease, transform 0.25s ease;
-      overflow-y: auto;
+      top: 0; bottom: 0; left: 0;
+      z-index: 100;
+      transition: transform 0.3s ease;
     }
 
-    body.sidebar-collapsed aside {
-      width: var(--sidebar-collapsed-width);
+    .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--borda); display: flex; align-items: center; gap: 0.75rem; }
+    .sidebar-header img { max-height: 40px; border-radius: 4px; }
+    .sidebar-header h2 { font-size: 1.1rem; color: var(--cor-primaria); }
+
+    nav { padding: 1rem 0; flex: 1; }
+    nav .nav-item {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 1.5rem;
+      color: var(--texto-secundario); cursor: pointer; transition: 0.2s; font-weight: 500;
+    }
+    nav .nav-item:hover, nav .nav-item.active {
+      background-color: var(--bg-principal); color: var(--cor-primaria); border-left: 4px solid var(--cor-primaria);
     }
 
-    nav {
-      display: flex;
-      flex-direction: column;
-      padding-top: 1rem;
+    /* MAIN CONTENT */
+    .app-container { flex: 1; margin-left: var(--largura-sidebar); display: flex; flex-direction: column; min-width: 0; transition: margin 0.3s; }
+    
+    header {
+      height: 64px; background: var(--bg-card); border-bottom: 1px solid var(--borda);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; position: sticky; top: 0; z-index: 90;
     }
 
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 0.85rem 1.25rem;
-      color: #FFFFFF;
-      text-decoration: none;
-      cursor: pointer;
-      gap: 1rem;
-      white-space: nowrap;
-      border-left: 4px solid transparent;
-    }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .btn-toggle-menu { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--texto-principal); display: none; }
 
-    .nav-item:hover, .nav-item.active {
-      background-color: var(--azul-marinho-claro);
-      border-left-color: var(--laranja-terra);
-    }
-
-    body.sidebar-collapsed .nav-text {
-      display: none;
-    }
-
-    /* MAIN & CONTENT WRAPPER */
-    .main-wrapper {
-      margin-top: var(--header-height);
-      margin-left: var(--sidebar-width);
-      width: calc(100% - var(--sidebar-width));
-      transition: margin-left 0.25s ease, width 0.25s ease;
-      display: flex;
-      flex-direction: column;
-      min-height: calc(100vh - var(--header-height));
-    }
-
-    body.sidebar-collapsed .main-wrapper {
-      margin-left: var(--sidebar-collapsed-width);
-      width: calc(100% - var(--sidebar-collapsed-width));
-    }
-
-    main {
-      padding: 2rem;
-      flex: 1;
-      max-width: 1400px;
-      width: 100%;
-      margin: 0 auto;
-    }
+    main { padding: 2rem; flex: 1; max-width: 1200px; margin: 0 auto; width: 100%; }
 
     .page { display: none; }
-    .page.active { display: block; }
+    .page.active { display: block; animation: fadeIn 0.3s ease; }
 
-    .hero-banner {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 2.5rem 2rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    .hero-banner h1 {
-      color: var(--terracota);
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
-      margin-bottom: 0.75rem;
-    }
-
-    .hero-banner p {
-      font-size: clamp(1rem, 1.5vw, 1.15rem);
-      line-height: 1.6;
-    }
-
-    /* CARDS COMO JANELAS DE CONTEÚDO */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
+    /* CARDS & WINDOWS */
+    .hero-banner { background: var(--cor-primaria); color: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
 
     .window-card {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      background: var(--bg-card); border: 1px solid var(--borda); border-radius: 8px;
+      overflow: hidden; box-shadow: var(--sombra); cursor: pointer; transition: transform 0.2s;
     }
+    .window-card:hover { transform: translateY(-4px); }
+    .window-header { background: var(--bg-principal); padding: 0.5rem 1rem; font-size: 0.85rem; border-bottom: 1px solid var(--borda); display: flex; justify-content: space-between; }
+    .card-cover-img { width: 100%; height: 160px; object-fit: cover; }
+    .window-body { padding: 1.25rem; }
+    .window-title { font-weight: bold; margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .window-desc { color: var(--texto-secundario); font-size: 0.9rem; line-height: 1.4; }
 
-    .window-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      border-color: var(--terracota);
+    /* ADMIN & FORMS */
+    .admin-card { background: var(--bg-card); border: 1px solid var(--borda); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+    .form-group input, .form-group select {
+      width: 100%; padding: 0.75rem; border: 1px solid var(--borda); border-radius: 6px;
+      background: var(--bg-principal); color: var(--texto-principal);
     }
-
-    .window-header {
-      background-color: var(--azul-marinho);
-      color: #FFFFFF;
-      padding: 0.6rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .card-cover-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .window-body {
-      padding: 1.25rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .window-title {
-      color: var(--terracota);
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .window-desc {
-      color: var(--texto-secundario);
-      font-size: 0.95rem;
-      line-height: 1.5;
-      flex-grow: 1;
-    }
-
-    .meta-tag {
-      display: inline-block;
-      align-self: flex-start;
-      font-size: 0.75rem;
-      background-color: var(--laranja-terra);
-      color: #fff;
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
-    /* ÁREA DE EXIBIÇÃO DE CONTEÚDO ENRIQUECIDO */
-    .content-area {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 2.5rem;
-      border-radius: 12px;
-      margin-top: 1rem;
-      line-height: 1.8;
-      font-size: 1.05rem;
-    }
-
-    /* CONTROLE DESKTOP PARA MÍDIAS GRANDES */
-    .content-area img {
-      max-width: 100%;
-      max-height: 500px;
-      width: auto;
-      object-fit: contain;
-      border-radius: 8px;
-      margin: 1.5rem auto;
-      display: block;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
     .btn-action {
-      background-color: var(--terracota);
-      color: #FFFFFF;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
+      background: var(--cor-primaria); color: white; border: none; padding: 0.75rem 1.5rem;
+      border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;
     }
+    .btn-action:hover { background: var(--cor-hover); }
+    .btn-secondary { background: var(--texto-secundario); }
 
-    .btn-action:hover {
-      background-color: var(--terracota-escuro);
-    }
+    /* EDITOR WYSIWYG */
+    .editor-container { border: 1px solid var(--borda); border-radius: 6px; overflow: hidden; }
+    .editor-toolbar { background: var(--bg-principal); padding: 0.5rem; border-bottom: 1px solid var(--borda); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .editor-toolbar button { background: var(--bg-card); border: 1px solid var(--borda); padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; color: var(--texto-principal); }
+    .editor-content { min-height: 180px; padding: 1rem; background: var(--bg-card); outline: none; }
 
-    .btn-secondary {
-      background-color: transparent;
-      border: 1px solid var(--terracota);
-      color: var(--texto);
-    }
+    .admin-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .admin-table th, .admin-table td { padding: 0.75rem; border-bottom: 1px solid var(--borda); text-align: left; }
 
-    .btn-secondary:hover {
-      background-color: var(--terracota);
-      color: #FFFFFF;
-    }
+    .tabs-header { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab-btn { padding: 0.5rem 1rem; border: 1px solid var(--borda); background: var(--bg-card); cursor: pointer; border-radius: 20px; color: var(--texto-principal); }
+    .tab-btn.active { background: var(--cor-primaria); color: white; border-color: var(--cor-primaria); }
 
-    /* EDITOR VISUAL DE TEXTO (WYSIWYG) */
-    .editor-container {
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      overflow: hidden;
-      background-color: var(--fundo-claro);
-    }
+    footer { text-align: center; padding: 2rem; border-top: 1px solid var(--borda); color: var(--texto-secundario); margin-top: auto; }
 
-    .editor-toolbar {
-      background-color: var(--fundo);
-      border-bottom: 1px solid var(--card-border);
-      padding: 0.5rem;
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .editor-toolbar button {
-      background: var(--fundo-claro);
-      border: 1px solid var(--card-border);
-      color: var(--texto);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.85rem;
-    }
-
-    .editor-toolbar button:hover {
-      background-color: var(--terracota);
-      color: #FFFFFF;
-    }
-
-    .editor-content {
-      min-height: 220px;
-      padding: 1rem;
-      outline: none;
-      color: var(--texto);
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-
-    .editor-content img {
-      max-width: 100%;
-      max-height: 350px;
-      object-fit: contain;
-      margin: 0.5rem auto;
-      display: block;
-    }
-
-    /* ADMIN & TABELAS */
-    .admin-card {
-      background-color: var(--fundo);
-      padding: 1.75rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--card-border);
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 0.7rem;
-      border-radius: 6px;
-      border: 1px solid var(--card-border);
-      background-color: var(--fundo-claro);
-      color: var(--texto);
-      font-family: inherit;
-      font-size: 0.95rem;
-    }
-
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: var(--fundo);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 2rem;
-    }
-
-    .admin-table th, .admin-table td {
-      padding: 0.9rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .admin-table th {
-      background-color: var(--azul-marinho);
-      color: #FFFFFF;
-      font-weight: 600;
-    }
-
-    .stats-container {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-box {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 1.25rem 1.5rem;
-      border-radius: 8px;
-      flex: 1;
-    }
-
-    .stat-box span {
-      display: block;
-      font-size: 0.9rem;
-      color: var(--texto-secundario);
-    }
-
-    .stat-box strong {
-      font-size: 1.8rem;
-      color: var(--terracota);
-    }
-
-    .tabs-header {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 2px solid var(--card-border);
-      overflow-x: auto;
-    }
-
-    .tab-btn {
-      padding: 0.6rem 1.2rem;
-      background: none;
-      border: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--texto-secundario);
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      white-space: nowrap;
-    }
-
-    .tab-btn.active {
-      color: var(--terracota);
-      border-bottom-color: var(--terracota);
-    }
-
-    /* RODAPÉ INSTITUCIONAL */
-    footer {
-      background-color: var(--azul-marinho);
-      color: #FFFFFF;
-      padding: 2rem;
-      text-align: center;
-      margin-top: auto;
-      border-top: 3px solid var(--terracota);
-    }
-
-    footer p {
-      font-size: 0.95rem;
-      margin: 0.25rem 0;
-      opacity: 0.9;
-    }
-
-    footer strong {
-      color: var(--amarelo-sol);
-    }
-
-    /* ADJUSTMENTS FOR RESPONSIVENESS */
     @media (max-width: 768px) {
-      aside {
-        transform: translateX(-100%);
-        width: var(--sidebar-width) !important;
-      }
+      aside { transform: translateX(-100%); }
       body.sidebar-open aside { transform: translateX(0); }
-      body.sidebar-open .overlay { display: block; }
-      .main-wrapper { 
-        margin-left: 0 !important; 
-        width: 100% !important;
-      }
-      main { padding: 1rem; }
-      .stats-container { flex-direction: column; gap: 0.75rem; }
-      .header-logo { height: 30px; }
-      .header-title { font-size: 1rem; }
-      .content-area { padding: 1.25rem; }
+      .app-container { margin-left: 0; }
+      .btn-toggle-menu { display: block; }
     }
   </style>
 </head>
 <body>
 
-  <div class="overlay" id="overlay"></div>
+  <div id="overlay"></div>
 
-  <header>
-    <div class="header-left">
-      <button class="icon-btn" id="btnToggleSidebar" aria-label="Abrir ou recolher menu lateral">☰</button>
-      <div class="header-logos">
-        <img src="Logo.png" alt="Logo Plataforma" class="header-logo" id="platformLogo" onerror="this.style.display='none'">
-        <img src="EscolaLogo.png" alt="Logo Escola CETI José Marques" class="header-logo" id="schoolLogo" onerror="this.style.display='none'">
-      </div>
-      <div class="header-title" id="headerTitleText">Escravo, Nem Pensar! — CETI José Marques</div>
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-header">
+      <img id="schoolLogo" src="" alt="Logo Escola" style="display:none;">
+      <h2 id="headerTitleText">Escravo, Nem Pensar!</h2>
     </div>
-    <button class="theme-btn" id="btnToggleTheme" aria-label="Alternar tema">Modo Escuro</button>
-  </header>
+    <nav>
+      <div class="nav-item active" data-target="home">🏠 Início</div>
+      <div class="nav-item" data-target="sobre">📖 Sobre o Projeto</div>
+      <div class="nav-item" data-target="atividades">🎯 Atividades</div>
+      <div class="nav-item" data-target="pratica">📸 Projeto na Prática</div>
+      <div class="nav-item" data-target="admin">🔐 Administração</div>
+    </nav>
+  </aside>
 
-  <div class="app-layout">
-    <aside aria-label="Menu principal">
-      <nav>
-        <a class="nav-item active" data-target="home">
-          <span>🏠</span>
-          <span class="nav-text">Início</span>
-        </a>
-        <a class="nav-item" data-target="about">
-          <span>📖</span>
-          <span class="nav-text">Sobre o projeto</span>
-        </a>
-        <a class="nav-item" data-target="activities">
-          <span>🎯</span>
-          <span class="nav-text">Atividades</span>
-        </a>
-        <a class="nav-item" data-target="practice">
-          <span>📸</span>
-          <span class="nav-text">Projeto na Prática</span>
-        </a>
-        <a class="nav-item" data-target="materials">
-          <span>📚</span>
-          <span class="nav-text">Materiais</span>
-        </a>
-        <a class="nav-item" data-target="admin">
-          <span>🔐</span>
-          <span class="nav-text">Administração</span>
-        </a>
-      </nav>
-    </aside>
+  <div class="app-container">
+    <header>
+      <div class="header-left">
+        <button class="btn-toggle-menu" id="btnToggleSidebar">☰</button>
+        <span id="docTitleHeader">CETI José Marques</span>
+      </div>
+      <button class="btn-action btn-secondary" id="btnToggleTheme" style="padding:0.4rem 0.8rem; font-size:0.85rem;">Modo Escuro</button>
+    </header>
 
-    <div class="main-wrapper">
-      <main>
-        <!-- PÁGINA INICIAL -->
-        <section id="home" class="page active">
-          <div class="hero-banner">
-            <h1 id="heroTitleText">Projeto Escravo, Nem Pensar!</h1>
-            <p style="color: var(--texto-secundario);">
-              Plataforma de conteúdos educativos e informativos desenvolvida para o <strong>CETI José Marques</strong> para a prevenção ao trabalho escravo e promoção dos direitos humanos.
-            </p>
-          </div>
-          <h2>Módulos e Atividades em Destaque</h2>
+    <main>
+      <!-- PÁGINA: INÍCIO -->
+      <section id="home" class="page active">
+        <div class="hero-banner">
+          <h1 id="heroTitleText">Projeto Escravo, Nem Pensar!</h1>
+          <p style="margin-top:0.5rem; opacity:0.9;">Educação, Direitos Humanos e Conscientização no CETI José Marques.</p>
+        </div>
+        <div class="form-group">
+          <input type="text" id="searchInput" placeholder="🔍 Pesquisar atividades ou relatos...">
+        </div>
+        <h3>📌 Em Destaque</h3>
+        <br>
+        <div class="cards-grid" id="cardsContainer"></div>
+      </section>
+
+      <!-- PÁGINA: SOBRE -->
+      <section id="sobre" class="page">
+        <div class="admin-card">
+          <h2>📖 Sobre o Projeto</h2>
           <br>
-          <div class="form-group" style="max-width: 360px;">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar por título ou palavra-chave...">
-          </div>
-          <br>
-          <div class="cards-grid" id="cardsContainer"></div>
-        </section>
+          <div id="aboutPageContent"></div>
+        </div>
+      </section>
 
-        <!-- SOBRE O PROJETO -->
-        <section id="about" class="page">
-          <h1>Sobre o projeto</h1>
-          <div class="content-area" id="aboutPageContent">
-            <p>O programa <strong>Escravo, Nem Pensar!</strong> é uma iniciativa dedicada à conscientização e erradicação do trabalho escravo contemporâneo no Brasil.</p>
-            <br>
-            <p>No <strong>CETI José Marques</strong>, a plataforma reúne materiais didáticos, registros das ações pedagógicas desenvolvidas pelos estudantes e conteúdos interativos para engajar toda a comunidade escolar no combate às violações dos direitos humanos.</p>
-          </div>
-        </section>
+      <!-- PÁGINA: ATIVIDADES -->
+      <section id="atividades" class="page">
+        <h2>🎯 Atividades Pedagógicas</h2>
+        <br>
+        <div class="cards-grid" id="activitiesContainer"></div>
+      </section>
 
-        <!-- ATIVIDADES -->
-        <section id="activities" class="page">
-          <h1>🎯 Atividades Pedagógicas</h1>
-          <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Explore o acervo completo de atividades pedagógicas aplicadas na escola.</p>
-          <div class="cards-grid" id="activitiesContainer"></div>
-        </section>
+      <!-- PÁGINA: PROJETO NA PRÁTICA -->
+      <section id="pratica" class="page">
+        <h2>📸 Projeto na Prática</h2>
+        <br>
+        <div class="tabs-header">
+          <button class="tab-btn active" onclick="App.filterPractice('Todos', this)">Todos</button>
+          <button class="tab-btn" onclick="App.filterPractice('Culminância', this)">Culminância</button>
+          <button class="tab-btn" onclick="App.filterPractice('Galeria de Fotos', this)">Galeria de Fotos</button>
+          <button class="tab-btn" onclick="App.filterPractice('Apresentações', this)">Apresentações</button>
+          <button class="tab-btn" onclick="App.filterPractice('Relatos dos estudantes', this)">Relatos</button>
+          <button class="tab-btn" onclick="App.filterPractice('Trabalhos produzidos', this)">Trabalhos</button>
+        </div>
+        <div class="cards-grid" id="practiceContainer"></div>
+      </section>
 
-        <!-- PROJETO NA PRÁTICA -->
-        <section id="practice" class="page">
-          <h1>📸 Projeto na Prática</h1>
-          <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Registros visuais, culminâncias, apresentações e relatos das ações do CETI José Marques.</p>
-          
-          <div class="tabs-header">
-            <button class="tab-btn active" onclick="App.filterPractice('Todos', this)">Todos</button>
-            <button class="tab-btn" onclick="App.filterPractice('Culminância', this)">Culminância</button>
-            <button class="tab-btn" onclick="App.filterPractice('Galeria de Fotos', this)">Fotos</button>
-            <button class="tab-btn" onclick="App.filterPractice('Apresentações', this)">Apresentações</button>
-            <button class="tab-btn" onclick="App.filterPractice('Relatos dos estudantes', this)">Relatos</button>
-            <button class="tab-btn" onclick="App.filterPractice('Trabalhos produzidos', this)">Trabalhos</button>
-          </div>
-
-          <div class="cards-grid" id="practiceContainer"></div>
-        </section>
-
-        <!-- MATERIAIS -->
-        <section id="materials" class="page">
-          <h1>📚 Materiais de Apoio</h1>
-          <div class="content-area">
-            <p>Guias pedagógicos, cartilhas e publicações de referência para download e consulta.</p>
-          </div>
-        </section>
-
-        <!-- VISUALIZADOR DE CONTEÚDO -->
-        <section id="contentView" class="page">
-          <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar</button>
-          <h1 id="viewTitle" style="margin-top: 1.5rem; color: var(--terracota);"></h1>
-          <div id="viewMetaInfo" style="margin-top: 0.5rem; color: var(--texto-secundario);"></div>
+      <!-- PÁGINA: VISUALIZAÇÃO DE CONTEÚDO -->
+      <section id="contentView" class="page">
+        <button class="btn-action btn-secondary" onclick="App.navigateTo(App.state.activePage || 'home')" style="margin-bottom:1.5rem;">← Voltar</button>
+        <div class="admin-card">
+          <h1 id="viewTitle"></h1>
+          <p id="viewMetaInfo" style="color: var(--texto-secundario); font-size:0.9rem; margin-top:0.5rem;"></p>
           <div id="viewCoverContainer"></div>
-          <div class="content-area" id="viewBody"></div>
-        </section>
+          <hr style="margin:1.5rem 0; border-color:var(--borda);">
+          <div id="viewBody"></div>
+        </div>
+      </section>
 
-        <!-- ÁREA DO ADMINISTRADOR -->
-        <section id="admin" class="page">
-          <h1>🔐 Área do Administrador</h1>
-          <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Gerencie o conteúdo do site e os registros das atividades na prática.</p>
+      <!-- PÁGINA: ADMIN -->
+      <section id="admin" class="page">
+        <div id="adminLoginBox" class="admin-card" style="max-width: 400px; margin: 2rem auto;">
+          <h3>🔐 Acesso Administrativo</h3>
+          <br>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="inputPassword">Senha de Acesso</label>
+              <input type="password" id="inputPassword" placeholder="Digite a senha..." required>
+            </div>
+            <button type="submit" class="btn-action" style="width:100%;">Entrar</button>
+          </form>
+        </div>
 
-          <!-- PAINEL DE LOGIN -->
-          <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
-            <h3>Acesso Restrito</h3>
+        <div id="adminPanel" style="display: none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+            <h2>⚙️ Painel de Gestão</h2>
+            <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
+          </div>
+
+          <div style="display:flex; gap:1rem; margin-bottom:2rem;">
+            <div class="admin-card" style="flex:1; margin-bottom:0; text-align:center;">
+              <h3 id="statTotal">0</h3>
+              <p style="color:var(--texto-secundario);">Atividades</p>
+            </div>
+            <div class="admin-card" style="flex:1; margin-bottom:0; text-align:center;">
+              <h3 id="statPractice">0</h3>
+              <p style="color:var(--texto-secundario);">Registros na Prática</p>
+            </div>
+          </div>
+
+          <!-- CONFIGURAÇÕES GERAIS -->
+          <div class="admin-card">
+            <h3>⚙️ Configurações Gerais da Plataforma</h3>
             <br>
-            <form id="loginForm">
+            <form id="settingsForm">
               <div class="form-group">
-                <label for="inputPassword">Senha de Acesso</label>
-                <input type="password" id="inputPassword" required autocomplete="current-password">
+                <label for="inputHeaderTitle">Nome da Plataforma (Título Superior)</label>
+                <input type="text" id="inputHeaderTitle" required>
               </div>
-              <button type="submit" class="btn-action">Entrar</button>
+              <div class="form-group">
+                <label for="inputSchoolLogo">Logo da Escola (Enviar Imagem)</label>
+                <input type="file" id="inputSchoolLogo" accept="image/*">
+              </div>
+              <div class="form-group">
+                <label>Texto da Página "Sobre o Projeto"</label>
+                <div class="editor-container">
+                  <div class="editor-toolbar">
+                    <button type="button" onclick="App.execAboutCmd('bold')"><b>B</b></button>
+                    <button type="button" onclick="App.execAboutCmd('italic')"><i>I</i></button>
+                    <button type="button" onclick="App.execAboutCmd('underline')"><u>U</u></button>
+                    <button type="button" onclick="App.execAboutCmd('insertUnorderedList')">• Lista</button>
+                  </div>
+                  <div id="aboutEditorContent" class="editor-content" contenteditable="true"></div>
+                </div>
+              </div>
+              <button type="submit" class="btn-action">Salvar Configurações Gerais</button>
             </form>
           </div>
 
-          <!-- PAINEL ADMINISTRATIVO -->
-          <div id="adminPanel" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-align: center; margin-bottom: 1.5rem;">
-              <span>Sessão ativa como <strong>Administrador</strong></span>
-              <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
-            </div>
-
-            <div class="stats-container">
-              <div class="stat-box">
-                <span>Total de Atividades</span>
-                <strong id="statTotal">0</strong>
+          <!-- FORMULÁRIO 1: ATIVIDADES -->
+          <div class="admin-card">
+            <h3 id="formTitle">➕ Criar Nova Atividade</h3>
+            <br>
+            <form id="contentForm">
+              <input type="hidden" id="editId">
+              <input type="hidden" id="currentCoverUrl">
+              <div class="form-group">
+                <label for="inputTitle">Título da Atividade</label>
+                <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
               </div>
-              <div class="stat-box">
-                <span>Registros na Prática</span>
-                <strong id="statPractice">0</strong>
+              <div class="form-group">
+                <label for="inputDesc">Descrição Curta</label>
+                <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
               </div>
-            </div>
-
-            <!-- CONFIGURAÇÕES GERACÕES GERAIS / TEXTO E LOGO -->
-            <div class="admin-card">
-              <h3>⚙️ Configurações Gerais da Plataforma</h3>
-              <br>
-              <form id="settingsForm">
-                <div class="form-group">
-                  <label for="inputHeaderTitle">Nome da Plataforma (Título Superior)</label>
-                  <input type="text" id="inputHeaderTitle" required placeholder="Ex: Escravo, Nem Pensar! — CETI José Marques">
-                </div>
-
-                <div class="form-group">
-                  <label for="inputSchoolLogo">Logo da Escola (Enviar Imagem)</label>
-                  <input type="file" id="inputSchoolLogo" accept="image/*">
-                  <input type="hidden" id="currentSchoolLogoUrl">
-                  <div id="schoolLogoPreview" style="margin-top: 0.5rem;"></div>
-                </div>
-
-                <div class="form-group">
-                  <label>Texto da Página "Sobre o Projeto" (Editor Visual)</label>
-                  <div class="editor-container">
-                    <div class="editor-toolbar">
-                      <button type="button" onclick="App.execAboutCmd('bold')" title="Negrito">B</button>
-                      <button type="button" onclick="App.execAboutCmd('italic')" title="Itálico">I</button>
-                      <button type="button" onclick="App.execAboutCmd('underline')" title="Sublinhado">U</button>
-                      <button type="button" onclick="App.execAboutCmd('insertUnorderedList')" title="Lista">• Lista</button>
-                    </div>
-                    <div id="aboutEditorContent" class="editor-content" contenteditable="true"></div>
+              <div class="form-group">
+                <label for="inputStatus">Status</label>
+                <select id="inputStatus">
+                  <option value="Publicado">Publicado</option>
+                  <option value="Rascunho">Rascunho</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="inputCover">Imagem de Capa</label>
+                <input type="file" id="inputCover" accept="image/*">
+                <div id="coverPreview" style="margin-top: 0.5rem;"></div>
+              </div>
+              <div class="form-group">
+                <label>Conteúdo Detalhado</label>
+                <div class="editor-container">
+                  <div class="editor-toolbar">
+                    <button type="button" onclick="App.execCmd('bold')"><b>B</b></button>
+                    <button type="button" onclick="App.execCmd('italic')"><i>I</i></button>
+                    <button type="button" onclick="App.execCmd('underline')"><u>U</u></button>
+                    <button type="button" onclick="App.execCmd('formatBlock', '<h2>')">H2</button>
+                    <button type="button" onclick="App.execCmd('insertUnorderedList')">• Lista</button>
+                    <button type="button" onclick="App.triggerImageUpload()">📷 Imagem</button>
+                    <input type="file" id="editorImgInput" accept="image/*" style="display:none;" onchange="App.insertEditorImage(this)">
                   </div>
+                  <div id="editorContent" class="editor-content" contenteditable="true"></div>
                 </div>
-
-                <button type="submit" class="btn-action">Salvar Configurações Gerais</button>
-              </form>
-            </div>
-
-            <!-- FORMULÁRIO 1: ATIVIDADES -->
-            <div class="admin-card">
-              <h3 id="formTitle">➕ Criar Nova Atividade</h3>
-              <br>
-              <form id="contentForm">
-                <input type="hidden" id="editId">
-                <input type="hidden" id="currentCoverUrl">
-
-                <div class="form-group">
-                  <label for="inputTitle">Título da Atividade</label>
-                  <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
-                </div>
-                
-                <div class="form-group">
-                  <label for="inputDesc">Descrição Curta</label>
-                  <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
-                </div>
-
-                <div class="form-group">
-                  <label for="inputStatus">Status</label>
-                  <select id="inputStatus">
-                    <option value="Publicado">Publicado</option>
-                    <option value="Rascunho">Rascunho</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="inputCover">Imagem de Capa</label>
-                  <input type="file" id="inputCover" accept="image/*">
-                  <div id="coverPreview" style="margin-top: 0.5rem;"></div>
-                </div>
-
-                <div class="form-group">
-                  <label>Conteúdo Detalhado (Editor Visual WYSIWYG)</label>
-                  <div class="editor-container">
-                    <div class="editor-toolbar">
-                      <button type="button" onclick="App.execCmd('bold')" title="Negrito">B</button>
-                      <button type="button" onclick="App.execCmd('italic')" title="Itálico">I</button>
-                      <button type="button" onclick="App.execCmd('underline')" title="Sublinhado">U</button>
-                      <button type="button" onclick="App.execCmd('formatBlock', '<h2>')" title="Título">H2</button>
-                      <button type="button" onclick="App.execCmd('insertUnorderedList')" title="Lista">• Lista</button>
-                      <button type="button" onclick="App.triggerImageUpload()" title="Inserir Imagem">📷 Imagem</button>
-                      <input type="file" id="editorImgInput" accept="image/*" style="display:none;" onchange="App.insertEditorImage(this)">
-                    </div>
-                    <div id="editorContent" class="editor-content" contenteditable="true"></div>
-                  </div>
-                </div>
-
-                <div style="display: flex; gap: 0.5rem;">
-                  <button type="submit" class="btn-action">Salvar Atividade</button>
-                  <button type="button" class="btn-action btn-secondary" onclick="App.resetForm()">Cancelar</button>
-                </div>
-              </form>
-            </div>
-
-            <div class="admin-card">
-              <h3>📋 Atividades Cadastradas</h3>
-              <br>
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Título</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody id="adminTableBody"></tbody>
-              </table>
-            </div>
-
-            <!-- FORMULÁRIO 2: PROJETO NA PRÁTICA -->
-            <div class="admin-card">
-              <h3 id="practiceFormTitle">📸 Adicionar Registro: Projeto na Prática</h3>
-              <br>
-              <form id="practiceForm">
-                <input type="hidden" id="editPracticeId">
-                <input type="hidden" id="currentPracticeCoverUrl">
-
-                <div class="form-group">
-                  <label for="inputPracticeTitle">Título do Registro</label>
-                  <input type="text" id="inputPracticeTitle" required placeholder="Ex: Feira Cultural sobre Direitos Humanos">
-                </div>
-
-                <div class="form-group">
-                  <label for="inputPracticeCategory">Categoria</label>
-                  <select id="inputPracticeCategory" required>
-                    <option value="Culminância">Culminância</option>
-                    <option value="Galeria de Fotos">Galeria de Fotos</option>
-                    <option value="Apresentações">Apresentações</option>
-                    <option value="Relatos dos estudantes">Relatos dos estudantes</option>
-                    <option value="Trabalhos produzidos">Trabalhos produzidos</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="inputPracticeDesc">Descrição Resumida</label>
-                  <input type="text" id="inputPracticeDesc" required placeholder="Ex: Fotos das maquetes criadas pelas turmas.">
-                </div>
-
-                <div class="form-group">
-                  <label for="inputPracticeCover">Imagem Principal / Capa</label>
-                  <input type="file" id="inputPracticeCover" accept="image/*">
-                  <div id="practiceCoverPreview" style="margin-top: 0.5rem;"></div>
-                </div>
-
-                <div class="form-group">
-                  <label>Relato / Conteúdo Completo (Editor Visual)</label>
-                  <div class="editor-container">
-                    <div class="editor-toolbar">
-                      <button type="button" onclick="App.execPracticeCmd('bold')" title="Negrito">B</button>
-                      <button type="button" onclick="App.execPracticeCmd('italic')" title="Itálico">I</button>
-                      <button type="button" onclick="App.execPracticeCmd('underline')" title="Sublinhado">U</button>
-                      <button type="button" onclick="App.execPracticeCmd('insertUnorderedList')" title="Lista">• Lista</button>
-                      <button type="button" onclick="App.triggerPracticeImageUpload()" title="Inserir Imagem">📷 Imagem</button>
-                      <input type="file" id="practiceEditorImgInput" accept="image/*" style="display:none;" onchange="App.insertPracticeEditorImage(this)">
-                    </div>
-                    <div id="practiceEditorContent" class="editor-content" contenteditable="true"></div>
-                  </div>
-                </div>
-
-                <div style="display: flex; gap: 0.5rem;">
-                  <button type="submit" class="btn-action">Salvar Registro na Prática</button>
-                  <button type="button" class="btn-action btn-secondary" onclick="App.resetPracticeForm()">Cancelar</button>
-                </div>
-              </form>
-            </div>
-
-            <div class="admin-card">
-              <h3>📋 Registros do "Projeto na Prática"</h3>
-              <br>
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Título</th>
-                    <th>Categoria</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody id="practiceAdminTableBody"></tbody>
-              </table>
-            </div>
-
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn-action">Salvar Atividade</button>
+                <button type="button" class="btn-action btn-secondary" onclick="App.resetForm()">Cancelar</button>
+              </div>
+            </form>
           </div>
-        </section>
-      </main>
 
-      <!-- RODAPÉ INSTITUCIONAL -->
-      <footer>
-        <p><strong>CETI José Marques</strong> — Projeto Escravo, Nem Pensar!</p>
-        <p>Promovendo os Direitos Humanos e o Trabalho Digno na Educação Pública.</p>
-      </footer>
-    </div>
+          <div class="admin-card">
+            <h3>📋 Atividades Cadastradas</h3>
+            <br>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- FORMULÁRIO 2: PROJETO NA PRÁTICA -->
+          <div class="admin-card">
+            <h3 id="practiceFormTitle">📸 Adicionar Registro: Projeto na Prática</h3>
+            <br>
+            <form id="practiceForm">
+              <input type="hidden" id="editPracticeId">
+              <input type="hidden" id="currentPracticeCoverUrl">
+              <div class="form-group">
+                <label for="inputPracticeTitle">Título do Registro</label>
+                <input type="text" id="inputPracticeTitle" required placeholder="Ex: Feira Cultural sobre Direitos Humanos">
+              </div>
+              <div class="form-group">
+                <label for="inputPracticeCategory">Categoria</label>
+                <select id="inputPracticeCategory" required>
+                  <option value="Culminância">Culminância</option>
+                  <option value="Galeria de Fotos">Galeria de Fotos</option>
+                  <option value="Apresentações">Apresentações</option>
+                  <option value="Relatos dos estudantes">Relatos dos estudantes</option>
+                  <option value="Trabalhos produzidos">Trabalhos produzidos</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="inputPracticeDesc">Descrição Resumida</label>
+                <input type="text" id="inputPracticeDesc" required placeholder="Ex: Fotos das maquetes criadas pelas turmas.">
+              </div>
+              <div class="form-group">
+                <label for="inputPracticeCover">Imagem Principal / Capa</label>
+                <input type="file" id="inputPracticeCover" accept="image/*">
+                <div id="practiceCoverPreview" style="margin-top: 0.5rem;"></div>
+              </div>
+              <div class="form-group">
+                <label>Relato / Conteúdo Completo</label>
+                <div class="editor-container">
+                  <div class="editor-toolbar">
+                    <button type="button" onclick="App.execPracticeCmd('bold')"><b>B</b></button>
+                    <button type="button" onclick="App.execPracticeCmd('italic')"><i>I</i></button>
+                    <button type="button" onclick="App.execPracticeCmd('underline')"><u>U</u></button>
+                    <button type="button" onclick="App.execPracticeCmd('insertUnorderedList')">• Lista</button>
+                    <button type="button" onclick="App.triggerPracticeImageUpload()">📷 Imagem</button>
+                    <input type="file" id="practiceEditorImgInput" accept="image/*" style="display:none;" onchange="App.insertPracticeEditorImage(this)">
+                  </div>
+                  <div id="practiceEditorContent" class="editor-content" contenteditable="true"></div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn-action">Salvar Registro na Prática</button>
+                <button type="button" class="btn-action btn-secondary" onclick="App.resetPracticeForm()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="admin-card">
+            <h3>📋 Registros do "Projeto na Prática"</h3>
+            <br>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Categoria</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="practiceAdminTableBody"></tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><strong>CETI José Marques</strong> — Projeto Escravo, Nem Pensar!</p>
+      <p>Promovendo os Direitos Humanos      <p>Promovendo os Direitos Humanos e o Trabalho Digno na Educação Pública.</p>
+    </footer>
   </div>
 
-  <!-- FIREBASE IMPORTS & APLICAÇÃO INTEGRADA COM FIREBASE STORAGE -->
+  <!-- FIREBASE IMPORTS & LÓGICA DA APLICAÇÃO -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
     import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
     import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
 
@@ -911,12 +431,10 @@
       projectId: "escravonempensar-d87c3",
       storageBucket: "escravonempensar-d87c3.firebasestorage.app",
       messagingSenderId: "132266908384",
-      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85",
-      measurementId: "G-7QJ9XL751E"
+      appId: "1:132266908384:web:b0b5c2023a090d5cea8e85"
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const db = getDatabase(app);
     const storage = getStorage(app);
 
@@ -927,10 +445,11 @@
         settings: {
           headerTitle: 'Escravo, Nem Pensar! — CETI José Marques',
           schoolLogo: '',
-          aboutText: '<p>O programa <strong>Escravo, Nem Pensar!</strong> é uma iniciativa dedicada à conscientização e erradicação do trabalho escravo contemporâneo no Brasil.</p><br><p>No <strong>CETI José Marques</strong>, a plataforma reúne materiais didáticos, registros das ações pedagógicas desenvolvidas pelos estudantes e conteúdos interativos para engajar toda a comunidade escolar no combate às violações dos direitos humanos.</p>'
+          aboutText: '<p>O programa <strong>Escravo, Nem Pensar!</strong> é uma iniciativa dedicada à conscientização e erradicação do trabalho escravo contemporâneo no Brasil.</p>'
         },
         isAdmin: false,
         activePage: 'home',
+        previousPage: 'home',
         practiceFilter: 'Todos'
       },
 
@@ -944,10 +463,9 @@
         try {
           const fileRef = storageRef(storage, `${pathFolder}/${Date.now()}_${file.name}`);
           await uploadBytes(fileRef, file);
-          const url = await getDownloadURL(fileRef);
-          return url;
+          return await getDownloadURL(fileRef);
         } catch (err) {
-          console.warn("Storage inacessível ou não configurado, fazendo fallback local:", err);
+          console.warn("Storage inacessível. Usando fallback Base64:", err);
           return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = (e) => resolve(e.target.result);
@@ -957,40 +475,21 @@
       },
 
       bindFirebaseListeners() {
-        const actRef = ref(db, 'activities');
-        onValue(actRef, (snapshot) => {
+        onValue(ref(db, 'activities'), (snapshot) => {
           const data = snapshot.val();
-          if (data) {
-            this.state.activities = Object.keys(data).map(key => ({
-              id: key,
-              ...data[key]
-            }));
-          } else {
-            this.state.activities = [];
-          }
+          this.state.activities = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
           this.renderAll();
         });
 
-        const pracRef = ref(db, 'practice');
-        onValue(pracRef, (snapshot) => {
+        onValue(ref(db, 'practice'), (snapshot) => {
           const data = snapshot.val();
-          if (data) {
-            this.state.practiceItems = Object.keys(data).map(key => ({
-              id: key,
-              ...data[key]
-            }));
-          } else {
-            this.state.practiceItems = [];
-          }
+          this.state.practiceItems = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
           this.renderAll();
         });
 
-        const setRef = ref(db, 'settings');
-        onValue(setRef, (snapshot) => {
+        onValue(ref(db, 'settings'), (snapshot) => {
           const data = snapshot.val();
-          if (data) {
-            this.state.settings = { ...this.state.settings, ...data };
-          }
+          if (data) this.state.settings = { ...this.state.settings, ...data };
           this.applySettings();
         });
       },
@@ -1003,18 +502,11 @@
           document.getElementById('btnToggleTheme').textContent = nextTheme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
         });
 
-        const toggleBtn = document.getElementById('btnToggleSidebar');
-        const overlay = document.getElementById('overlay');
-        
-        toggleBtn.addEventListener('click', () => {
-          if (window.innerWidth <= 768) {
-            document.body.classList.toggle('sidebar-open');
-          } else {
-            document.body.classList.toggle('sidebar-collapsed');
-          }
+        document.getElementById('btnToggleSidebar').addEventListener('click', () => {
+          document.body.classList.toggle('sidebar-open');
         });
 
-        overlay.addEventListener('click', () => {
+        document.getElementById('overlay').addEventListener('click', () => {
           document.body.classList.remove('sidebar-open');
         });
 
@@ -1022,9 +514,7 @@
           item.addEventListener('click', () => {
             const target = item.getAttribute('data-target');
             this.navigateTo(target);
-            if (window.innerWidth <= 768) {
-              document.body.classList.remove('sidebar-open');
-            }
+            document.body.classList.remove('sidebar-open');
           });
         });
 
@@ -1034,8 +524,7 @@
 
         document.getElementById('loginForm').addEventListener('submit', (e) => {
           e.preventDefault();
-          const pass = document.getElementById('inputPassword').value;
-          if (pass === 'admin123') {
+          if (document.getElementById('inputPassword').value === 'admin123') {
             this.state.isAdmin = true;
             document.getElementById('adminLoginBox').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
@@ -1048,74 +537,88 @@
 
         document.getElementById('settingsForm').addEventListener('submit', async (e) => {
           e.preventDefault();
-          const headerTitle = document.getElementById('inputHeaderTitle').value;
-          const aboutText = document.getElementById('aboutEditorContent').innerHTML;
-          const schoolLogoFile = document.getElementById('inputSchoolLogo').files[0];
+          try {
+            const headerTitle = document.getElementById('inputHeaderTitle').value;
+            const aboutText = document.getElementById('aboutEditorContent').innerHTML;
+            const schoolLogoFile = document.getElementById('inputSchoolLogo').files[0];
 
-          let logoUrl = this.state.settings.schoolLogo || '';
-          if (schoolLogoFile) {
-            logoUrl = await this.uploadImage(schoolLogoFile, 'logos');
+            let logoUrl = this.state.settings.schoolLogo || '';
+            if (schoolLogoFile) {
+              logoUrl = await this.uploadImage(schoolLogoFile, 'logos');
+            }
+
+            await set(ref(db, 'settings'), { headerTitle, aboutText, schoolLogo: logoUrl });
+            alert('Configurações salvas com sucesso!');
+          } catch (err) {
+            alert('Erro ao salvar configurações: ' + err.message);
           }
-
-          const updatedSettings = { headerTitle, aboutText, schoolLogo: logoUrl };
-          set(ref(db, 'settings'), updatedSettings)
-            .then(() => alert('Configurações salvas no Firebase!'))
-            .catch(err => alert('Erro ao salvar configurações: ' + err.message));
         });
 
         document.getElementById('contentForm').addEventListener('submit', async (e) => {
           e.preventDefault();
-          const editId = document.getElementById('editId').value;
-          const title = document.getElementById('inputTitle').value;
-          const desc = document.getElementById('inputDesc').value;
-          const status = document.getElementById('inputStatus').value;
-          const content = document.getElementById('editorContent').innerHTML;
-          const coverFile = document.getElementById('inputCover').files[0];
+          try {
+            const editId = document.getElementById('editId').value;
+            const title = document.getElementById('inputTitle').value;
+            const desc = document.getElementById('inputDesc').value;
+            const status = document.getElementById('inputStatus').value;
+            const content = document.getElementById('editorContent').innerHTML;
+            const coverFile = document.getElementById('inputCover').files[0];
 
-          let coverUrl = document.getElementById('currentCoverUrl').value;
-          if (coverFile) {
-            coverUrl = await this.uploadImage(coverFile, 'atividades');
-          }
+            let coverUrl = document.getElementById('currentCoverUrl').value;
+            if (coverFile) {
+              coverUrl = await this.uploadImage(coverFile, 'atividades');
+            }
 
-          const activityData = { title, desc, status, content, cover: coverUrl || '' };
+            const activityData = { title, desc, status, content, cover: coverUrl || '' };
 
-          if (editId) {
-            update(ref(db, `activities/${editId}`), activityData)
-              .then(() => { alert('Atividade atualizada!'); this.resetForm(); });
-          } else {
-            push(ref(db, 'activities'), activityData)
-              .then(() => { alert('Atividade criada!'); this.resetForm(); });
+            if (editId) {
+              await update(ref(db, `activities/${editId}`), activityData);
+              alert('Atividade atualizada!');
+            } else {
+              await push(ref(db, 'activities'), activityData);
+              alert('Atividade criada!');
+            }
+            this.resetForm();
+          } catch (err) {
+            alert('Erro ao salvar atividade: ' + err.message);
           }
         });
 
         document.getElementById('practiceForm').addEventListener('submit', async (e) => {
           e.preventDefault();
-          const editId = document.getElementById('editPracticeId').value;
-          const title = document.getElementById('inputPracticeTitle').value;
-          const category = document.getElementById('inputPracticeCategory').value;
-          const desc = document.getElementById('inputPracticeDesc').value;
-          const content = document.getElementById('practiceEditorContent').innerHTML;
-          const coverFile = document.getElementById('inputPracticeCover').files[0];
+          try {
+            const editId = document.getElementById('editPracticeId').value;
+            const title = document.getElementById('inputPracticeTitle').value;
+            const category = document.getElementById('inputPracticeCategory').value;
+            const desc = document.getElementById('inputPracticeDesc').value;
+            const content = document.getElementById('practiceEditorContent').innerHTML;
+            const coverFile = document.getElementById('inputPracticeCover').files[0];
 
-          let coverUrl = document.getElementById('currentPracticeCoverUrl').value;
-          if (coverFile) {
-            coverUrl = await this.uploadImage(coverFile, 'pratica');
-          }
+            let coverUrl = document.getElementById('currentPracticeCoverUrl').value;
+            if (coverFile) {
+              coverUrl = await this.uploadImage(coverFile, 'pratica');
+            }
 
-          const practiceData = { title, category, desc, content, cover: coverUrl || '' };
+            const practiceData = { title, category, desc, content, cover: coverUrl || '' };
 
-          if (editId) {
-            update(ref(db, `practice/${editId}`), practiceData)
-              .then(() => { alert('Registro atualizado!'); this.resetPracticeForm(); });
-          } else {
-            push(ref(db, 'practice'), practiceData)
-              .then(() => { alert('Registro inserido com sucesso!'); this.resetPracticeForm(); });
+            if (editId) {
+              await update(ref(db, `practice/${editId}`), practiceData);
+              alert('Registro atualizado!');
+            } else {
+              await push(ref(db, 'practice'), practiceData);
+              alert('Registro cadastrado com sucesso!');
+            }
+            this.resetPracticeForm();
+          } catch (err) {
+            alert('Erro ao salvar registro: ' + err.message);
           }
         });
       },
 
       navigateTo(pageId) {
+        this.state.previousPage = this.state.activePage;
         this.state.activePage = pageId;
+
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('nav .nav-item').forEach(n => n.classList.remove('active'));
 
@@ -1124,6 +627,7 @@
 
         const navLink = document.querySelector(`nav .nav-item[data-target="${pageId}"]`);
         if (navLink) navLink.classList.add('active');
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
 
@@ -1131,7 +635,7 @@
         const title = this.state.settings.headerTitle || 'Escravo, Nem Pensar! — CETI José Marques';
         document.getElementById('docTitle').textContent = title;
         document.getElementById('headerTitleText').textContent = title;
-        document.getElementById('heroTitleText').textContent = `Projeto ${title}`;
+        document.getElementById('heroTitleText').textContent = title;
         document.getElementById('aboutPageContent').innerHTML = this.state.settings.aboutText || '';
 
         const schoolImg = document.getElementById('schoolLogo');
@@ -1153,9 +657,7 @@
         this.renderCards();
         this.renderActivitiesPage();
         this.renderPracticeCards();
-        if (this.state.isAdmin) {
-          this.renderAdminTables();
-        }
+        if (this.state.isAdmin) this.renderAdminTables();
       },
 
       renderCards(filterText = '') {
@@ -1179,15 +681,11 @@
           card.className = 'window-card';
           card.onclick = () => this.viewItem(item, 'atividade');
           card.innerHTML = `
-            <div class="window-header">
-              <span>Atividade</span>
-              <span>📌</span>
-            </div>
+            <div class="window-header"><span>Atividade</span><span>📌</span></div>
             ${item.cover ? `<img src="${item.cover}" alt="${item.title}" class="card-cover-img">` : ''}
             <div class="window-body">
               <div class="window-title">${item.title}</div>
               <div class="window-desc">${item.desc}</div>
-              <span class="meta-tag">Acessar conteúdo</span>
             </div>
           `;
           container.appendChild(card);
@@ -1206,10 +704,7 @@
           card.className = 'window-card';
           card.onclick = () => this.viewItem(item, 'atividade');
           card.innerHTML = `
-            <div class="window-header">
-              <span>🎯 Pedagógico</span>
-              <span>📖</span>
-            </div>
+            <div class="window-header"><span>🎯 Pedagógico</span><span>📖</span></div>
             ${item.cover ? `<img src="${item.cover}" alt="${item.title}" class="card-cover-img">` : ''}
             <div class="window-body">
               <div class="window-title">${item.title}</div>
@@ -1247,10 +742,7 @@
           card.className = 'window-card';
           card.onclick = () => this.viewItem(item, 'pratica');
           card.innerHTML = `
-            <div class="window-header">
-              <span>${item.category}</span>
-              <span>📸</span>
-            </div>
+            <div class="window-header"><span>${item.category}</span><span>📸</span></div>
             ${item.cover ? `<img src="${item.cover}" alt="${item.title}" class="card-cover-img">` : ''}
             <div class="window-body">
               <div class="window-title">${item.title}</div>
@@ -1267,7 +759,7 @@
         
         const coverContainer = document.getElementById('viewCoverContainer');
         if (item.cover) {
-          coverContainer.innerHTML = `<img src="${item.cover}" style="max-width: 100%; max-height: 480px; width: auto; object-fit: contain; border-radius: 8px; margin: 1.5rem auto; display: block; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">`;
+          coverContainer.innerHTML = `<img src="${item.cover}" style="max-width: 100%; max-height: 480px; width: auto; border-radius: 8px; margin: 1.5rem auto; display: block; box-shadow: var(--sombra);">`;
         } else {
           coverContainer.innerHTML = '';
         }
@@ -1277,10 +769,8 @@
       },
 
       renderAdminTables() {
-        const statTotal = document.getElementById('statTotal');
-        const statPractice = document.getElementById('statPractice');
-        if (statTotal) statTotal.textContent = this.state.activities.length;
-        if (statPractice) statPractice.textContent = this.state.practiceItems.length;
+        document.getElementById('statTotal').textContent = this.state.activities.length;
+        document.getElementById('statPractice').textContent = this.state.practiceItems.length;
 
         const actBody = document.getElementById('adminTableBody');
         if (actBody) {
@@ -1289,7 +779,7 @@
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td>${item.title}</td>
-              <td><span class="meta-tag">${item.status}</span></td>
+              <td><span style="font-size:0.8rem; background:var(--bg-principal); padding:2px 6px; border-radius:4px;">${item.status}</span></td>
               <td>
                 <button class="btn-action" style="padding:0.2rem 0.5rem; font-size:0.8rem;" onclick="App.editActivity('${item.id}')">Editar</button>
                 <button class="btn-action btn-secondary" style="padding:0.2rem 0.5rem; font-size:0.8rem;" onclick="App.deleteActivity('${item.id}')">Excluir</button>
