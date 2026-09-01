@@ -73,6 +73,7 @@
       font-weight: 600; transition: background 0.2s;
     }
     .btn-action:hover { opacity: 0.9; }
+    .btn-action:disabled { background: var(--texto-suave); cursor: not-allowed; }
     .btn-secondary { background: var(--texto-suave); }
     .btn-danger { background: #E53E3E; }
     .editor-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
@@ -117,7 +118,7 @@
     <!-- SIDEBAR -->
     <sidebar id="appSidebar">
       <button class="btn-action btn-secondary" id="toggleSidebarBtn" style="margin-bottom: 15px;">☰ <span class="sidebar-text">Menu</span></button>
-      <h2 class="sidebar-text" id="sidebarSchoolLabel">CETI José Marques</h2>
+      <h2 class="sidebar-text" id="sidebarSchoolLabel">Carregando...</h2>
       
       <button class="nav-btn active" data-page="home">🏠 <span class="sidebar-text">Início</span></button>
       <button class="nav-btn" data-page="about">ℹ️ <span class="sidebar-text">Sobre</span></button>
@@ -130,8 +131,8 @@
     <main>
       <!-- HEADER / HERO -->
       <header style="margin-bottom: 20px;">
-        <h1 id="heroTitleDisplay">Projeto Escravo, Nem Pensar!</h1>
-        <p style="color: var(--texto-suave);" id="heroSchoolDisplay">CETI José Marques</p>
+        <h1 id="heroTitleDisplay">Carregando...</h1>
+        <p style="color: var(--texto-suave);" id="heroSchoolDisplay">Aguarde um momento</p>
       </header>
 
       <!-- PÁGINA INICIAL -->
@@ -187,7 +188,7 @@
           </form>
         </div>
 
-        <!-- PAINEL ADMIN (OCULTO INICIALMENTE) -->
+        <!-- PAINEL ADMIN -->
         <div id="adminPanel" style="display: none;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2>Painel de Controle</h2>
@@ -213,16 +214,13 @@
             <h3>📝 Editar Conteúdo "Sobre o Projeto"</h3>
             <div class="form-group">
               <div class="editor-toolbar">
-                <button type="button" onclick="execCmd('bold')"><b>B</b></button>
-                <button type="button" onclick="execCmd('italic')"><i>I</i></button>
-                <button type="button" onclick="execCmd('underline')"><u>U</u></button>
-                <button type="button" onclick="execCmd('justifyLeft')">Esquerda</button>
-                <button type="button" onclick="execCmd('justifyCenter')">Centralizar</button>
-                <button type="button" onclick="execCmd('justifyRight')">Direita</button>
-                <button type="button" onclick="execCmd('insertUnorderedList')">• Lista</button>
-                <label class="btn-action btn-secondary" style="padding: 2px 8px; cursor: pointer; display: inline-block;">
-                  🖼️ Inserir Imagem <input type="file" accept="image/*" style="display:none;" onchange="insertLocalImageEditor(event, 'aboutEditor')">
-                </label>
+                <button type="button" data-cmd="bold"><b>B</b></button>
+                <button type="button" data-cmd="italic"><i>I</i></button>
+                <button type="button" data-cmd="underline"><u>U</u></button>
+                <button type="button" data-cmd="justifyLeft">Esquerda</button>
+                <button type="button" data-cmd="justifyCenter">Centralizar</button>
+                <button type="button" data-cmd="justifyRight">Direita</button>
+                <button type="button" data-cmd="insertUnorderedList">• Lista</button>
               </div>
               <div id="aboutEditor" class="editor-content" contenteditable="true"></div>
             </div>
@@ -259,7 +257,6 @@
               <div class="form-group">
                 <label>Imagem de Capa (Galeria):</label>
                 <input type="file" id="contentCoverFile" accept="image/*">
-                <input type="hidden" id="contentCoverBase64">
                 <div id="coverPreview" style="margin-top: 10px;"></div>
               </div>
 
@@ -271,15 +268,12 @@
               <div class="form-group">
                 <label>Conteúdo Detalhado:</label>
                 <div class="editor-toolbar">
-                  <button type="button" onclick="execCmd('bold')"><b>B</b></button>
-                  <button type="button" onclick="execCmd('italic')"><i>I</i></button>
-                  <button type="button" onclick="execCmd('underline')"><u>U</u></button>
-                  <button type="button" onclick="execCmd('justifyLeft')">Esquerda</button>
-                  <button type="button" onclick="execCmd('justifyCenter')">Centralizar</button>
-                  <button type="button" onclick="execCmd('insertUnorderedList')">• Lista</button>
-                  <label class="btn-action btn-secondary" style="padding: 2px 8px; cursor: pointer; display: inline-block;">
-                    🖼️ Inserir Imagem <input type="file" accept="image/*" style="display:none;" onchange="insertLocalImageEditor(event, 'contentBodyEditor')">
-                  </label>
+                  <button type="button" data-cmd="bold"><b>B</b></button>
+                  <button type="button" data-cmd="italic"><i>I</i></button>
+                  <button type="button" data-cmd="underline"><u>U</u></button>
+                  <button type="button" data-cmd="justifyLeft">Esquerda</button>
+                  <button type="button" data-cmd="justifyCenter">Centralizar</button>
+                  <button type="button" data-cmd="insertUnorderedList">• Lista</button>
                 </div>
                 <div id="contentBodyEditor" class="editor-content" contenteditable="true"></div>
               </div>
@@ -316,47 +310,44 @@
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast-msg">Operação realizada com sucesso!</div>
 
-  <script>
-    /* 1. DADOS INICIAIS DA APLICAÇÃO */
-    const defaultData = {
-      config: {
-        title: "Projeto Escravo, Nem Pensar!",
-        school: "CETI José Marques"
-      },
-      about: `<h3>Sobre a Iniciativa</h3><p>O programa <strong>Escravo, Nem Pensar!</strong> é uma iniciativa pioneira de prevenção ao trabalho escravo.</p>`,
-      items: [
-        {
-          id: "1",
-          type: "activity",
-          title: "Cine-Debate: Trabalho Escravo Contemporâneo",
-          status: "concluido",
-          cover: "",
-          summary: "Exibição de documentário com mesa redonda.",
-          body: "<p>Realizamos no auditório da escola a exibição de um documentário reflexivo.</p>"
-        }
-      ]
+  <!-- MÓDULO FIREBASE E LÓGICA DO SISTEMA -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      getStorage, ref, uploadBytes, getDownloadURL 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+    // 1. CONFIGURAÇÃO DO FIREBASE (Substitua pelos seus dados)
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "seu-projeto.firebaseapp.com",
+      projectId: "seu-projeto",
+      storageBucket: "seu-projeto.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
     };
 
-    function getAppData() {
-      const data = localStorage.getItem('enp_app_data');
-      return data ? JSON.parse(data) : defaultData;
-    }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
 
-    function saveAppData(data) {
-      localStorage.setItem('enp_app_data', JSON.stringify(data));
-      renderApp();
-    }
-
+    // Estado da Aplicação
+    let currentItems = [];
+    let currentConfig = { title: "Projeto Escravo, Nem Pensar!", school: "CETI José Marques" };
+    let currentAbout = "<h3>Sobre a Iniciativa</h3><p>Prevenção ao trabalho escravo nas escolas.</p>";
+    let selectedCoverFile = null;
     let previousPage = 'home';
 
-    /* 2. MENU RETRÁTIL E NAVEGAÇÃO */
+    // 2. NAVEGAÇÃO E INTERFACE
     const appContainer = document.getElementById('appContainer');
     const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
     const navButtons = document.querySelectorAll('.nav-btn');
     const sections = document.querySelectorAll('.page-section');
     const backBtn = document.getElementById('backBtn');
 
-    // Botão de recolher/expandir menu corrigido
     toggleSidebarBtn.addEventListener('click', () => {
       appContainer.classList.toggle('sidebar-collapsed');
     });
@@ -383,52 +374,72 @@
 
     backBtn.addEventListener('click', () => navigateTo(previousPage));
 
-    /* 3. UPLOAD DE IMAGEM LOCAL (SEM URL) */
-    document.getElementById('contentCoverFile').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
+    // Editor de Texto Formatado
+    document.querySelectorAll('.editor-toolbar button').forEach(button => {
+      button.addEventListener('click', () => {
+        const command = button.dataset.cmd;
+        document.execCommand(command, false, null);
+      });
+    });
+
+    // Preview de Capa
+    document.getElementById('contentCoverFile').addEventListener('change', (e) => {
+      selectedCoverFile = e.target.files[0];
+      if (selectedCoverFile) {
         const reader = new FileReader();
-        reader.onload = function(evt) {
-          document.getElementById('contentCoverBase64').value = evt.target.result;
+        reader.onload = (evt) => {
           document.getElementById('coverPreview').innerHTML = `<img src="${evt.target.result}" style="max-height:100px; border-radius:4px;">`;
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(selectedCoverFile);
       }
     });
 
-    function insertLocalImageEditor(event, editorId) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const imgHtml = `<img src="${e.target.result}" style="max-width:100%; height:auto; border-radius:4px; margin: 10px 0;">`;
-          document.getElementById(editorId).focus();
-          document.execCommand('insertHTML', false, imgHtml);
-        };
-        reader.readAsDataURL(file);
+    // 3. OPERAÇÕES BANCO DE DADOS (FIREBASE)
+    async function fetchAppData() {
+      try {
+        // Buscar Configurações
+        const configDoc = await getDoc(doc(db, "settings", "general"));
+        if (configDoc.exists()) {
+          currentConfig = configDoc.data();
+        }
+
+        // Buscar Conteúdo Sobre
+        const aboutDoc = await getDoc(doc(db, "settings", "about"));
+        if (aboutDoc.exists()) {
+          currentAbout = aboutDoc.data().content;
+        }
+
+        // Buscar Itens (Atividades e Materiais)
+        const querySnapshot = await getDocs(collection(db, "items"));
+        currentItems = [];
+        querySnapshot.forEach((docSnap) => {
+          currentItems.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        renderApp();
+      } catch (error) {
+        console.error("Erro ao carregar dados: ", error);
+        showToast("Erro ao conectar ao banco de dados.");
       }
     }
 
-    /* 4. RENDERIZAÇÃO DE CONTEÚDO */
     function renderApp() {
-      const data = getAppData();
+      document.getElementById('heroTitleDisplay').textContent = currentConfig.title;
+      document.getElementById('heroSchoolDisplay').textContent = currentConfig.school;
+      document.getElementById('sidebarSchoolLabel').textContent = currentConfig.school;
+      document.getElementById('aboutContentDisplay').innerHTML = currentAbout;
 
-      document.getElementById('heroTitleDisplay').textContent = data.config.title;
-      document.getElementById('heroSchoolDisplay').textContent = data.config.school;
-      document.getElementById('sidebarSchoolLabel').textContent = data.config.school;
-      document.getElementById('aboutContentDisplay').innerHTML = data.about;
+      document.getElementById('inputHeaderTitle').value = currentConfig.title;
+      document.getElementById('inputSchoolName').value = currentConfig.school;
+      document.getElementById('aboutEditor').innerHTML = currentAbout;
 
-      document.getElementById('inputHeaderTitle').value = data.config.title;
-      document.getElementById('inputSchoolName').value = data.config.school;
-      document.getElementById('aboutEditor').innerHTML = data.about;
-
-      const activities = data.items.filter(i => i.type === 'activity');
-      const materials = data.items.filter(i => i.type === 'material');
+      const activities = currentItems.filter(i => i.type === 'activity');
+      const materials = currentItems.filter(i => i.type === 'material');
 
       renderGrid('recentActivitiesGrid', activities.slice(0, 3));
       renderGrid('activitiesGrid', activities);
       renderGrid('materialsGrid', materials);
-      renderAdminTable(data.items);
+      renderAdminTable(currentItems);
     }
 
     function renderGrid(containerId, items) {
@@ -448,16 +459,19 @@
           <div class="card-body">
             <h3>${item.title}</h3>
             <p>${item.summary}</p>
-            <button class="btn-action" onclick="viewDetail('${item.id}')">Ver Detalhes</button>
+            <button class="btn-action view-btn" data-id="${item.id}">Ver Detalhes</button>
           </div>
         `;
         container.appendChild(card);
       });
+
+      container.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => viewDetail(btn.dataset.id));
+      });
     }
 
     function viewDetail(id) {
-      const data = getAppData();
-      const item = data.items.find(i => i.id === id);
+      const item = currentItems.find(i => i.id === id);
       if (!item) return;
 
       document.getElementById('viewTitle').textContent = item.title;
@@ -467,150 +481,238 @@
       navigateTo('contentViewPage');
     }
 
-    /* 5. BUSCA EM TEMPO REAL */
-    document.getElementById('homeSearchInput').addEventListener('input', (e) => filterList(e.target.value, 'activity', 'recentActivitiesGrid'));
-    document.getElementById('actSearchInput').addEventListener('input', (e) => filterList(e.target.value, 'activity', 'activitiesGrid'));
-
-    function filterList(query, type, containerId) {
-      const data = getAppData();
-      const filtered = data.items.filter(i => i.type === type && (i.title.toLowerCase().includes(query.toLowerCase()) || i.summary.toLowerCase().includes(query.toLowerCase())));
-      renderGrid(containerId, filtered);
+    // 4. UPLOAD DE MÍDIA
+    async function uploadCoverImage(file) {
+      if (!file) return null;
+      const storageRef = ref(storage, `covers/${Date.now()}_${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      return       return await getDownloadURL(snapshot.ref);
     }
 
-    /* 6. ADMIN E AUTENTICAÇÃO COM SENHA 'admin123' */
+    // 5. ADMINISTRAÇÃO E AUTENTICAÇÃO
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminLoginBox = document.getElementById('adminLoginBox');
     const adminPanel = document.getElementById('adminPanel');
     const logoutAdminBtn = document.getElementById('logoutAdminBtn');
+    const contentForm = document.getElementById('contentForm');
+    const btnCancelEdit = document.getElementById('btnCancelEdit');
 
+    // Login simples (Apenas para demonstração no front-end)
     adminLoginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const pass = document.getElementById('adminPassword').value;
-      if (pass === 'admin123') { 
+      
+      // Defina sua senha de acesso aqui
+      if (pass === "admin123") {
         adminLoginBox.style.display = 'none';
         adminPanel.style.display = 'block';
-        showToast('Acesso concedido!');
+        showToast("Acesso concedido!");
       } else {
-        alert('Senha incorreta! Tente novamente.');
+        showToast("Senha incorreta!");
       }
     });
 
     logoutAdminBtn.addEventListener('click', () => {
-      adminLoginBox.style.display = 'block';
       adminPanel.style.display = 'none';
+      adminLoginBox.style.display = 'block';
       document.getElementById('adminPassword').value = '';
+      resetForm();
+      showToast("Sessão encerrada.");
     });
 
-    function execCmd(command, value = null) {
-      document.execCommand(command, false, value);
+    // Salvar Configurações Gerais
+    document.getElementById('btnSaveConfig').addEventListener('click', async () => {
+      const title = document.getElementById('inputHeaderTitle').value;
+      const school = document.getElementById('inputSchoolName').value;
+
+      try {
+        await setDoc(doc(db, "settings", "general"), { title, school });
+        currentConfig = { title, school };
+        renderApp();
+        showToast("Configurações atualizadas!");
+      } catch (error) {
+        console.error("Erro ao salvar configurações:", error);
+        showToast("Erro ao salvar alterações.");
+      }
+    });
+
+    // Salvar Conteúdo da Página Sobre
+    document.getElementById('btnSaveAbout').addEventListener('click', async () => {
+      const content = document.getElementById('aboutEditor').innerHTML;
+
+      try {
+        await setDoc(doc(db, "settings", "about"), { content });
+        currentAbout = content;
+        renderApp();
+        showToast("Página 'Sobre' atualizada!");
+      } catch (error) {
+        console.error("Erro ao salvar Sobre:", error);
+        showToast("Erro ao salvar alterações.");
+      }
+    });
+
+    // Salvar/Editar Atividade ou Material
+    contentForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById('contentId').value;
+      const type = document.getElementById('contentType').value;
+      const title = document.getElementById('contentTitle').value;
+      const status = document.getElementById('contentStatus').value;
+      const summary = document.getElementById('contentSummary').value;
+      const body = document.getElementById('contentBodyEditor').innerHTML;
+
+      const btnSubmit = document.getElementById('btnSaveContent');
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Salvando...";
+
+      try {
+        let coverUrl = null;
+
+        if (selectedCoverFile) {
+          coverUrl = await uploadCoverImage(selectedCoverFile);
+        }
+
+        const dataPayload = {
+          type,
+          title,
+          status,
+          summary,
+          body,
+          updatedAt: new Date()
+        };
+
+        if (coverUrl) {
+          dataPayload.cover = coverUrl;
+        }
+
+        if (id) {
+          // Atualizar Item Existente
+          await updateDoc(doc(db, "items", id), dataPayload);
+          showToast("Item atualizado com sucesso!");
+        } else {
+          // Criar Novo Item
+          dataPayload.createdAt = new Date();
+          if (!coverUrl) dataPayload.cover = "";
+          await addDoc(collection(db, "items"), dataPayload);
+          showToast("Item cadastrado com sucesso!");
+        }
+
+        resetForm();
+        await fetchAppData();
+      } catch (error) {
+        console.error("Erro ao salvar item:", error);
+        showToast("Erro ao processar requisição.");
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Salvar Item";
+      }
+    });
+
+    function resetForm() {
+      document.getElementById('contentId').value = '';
+      document.getElementById('contentForm').reset();
+      document.getElementById('contentBodyEditor').innerHTML = '';
+      document.getElementById('coverPreview').innerHTML = '';
+      document.getElementById('formContentTitle').textContent = '➕ Cadastrar Nova Atividade / Material';
+      btnCancelEdit.style.display = 'none';
+      selectedCoverFile = null;
     }
 
-    document.getElementById('btnSaveConfig').addEventListener('click', () => {
-      const data = getAppData();
-      data.config.title = document.getElementById('inputHeaderTitle').value;
-      data.config.school = document.getElementById('inputSchoolName').value;
-      saveAppData(data);
-      showToast('Configurações salvas!');
-    });
+    btnCancelEdit.addEventListener('click', resetForm);
 
-    document.getElementById('btnSaveAbout').addEventListener('click', () => {
-      const data = getAppData();
-      data.about = document.getElementById('aboutEditor').innerHTML;
-      saveAppData(data);
-      showToast('Conteúdo "Sobre" atualizado!');
-    });
-
-    /* 7. CRUD DE ITENS */
-    const contentForm = document.getElementById('contentForm');
-    const btnCancelEdit = document.getElementById('btnCancelEdit');
-
-    contentForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = getAppData();
-      const id = document.getElementById('contentId').value;
-
-      const newItem = {
-        id: id ? id : Date.now().toString(),
-        type: document.getElementById('contentType').value,
-        title: document.getElementById('contentTitle').value,
-        status: document.getElementById('contentStatus').value,
-        cover: document.getElementById('contentCoverBase64').value,
-        summary: document.getElementById('contentSummary').value,
-        body: document.getElementById('contentBodyEditor').innerHTML
-      };
-
-      if (id) {
-        const index = data.items.findIndex(i => i.id === id);
-        if (index !== -1) data.items[index] = newItem;
-      } else {
-        data.items.push(newItem);
-      }
-
-      saveAppData(data);
-      resetForm();
-      showToast(id ? 'Item atualizado!' : 'Item cadastrado com sucesso!');
-    });
-
+    // Renderizar Tabela Administrativa
     function renderAdminTable(items) {
       const tbody = document.getElementById('adminContentTable');
       tbody.innerHTML = '';
 
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nenhum registro encontrado.</td></tr>';
+        return;
+      }
+
       items.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong>${item.type === 'activity' ? 'Atividade' : 'Material'}</strong></td>
-          <td>${item.title}</td>
-          <td>${item.type === 'activity' ? item.status : '-'}</td>
+          <td>${item.type === 'activity' ? 'Atividade' : 'Material'}</td>
+          <td><strong>${item.title}</strong></td>
+          <td>${item.type === 'activity' ? item.status : 'N/A'}</td>
           <td>
-            <button class="btn-action btn-secondary" style="padding: 4px 8px; font-size: 0.8rem;" onclick="editItem('${item.id}')">Editar</button>
-            <button class="btn-action btn-danger" style="padding: 4px 8px; font-size: 0.8rem;" onclick="deleteItem('${item.id}')">Excluir</button>
+            <button class="btn-action edit-btn" data-id="${item.id}" style="padding: 4px 8px; font-size: 0.8rem;">Editar</button>
+            <button class="btn-action btn-danger delete-btn" data-id="${item.id}" style="padding: 4px 8px; font-size: 0.8rem;">Excluir</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
+
+      // Eventos de Editar e Excluir
+      tbody.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => editItem(btn.dataset.id));
+      });
+
+      tbody.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => deleteItem(btn.dataset.id));
+      });
     }
 
+    // Carregar Dados no Formulário para Edição
     function editItem(id) {
-      const data = getAppData();
-      const item = data.items.find(i => i.id === id);
+      const item = currentItems.find(i => i.id === id);
       if (!item) return;
 
       document.getElementById('contentId').value = item.id;
       document.getElementById('contentType').value = item.type;
       document.getElementById('contentTitle').value = item.title;
-      document.getElementById('contentStatus').value = item.status;
-      document.getElementById('contentCoverBase64').value = item.cover || '';
-      document.getElementById('coverPreview').innerHTML = item.cover ? `<img src="${item.cover}" style="max-height:100px;">` : '';
+      document.getElementById('contentStatus').value = item.status || 'concluido';
       document.getElementById('contentSummary').value = item.summary;
       document.getElementById('contentBodyEditor').innerHTML = item.body || '';
+      
+      if (item.cover) {
+        document.getElementById('coverPreview').innerHTML = `<img src="${item.cover}" style="max-height:100px; border-radius:4px;">`;
+      } else {
+        document.getElementById('coverPreview').innerHTML = '';
+      }
 
-      document.getElementById('formContentTitle').textContent = "✏️ Editar Item";
+      document.getElementById('formContentTitle').textContent = '✏️ Editar Item';
       btnCancelEdit.style.display = 'inline-block';
-      window.scrollTo({ top: contentForm.offsetTop - 50, behavior: 'smooth' });
+
+      // Scroll até o formulário de edição
+      document.getElementById('formContentTitle').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function deleteItem(id) {
-      if (confirm('Tem certeza que deseja excluir este item?')) {
-        const data = getAppData();
-        data.items = data.items.filter(i => i.id !== id);
-        saveAppData(data);
-        showToast('Item excluído com sucesso!');
+    // Excluir Item
+    async function deleteItem(id) {
+      if (confirm("Tem certeza que deseja excluir este item permanentemente?")) {
+        try {
+          await deleteDoc(doc(db, "items", id));
+          showToast("Item excluído com sucesso!");
+          await fetchAppData();
+        } catch (error) {
+          console.error("Erro ao excluir:", error);
+          showToast("Erro ao excluir o item.");
+        }
       }
     }
 
-    function resetForm() {
-      document.getElementById('contentId').value = '';
-      contentForm.reset();
-      document.getElementById('contentCoverBase64').value = '';
-      document.getElementById('coverPreview').innerHTML = '';
-      document.getElementById('contentBodyEditor').innerHTML = '';
-      document.getElementById('formContentTitle').textContent = "➕ Cadastrar Nova Atividade / Material";
-      btnCancelEdit.style.display = 'none';
+    // 6. CAMPO DE BUSCA (FILTRO EM TEMPO REAL)
+    function setupSearch(inputId, targetGridId, type) {
+      const input = document.getElementById(inputId);
+      input.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = currentItems.filter(item => {
+          const isCorrectType = type ? item.type === type : true;
+          const matchesTitle = item.title.toLowerCase().includes(term);
+          const matchesSummary = item.summary.toLowerCase().includes(term);
+          return isCorrectType && (matchesTitle || matchesSummary);
+        });
+        renderGrid(targetGridId, filtered);
+      });
     }
 
-    btnCancelEdit.addEventListener('click', resetForm);
+    setupSearch('homeSearchInput', 'recentActivitiesGrid', 'activity');
+    setupSearch('actSearchInput', 'activitiesGrid', 'activity');
 
-    /* 8. TOAST NOTIFICAÇÃO */
+    // 7. MENSAGEM TOAST (NOTIFICAÇÃO)
     function showToast(message) {
       const toast = document.getElementById('toast');
       toast.textContent = message;
@@ -620,9 +722,9 @@
       }, 3000);
     }
 
-    /* INICIALIZAÇÃO DA APLICAÇÃO */
-    document.addEventListener('DOMContentLoaded', () => {
-      renderApp();
+    // 8. INICIALIZAÇÃO DA APLICAÇÃO
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchAppData();
     });
   </script>
 </body>
