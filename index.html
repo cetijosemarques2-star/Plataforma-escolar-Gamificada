@@ -6,368 +6,291 @@
   <title id="docTitle">Escravo, Nem Pensar!</title>
   <style>
     :root {
-      --fundo: #F4E7C8;
-      --fundo-claro: #FFF7E6;
-      --branco: #FFFFFF;
-      --terracota: #B94E2E;
-      --terracota-escuro: #963B24;
-      --laranja-terra: #D87532;
-      --azul-marinho: #142B3D;
-      --azul-marinho-claro: #1D3A4D;
-      --bege: #F5DDA5;
-      --bege-claro: #FFF1CC;
-      --texto: #142B3D;
-      --texto-secundario: #5C4635;
-      --ocre: #C58A35;
-      --amarelo-sol: #E6A83B;
-      --vermelho: #A63D2F;
-      --card-border: rgba(185, 78, 46, 0.2);
-      --sidebar-width: 260px;
-      --sidebar-collapsed-width: 70px;
-      --header-height: 60px;
+      --bg-principal: #f8f9fa;
+      --bg-card: #ffffff;
+      --bg-sidebar: #1e293b;
+      --texto-principal: #0f172a;
+      --texto-secundario: #475569;
+      --texto-sidebar: #f8fafc;
+      --terracota: #c2410c;
+      --terracota-hover: #9a3412;
+      --borda: #e2e8f0;
+      --vermelho: #dc2626;
+      --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
     [data-theme="dark"] {
-      --fundo: #111820;
-      --fundo-claro: #18232C;
-      --branco: #FFFFFF;
-      --terracota: #D66A43;
-      --terracota-escuro: #B84E30;
-      --laranja-terra: #D98A45;
-      --azul-marinho: #E7D3A5;
-      --azul-marinho-claro: #F1DFC0;
-      --bege: #FFFFFF;
-      --bege-claro: #FFFFFF;
-      --texto: #FFFFFF;
-      --texto-secundario: #D8C9B5;
-      --ocre: #D49A43;
-      --amarelo-sol: #E5AE4A;
-      --card-border: rgba(214, 106, 67, 0.3);
+      --bg-principal: #0f172a;
+      --bg-card: #1e293b;
+      --bg-sidebar: #0f172a;
+      --texto-principal: #f8fafc;
+      --texto-secundario: #cbd5e1;
+      --texto-sidebar: #f8fafc;
+      --terracota: #ea580c;
+      --terracota-hover: #c2410c;
+      --borda: #334155;
+      --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
 
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: var(--fundo-claro);
-      color: var(--texto);
-      min-height: 100vh;
+      background-color: var(--bg-principal);
+      color: var(--texto-principal);
       display: flex;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    /* HEADER */
+    /* HEADER FIXO */
     header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: var(--header-height);
-      background-color: var(--terracota);
-      color: var(--bege-claro);
+      height: 60px;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--borda);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1.25rem;
-      z-index: 100;
+      padding: 0 1rem;
+      z-index: 1000;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
     }
 
-    .header-logos {
+    .btn-toggle-sidebar {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--texto-principal);
+    }
+
+    .logo-container {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
     }
 
-    .header-logo {
-      height: 38px;
-      max-width: 100px;
+    .school-logo {
+      max-height: 40px;
+      max-width: 120px;
       object-fit: contain;
-      border-radius: 4px;
     }
 
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--bege-claro);
-      font-size: 1.4rem;
-      cursor: pointer;
+    .header-right {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 0.3rem;
-      border-radius: 4px;
+      gap: 1rem;
     }
 
-    .icon-btn:hover, .icon-btn:focus-visible {
-      background-color: var(--terracota-escuro);
-      outline: 2px solid var(--bege-claro);
-    }
-
-    .header-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .theme-btn {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      border: 1px solid var(--laranja-terra);
+    .btn-theme {
+      background: var(--bg-principal);
+      border: 1px solid var(--borda);
+      color: var(--texto-principal);
       padding: 0.4rem 0.8rem;
       border-radius: 6px;
       cursor: pointer;
       font-size: 0.85rem;
-      font-weight: 600;
     }
 
-    /* SIDEBAR & OVERLAY */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 85;
-      display: none;
-    }
-
+    /* MENU LATERAL */
     aside {
       position: fixed;
-      top: var(--header-height);
+      top: 60px;
       bottom: 0;
       left: 0;
-      width: var(--sidebar-width);
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      z-index: 90;
-      transition: width 0.25s ease, transform 0.25s ease;
+      width: 240px;
+      background-color: var(--bg-sidebar);
+      color: var(--texto-sidebar);
+      transition: transform 0.3s ease, width 0.3s ease;
+      z-index: 900;
       overflow-y: auto;
     }
 
     body.sidebar-collapsed aside {
-      width: var(--sidebar-collapsed-width);
+      width: 70px;
     }
 
-    nav {
-      display: flex;
-      flex-direction: column;
-      padding-top: 1rem;
+    body.sidebar-collapsed aside .nav-text {
+      display: none;
+    }
+
+    body.sidebar-collapsed main {
+      margin-left: 70px;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 1rem 0;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      padding: 0.85rem 1.25rem;
-      color: var(--bege-claro);
-      text-decoration: none;
-      cursor: pointer;
       gap: 1rem;
-      white-space: nowrap;
-      border-left: 4px solid transparent;
+      padding: 0.8rem 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
     }
 
     .nav-item:hover, .nav-item.active {
-      background-color: var(--azul-marinho-claro);
-      border-left-color: var(--laranja-terra);
+      background-color: var(--terracota);
+      color: #fff;
     }
 
-    body.sidebar-collapsed .nav-text {
+    /* CONTEÚDO PRINCIPAL */
+    main {
+      margin-top: 60px;
+      margin-left: 240px;
+      flex: 1;
+      padding: 2rem;
+      transition: margin-left 0.3s ease;
+    }
+
+    .page {
       display: none;
     }
 
-    /* MAIN */
-    main {
-      margin-top: var(--header-height);
-      margin-left: var(--sidebar-width);
+    .page.active {
+      display: block;
+    }
+
+    /* HERO & BUSCA */
+    .hero {
+      background-color: var(--bg-card);
       padding: 2rem;
-      width: 100%;
-      transition: margin-left 0.25s ease;
-    }
-
-    body.sidebar-collapsed main {
-      margin-left: var(--sidebar-collapsed-width);
-    }
-
-    .page { display: none; }
-    .page.active { display: block; }
-
-    .hero-banner {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 1.5rem;
       border-radius: 8px;
       margin-bottom: 2rem;
+      box-shadow: var(--sombra);
+      border: 1px solid var(--borda);
     }
 
-    .hero-banner h1 {
-      color: var(--terracota);
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
+    .search-bar {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
     }
 
-    /* CARDS COMO JANELAS DE CONTEÚDO */
-    .cards-grid {
+    .search-bar input {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      background-color: var(--bg-principal);
+      color: var(--texto-principal);
+    }
+
+    /* CARDS */
+    .grid-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1.5rem;
     }
 
     .window-card {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
+      background-color: var(--bg-card);
+      border: 1px solid var(--borda);
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: var(--sombra);
       cursor: pointer;
+      transition: transform 0.2s;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.04);
     }
 
     .window-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--terracota);
+      transform: translateY(-4px);
     }
 
     .window-header {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
-      padding: 0.6rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
+      background-color: var(--bg-principal);
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--borda);
+      font-size: 0.8rem;
+      font-weight: bold;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      color: var(--texto-secundario);
     }
 
     .card-cover-img {
       width: 100%;
       height: 160px;
       object-fit: cover;
-      border-bottom: 1px solid var(--card-border);
     }
 
     .window-body {
-      padding: 1.25rem;
-      flex-grow: 1;
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .window-title {
-      color: var(--terracota);
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       margin-bottom: 0.5rem;
     }
 
     .window-desc {
-      color: var(--texto-secundario);
       font-size: 0.9rem;
-      line-height: 1.4;
+      color: var(--texto-secundario);
+      flex: 1;
     }
 
     .meta-tag {
       display: inline-block;
-      font-size: 0.75rem;
-      background-color: var(--laranja-terra);
-      color: #fff;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      margin-top: 0.5rem;
-    }
-
-    /* ÁREA DE EXIBIÇÃO DE CONTEÚDO ENRIQUECIDO */
-    .content-area {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 2rem;
-      border-radius: 8px;
       margin-top: 1rem;
-      line-height: 1.6;
+      font-size: 0.75rem;
+      color: var(--terracota);
+      font-weight: bold;
     }
 
-    .content-area img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 6px;
-      margin: 1rem 0;
-      display: block;
-    }
-
-    .btn-action {
-      background-color: var(--terracota);
-      color: var(--bege-claro);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .btn-action:hover {
-      background-color: var(--terracota-escuro);
-    }
-
-    .btn-secondary {
-      background-color: transparent;
-      border: 1px solid var(--terracota);
-      color: var(--texto);
-    }
-
-    /* EDITOR VISUAL DE TEXTO (WYSIWYG) */
-    .editor-container {
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      overflow: hidden;
-      background-color: var(--fundo-claro);
-    }
-
-    .editor-toolbar {
-      background-color: var(--fundo);
-      border-bottom: 1px solid var(--card-border);
-      padding: 0.5rem;
+    /* TABS */
+    .tabs-container {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
 
-    .editor-toolbar button {
-      background: var(--fundo-claro);
-      border: 1px solid var(--card-border);
-      color: var(--texto);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--borda);
+      background-color: var(--bg-card);
+      color: var(--texto-principal);
+      border-radius: 20px;
       cursor: pointer;
-      font-weight: bold;
-      font-size: 0.85rem;
     }
 
-    .editor-toolbar button:hover {
+    .tab-btn.active {
       background-color: var(--terracota);
-      color: var(--bege-claro);
+      color: #fff;
+      border-color: var(--terracota);
     }
 
-    .editor-content {
-      min-height: 200px;
-      padding: 1rem;
-      outline: none;
-      color: var(--texto);
-    }
-
-    /* ADMIN & TABELAS */
+    /* PAINEL ADMIN E FORMULÁRIOS */
     .admin-card {
-      background-color: var(--fundo);
+      background-color: var(--bg-card);
+      border: 1px solid var(--borda);
       padding: 1.5rem;
       border-radius: 8px;
       margin-bottom: 2rem;
-      border: 1px solid var(--card-border);
+      box-shadow: var(--sombra);
     }
 
     .form-group {
@@ -376,100 +299,108 @@
 
     .form-group label {
       display: block;
-      margin-bottom: 0.3rem;
-      font-weight: 600;
+      margin-bottom: 0.4rem;
+      font-weight: bold;
       font-size: 0.9rem;
     }
 
-    .form-group input, .form-group select, .form-group textarea {
+    .form-group input, .form-group select {
       width: 100%;
       padding: 0.6rem;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      background-color: var(--bg-principal);
+      color: var(--texto-principal);
+    }
+
+    .editor-container {
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .editor-toolbar {
+      background-color: var(--bg-principal);
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--borda);
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .editor-toolbar button {
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      color: var(--texto-principal);
+      padding: 0.3rem 0.6rem;
       border-radius: 4px;
-      border: 1px solid var(--card-border);
-      background-color: var(--fundo-claro);
-      color: var(--texto);
-      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .editor-content {
+      min-height: 150px;
+      padding: 1rem;
+      background-color: var(--bg-card);
+      color: var(--texto-principal);
+      outline: none;
+    }
+
+    .btn-action {
+      background-color: var(--terracota);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-action:hover {
+      background-color: var(--terracota-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--texto-secundario);
     }
 
     .admin-table {
       width: 100%;
       border-collapse: collapse;
-      background-color: var(--fundo);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 2rem;
+      margin-top: 1rem;
+      background-color: var(--bg-card);
     }
 
     .admin-table th, .admin-table td {
-      padding: 0.8rem 1rem;
+      border: 1px solid var(--borda);
+      padding: 0.8rem;
       text-align: left;
-      border-bottom: 1px solid var(--card-border);
     }
 
     .admin-table th {
-      background-color: var(--azul-marinho);
-      color: var(--bege-claro);
+      background-color: var(--bg-principal);
     }
 
-    .stats-container {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-box {
-      background-color: var(--fundo);
-      border: 1px solid var(--card-border);
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      flex: 1;
-    }
-
-    .stat-box span {
-      display: block;
-      font-size: 0.85rem;
-      color: var(--texto-secundario);
-    }
-
-    .stat-box strong {
-      font-size: 1.5rem;
-      color: var(--terracota);
-    }
-
-    .tabs-header {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid var(--card-border);
-    }
-
-    .tab-btn {
-      padding: 0.5rem 1rem;
-      background: none;
-      border: none;
-      font-weight: 600;
-      color: var(--texto-secundario);
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-    }
-
-    .tab-btn.active {
-      color: var(--terracota);
-      border-bottom-color: var(--terracota);
-    }
-
-    /* MOBILE ADJUSTMENTS */
+    /* RESPONSIVIDADE */
     @media (max-width: 768px) {
       aside {
         transform: translateX(-100%);
-        width: var(--sidebar-width) !important;
       }
-      body.sidebar-open aside { transform: translateX(0); }
-      body.sidebar-open .overlay { display: block; }
-      main { margin-left: 0 !important; }
-      .stats-container { flex-direction: column; gap: 0.75rem; }
-      .header-logo { height: 30px; }
-      .header-title { font-size: 1rem; }
+      body.sidebar-open aside {
+        transform: translateX(0);
+        width: 240px;
+      }
+      main {
+        margin-left: 0 !important;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 850;
+      }
+      body.sidebar-open .overlay {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -479,188 +410,180 @@
 
   <header>
     <div class="header-left">
-      <button class="icon-btn" id="btnToggleSidebar" aria-label="Abrir ou recolher menu lateral">☰</button>
-      <div class="header-logos">
-        <img src="Logo.png" alt="Logo Plataforma" class="header-logo" id="platformLogo" onerror="this.style.display='none'">
-        <img src="EscolaLogo.png" alt="Logo Escola" class="header-logo" id="schoolLogo" onerror="this.style.display='none'">
+      <button class="btn-toggle-sidebar" id="btnToggleSidebar" title="Menu">☰</button>
+      <div class="logo-container">
+        <img id="schoolLogo" class="school-logo" src="" alt="Logo Escola" style="display: none;">
+        <span id="headerTitleText">Escravo, Nem Pensar!</span>
       </div>
-      <div class="header-title" id="headerTitleText">Escravo, Nem Pensar!</div>
     </div>
-    <button class="theme-btn" id="btnToggleTheme" aria-label="Alternar tema">Modo Escuro</button>
+    <div class="header-right">
+      <button class="btn-theme" id="btnToggleTheme">Modo Escuro</button>
+    </div>
   </header>
 
-  <aside aria-label="Menu principal">
-    <nav>
-      <a class="nav-item active" data-target="home">
-        <span>🏠</span>
-        <span class="nav-text">Início</span>
-      </a>
-      <a class="nav-item" data-target="about">
-        <span>📖</span>
-        <span class="nav-text">Sobre o projeto</span>
-      </a>
-      <a class="nav-item" data-target="activities">
-        <span>🎯</span>
-        <span class="nav-text">Atividades</span>
-      </a>
-      <a class="nav-item" data-target="practice">
-        <span>📸</span>
-        <span class="nav-text">Projeto na Prática</span>
-      </a>
-      <a class="nav-item" data-target="materials">
-        <span>📚</span>
-        <span class="nav-text">Materiais</span>
-      </a>
-      <a class="nav-item" data-target="admin">
-        <span>🔐</span>
-        <span class="nav-text">Administração</span>
-      </a>
-    </nav>
+  <aside>
+    <ul class="nav-list">
+      <li class="nav-item active" data-target="home">
+        <span>🏠</span><span class="nav-text">Início</span>
+      </li>
+      <li class="nav-item" data-target="activities">
+        <span>📚</span><span class="nav-text">Atividades</span>
+      </li>
+      <li class="nav-item" data-target="practice">
+        <span>📸</span><span class="nav-text">Projeto na Prática</span>
+      </li>
+      <li class="nav-item" data-target="materials">
+        <span>📄</span><span class="nav-text">Materiais de Apoio</span>
+      </li>
+      <li class="nav-item" data-target="about">
+        <span>ℹ️</span><span class="nav-text">Sobre o Projeto</span>
+      </li>
+      <li class="nav-item" data-target="admin">
+        <span>⚙️</span><span class="nav-text">Administração</span>
+      </li>
+    </ul>
   </aside>
 
   <main>
-    <!-- PÁGINA INICIAL -->
+    <!-- PÁGINA INÍCIO -->
     <section id="home" class="page active">
-      <div class="hero-banner">
+      <div class="hero">
         <h1 id="heroTitleText">Projeto Escravo, Nem Pensar!</h1>
-        <p style="color: var(--texto-secundario);">
-          Plataforma de conteúdos educativos e informativos para a prevenção ao trabalho escravo e promoção dos direitos humanos.
-        </p>
+        <p style="margin-top: 0.5rem; color: var(--texto-secundario);">Plataforma educativa de prevenção ao trabalho escravo e promoção dos direitos humanos.</p>
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Buscar atividades por título ou conteúdo...">
+        </div>
       </div>
-      <h2>Módulos e Atividades em Destaque</h2>
+
+      <h2>Atividades em Destaque</h2>
       <br>
-      <div class="form-group" style="max-width: 320px;">
-        <input type="text" id="searchInput" placeholder="🔍 Buscar por título ou palavra-chave...">
-      </div>
-      <br>
-      <div class="cards-grid" id="cardsContainer"></div>
+      <div class="grid-cards" id="cardsContainer"></div>
     </section>
 
-    <!-- SOBRE O PROJETO -->
-    <section id="about" class="page">
-      <h1>Sobre o projeto</h1>
-      <div class="content-area" id="aboutPageContent">
-        <p>O <strong>Escravo, Nem Pensar!</strong> é um programa de educação dedicado à prevenção do trabalho escravo no Brasil.</p>
-        <br>
-        <p>Esta plataforma foi desenvolvida de forma modular para organizar e disponibilizar atividades, textos de apoio, fotos e materiais interativos sobre direitos humanos e trabalho digno.</p>
-      </div>
-    </section>
-
-    <!-- ATIVIDADES -->
+    <!-- PÁGINA ATIVIDADES -->
     <section id="activities" class="page">
-      <h1>🎯 Atividades Pedagógicas</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Explore o acervo completo de atividades educativas.</p>
-      <div class="cards-grid" id="activitiesContainer"></div>
+      <h2>Todas as Atividades</h2>
+      <br>
+      <div class="grid-cards" id="activitiesContainer"></div>
     </section>
 
-    <!-- PROJETO NA PRÁTICA -->
+    <!-- PÁGINA PROJETO NA PRÁTICA -->
     <section id="practice" class="page">
-      <h1>📸 Projeto na Prática</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Registros das ações, culminâncias, apresentações e trabalhos realizados pelos estudantes.</p>
-      
-      <div class="tabs-header">
+      <h2>Projeto na Prática</h2>
+      <p style="margin-bottom: 1rem; color: var(--texto-secundario);">Registros das produções, relatos e eventos realizados pelos alunos.</p>
+
+      <div class="tabs-container">
         <button class="tab-btn active" onclick="App.filterPractice('Todos', this)">Todos</button>
         <button class="tab-btn" onclick="App.filterPractice('Culminância', this)">Culminância</button>
-        <button class="tab-btn" onclick="App.filterPractice('Galeria de Fotos', this)">Fotos</button>
+        <button class="tab-btn" onclick="App.filterPractice('Galeria de Fotos', this)">Galeria de Fotos</button>
         <button class="tab-btn" onclick="App.filterPractice('Apresentações', this)">Apresentações</button>
-        <button class="tab-btn" onclick="App.filterPractice('Relatos dos estudantes', this)">Relatos</button>
-        <button class="tab-btn" onclick="App.filterPractice('Trabalhos produzidos', this)">Trabalhos</button>
+        <button class="tab-btn" onclick="App.filterPractice('Relatos dos estudantes', this)">Relatos dos estudantes</button>
+        <button class="tab-btn" onclick="App.filterPractice('Trabalhos produzidos', this)">Trabalhos produzidos</button>
       </div>
 
-      <div class="cards-grid" id="practiceContainer"></div>
+      <div class="grid-cards" id="practiceContainer"></div>
     </section>
 
-    <!-- MATERIAIS DE APOIO -->
+    <!-- PÁGINA MATERIAIS DE APOIO -->
     <section id="materials" class="page">
-      <h1>📚 Materiais de Apoio</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Guias pedagógicos, cartilhas, PDFs e publicações de referência para download e consulta.</p>
-      <div class="cards-grid" id="materialsContainer"></div>
+      <h2>Materiais de Apoio</h2>
+      <p style="margin-bottom: 1rem; color: var(--texto-secundario);">Guias, cadernos pedagógicos e links oficiais para consulta.</p>
+      <div class="grid-cards" id="materialsContainer"></div>
     </section>
 
-    <!-- VISUALIZADOR DE CONTEÚDO -->
+    <!-- PÁGINA SOBRE O PROJETO -->
+    <section id="about" class="page">
+      <div class="admin-card">
+        <h2>Sobre o Projeto</h2>
+        <br>
+        <div id="aboutPageContent"></div>
+      </div>
+    </section>
+
+    <!-- LEITOR DE CONTEÚDO (DETALHES DA ATIVIDADE OU REGISTRO) -->
     <section id="contentView" class="page">
-      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')">← Voltar</button>
-      <h1 id="viewTitle" style="margin-top: 1rem; color: var(--terracota);"></h1>
-      <div id="viewMetaInfo" style="margin-top: 0.5rem; color: var(--texto-secundario);"></div>
-      <div id="viewCoverContainer"></div>
-      <div class="content-area" id="viewBody"></div>
+      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')" style="margin-bottom: 1rem;">← Voltar</button>
+      <div class="admin-card">
+        <h1 id="viewTitle"></h1>
+        <p id="viewMetaInfo" style="color: var(--terracota); font-weight: bold; margin-top: 0.5rem;"></p>
+        <div id="viewCoverContainer"></div>
+        <hr style="margin: 1.5rem 0; border-color: var(--borda);">
+        <div id="viewBody" style="line-height: 1.6;"></div>
+      </div>
     </section>
 
-    <!-- ÁREA DO ADMINISTRADOR -->
+    <!-- PÁGINA ÁREA ADMINISTRATIVA -->
     <section id="admin" class="page">
-      <h1>🔐 Área do Administrador</h1>
-      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Gerencie o conteúdo do site e os registros das atividades na prática.</p>
-
-      <!-- PAINEL DE LOGIN -->
-      <div id="adminLoginBox" class="admin-card" style="max-width: 400px;">
-        <h3>Acesso Restrito</h3>
+      <!-- TELA DE LOGIN -->
+      <div id="adminLoginBox" class="admin-card" style="max-width: 400px; margin: 2rem auto;">
+        <h3>🔒 Acesso Restrito</h3>
         <br>
         <form id="loginForm">
           <div class="form-group">
-            <label for="inputPassword">Senha de Acesso</label>
-            <input type="password" id="inputPassword" required autocomplete="current-password">
+            <label for="inputPassword">Senha de Administrador</label>
+            <input type="password" id="inputPassword" placeholder="Digite a senha" required>
           </div>
-          <button type="submit" class="btn-action">Entrar</button>
+          <button type="submit" class="btn-action" style="width: 100%;">Entrar</button>
         </form>
       </div>
 
       <!-- PAINEL ADMINISTRATIVO -->
       <div id="adminPanel" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <span>Sessão ativa como <strong>Administrador</strong></span>
-          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2>Painel Administrativo</h2>
+          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair da Admin</button>
         </div>
 
-        <div class="stats-container">
-          <div class="stat-box">
-            <span>Total de Atividades</span>
-            <strong id="statTotal">0</strong>
+        <div class="grid-cards" style="margin-bottom: 2rem;">
+          <div class="window-card">
+            <div class="window-body">
+              <h4>Total de Atividades</h4>
+              <p id="statTotal" style="font-size: 2rem; font-weight: bold; color: var(--terracota);">0</p>
+            </div>
           </div>
-          <div class="stat-box">
-            <span>Registros na Prática</span>
-            <strong id="statPractice">0</strong>
+          <div class="window-card">
+            <div class="window-body">
+              <h4>Registros de Prática</h4>
+              <p id="statPractice" style="font-size: 2rem; font-weight: bold; color: var(--terracota);">0</p>
+            </div>
           </div>
-          <div class="stat-box">
-            <span>Materiais de Apoio</span>
-            <strong id="statMaterials">0</strong>
+          <div class="window-card">
+            <div class="window-body">
+              <h4>Materiais de Apoio</h4>
+              <p id="statMaterials" style="font-size: 2rem; font-weight: bold; color: var(--terracota);">0</p>
+            </div>
           </div>
         </div>
 
-        <!-- CONFIGURAÇÕES GERAIS / TEXTO E LOGO -->
+        <!-- CONFIGURAÇÕES DO CABEÇALHO E SOBRE -->
         <div class="admin-card">
-          <h3>⚙️ Configurações Gerais da Plataforma</h3>
+          <h3>⚙️ Configurações Gerais</h3>
           <br>
           <form id="settingsForm">
             <div class="form-group">
-              <label for="inputHeaderTitle">Nome da Plataforma (Título Superior)</label>
-              <input type="text" id="inputHeaderTitle" required placeholder="Ex: Escravo, Nem Pensar!">
+              <label for="inputHeaderTitle">Título da Plataforma</label>
+              <input type="text" id="inputHeaderTitle" required>
             </div>
-
             <div class="form-group">
-              <label for="inputSchoolLogo">Logo da Escola (Enviar Imagem)</label>
+              <label for="inputSchoolLogo">Logo da Escola / Projeto</label>
               <input type="file" id="inputSchoolLogo" accept="image/*">
-              <input type="hidden" id="currentSchoolLogoUrl">
-              <div id="schoolLogoPreview" style="margin-top: 0.5rem;"></div>
             </div>
-
             <div class="form-group">
-              <label>Texto da Página "Sobre o Projeto" (Editor Visual)</label>
+              <label>Conteúdo da Página "Sobre o Projeto"</label>
               <div class="editor-container">
                 <div class="editor-toolbar">
-                  <button type="button" onclick="App.execAboutCmd('bold')" title="Negrito">B</button>
-                  <button type="button" onclick="App.execAboutCmd('italic')" title="Itálico">I</button>
-                  <button type="button" onclick="App.execAboutCmd('underline')" title="Sublinhado">U</button>
-                  <button type="button" onclick="App.execAboutCmd('insertUnorderedList')" title="Lista">• Lista</button>
+                  <button type="button" onclick="App.execAboutCmd('bold')">B</button>
+                  <button type="button" onclick="App.execAboutCmd('italic')">I</button>
+                  <button type="button" onclick="App.execAboutCmd('insertUnorderedList')">• Lista</button>
                 </div>
                 <div id="aboutEditorContent" class="editor-content" contenteditable="true"></div>
               </div>
             </div>
-
             <button type="submit" class="btn-action">Salvar Configurações Gerais</button>
           </form>
         </div>
 
-        <!-- FORMULÁRIO 1: ATIVIDADES -->
+        <!-- FORMULÁRIO 1: CRIAR / EDITAR ATIVIDADE -->
         <div class="admin-card">
           <h3 id="formTitle">➕ Criar Nova Atividade</h3>
           <br>
@@ -670,17 +593,17 @@
 
             <div class="form-group">
               <label for="inputTitle">Título da Atividade</label>
-              <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Trabalho Digno">
+              <input type="text" id="inputTitle" required placeholder="Ex: Atividade 01 — Conceito de Trabalho Escravo">
             </div>
-            
+
             <div class="form-group">
               <label for="inputDesc">Descrição Curta</label>
-              <input type="text" id="inputDesc" required placeholder="Ex: Aprenda a reconhecer situações de exploração.">
+              <input type="text" id="inputDesc" required placeholder="Ex: Resumo sobre os elementos do Artigo 149 do Código Penal.">
             </div>
 
             <div class="form-group">
               <label for="inputStatus">Status</label>
-              <select id="inputInputStatus">
+              <select id="inputStatus">
                 <option value="Ativo">Ativo</option>
                 <option value="Rascunho">Rascunho</option>
               </select>
@@ -728,7 +651,7 @@
         </table>
 
         <!-- FORMULÁRIO 2: REGISTROS NA PRÁTICA -->
-        <div class="admin-card">
+        <div class="admin-card" style="margin-top: 2rem;">
           <h3 id="practiceFormTitle">➕ Novo Registro no "Projeto na Prática"</h3>
           <br>
           <form id="practiceForm">
@@ -743,7 +666,7 @@
             <div class="form-group">
               <label for="inputPracticeCategory">Categoria</label>
               <select id="inputPracticeCategory" required>
-                <option value="Culminância">Culminância</option>
+                <option                 value="Culminância">Culminância</option>
                 <option value="Galeria de Fotos">Galeria de Fotos</option>
                 <option value="Apresentações">Apresentações</option>
                 <option value="Relatos dos estudantes">Relatos dos estudantes</option>
@@ -797,7 +720,7 @@
         </table>
 
         <!-- FORMULÁRIO 3: MATERIAIS DE APOIO -->
-        <div class="admin-card">
+        <div class="admin-card" style="margin-top: 2rem;">
           <h3>➕ Adicionar Material de Apoio (PDF / Link)</h3>
           <br>
           <form id="materialForm">
@@ -923,7 +846,7 @@
 
         // Navegação pelos Menus
         document.querySelectorAll('.nav-item').forEach(item => {
-          item.addEventListener('click', (e) => {
+          item.addEventListener('click', () => {
             const target = item.getAttribute('data-target');
             this.navigateTo(target);
             if (window.innerWidth <= 768) {
@@ -1135,7 +1058,7 @@
                 <h3 class="window-title">${item.title}</h3>
                 <p class="window-desc">${item.desc}</p>
                 <br>
-                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-action" style="font-size:0.85rem;">
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-action" style="font-size:0.85rem; text-decoration:none; display:inline-block; text-align:center;">
                   Acessar Documento 🔗
                 </a>
               </div>
@@ -1241,9 +1164,7 @@
             </tr>
           `;
         });
-      },
-
-      logoutAdmin() {
+         logoutAdmin() {
         this.data.isAdmin = false;
         this.renderAdminView();
       },
