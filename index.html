@@ -1,66 +1,129 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="docTitle">Escravo, Nem Pensar!</title>
   <style>
     :root {
-      --bg-principal: #f8f9fa;
+      --terracota: #c85a32;
+      --terracota-dark: #a34321;
+      --amarelo: #f4b41a;
+      --creme: #fdfaf6;
+      --texto: #2b2b2b;
+      --texto-secundario: #666666;
       --bg-card: #ffffff;
-      --bg-sidebar: #1e293b;
-      --texto-principal: #0f172a;
-      --texto-secundario: #475569;
-      --texto-sidebar: #f8fafc;
-      --terracota: #c2410c;
-      --terracota-hover: #9a3412;
-      --borda: #e2e8f0;
-      --vermelho: #dc2626;
-      --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --borda: #e5e0d8;
+      --vermelho: #d9534f;
     }
 
     [data-theme="dark"] {
-      --bg-principal: #0f172a;
-      --bg-card: #1e293b;
-      --bg-sidebar: #0f172a;
-      --texto-principal: #f8fafc;
-      --texto-secundario: #cbd5e1;
-      --texto-sidebar: #f8fafc;
-      --terracota: #ea580c;
-      --terracota-hover: #c2410c;
-      --borda: #334155;
-      --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+      --terracota: #e07a5f;
+      --terracota-dark: #c85a32;
+      --amarelo: #f4b41a;
+      --creme: #121212;
+      --texto: #e0e0e0;
+      --texto-secundario: #a0a0a0;
+      --bg-card: #1e1e1e;
+      --borda: #333333;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      background-color: var(--bg-principal);
-      color: var(--texto-principal);
+      background-color: var(--creme);
+      color: var(--texto);
       display: flex;
       min-height: 100vh;
       transition: background-color 0.3s, color 0.3s;
     }
 
-    /* HEADER FIXO */
-    header {
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-card);
+      border-right: 1px solid var(--borda);
+      display: flex;
+      flex-direction: column;
       position: fixed;
       top: 0;
+      bottom: 0;
       left: 0;
-      right: 0;
-      height: 60px;
-      background-color: var(--bg-card);
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
       border-bottom: 1px solid var(--borda);
       display: flex;
       align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-header img {
+      max-height: 40px;
+      max-width: 100px;
+      object-fit: contain;
+    }
+
+    .sidebar-header h1 {
+      font-size: 1.1rem;
+      color: var(--terracota);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 1rem 0;
+      flex: 1;
+    }
+
+    .nav-item {
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      color: var(--texto-secundario);
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background-color: rgba(200, 90, 50, 0.1);
+      color: var(--terracota);
+      border-left: 4px solid var(--terracota);
+    }
+
+    .sidebar-footer {
+      padding: 1rem;
+      border-top: 1px solid var(--borda);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--borda);
+      padding: 1rem 2rem;
+      display: flex;
       justify-content: space-between;
-      padding: 0 1rem;
-      z-index: 1000;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 90;
     }
 
     .header-left {
@@ -72,130 +135,57 @@
     .btn-toggle-sidebar {
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
-      color: var(--texto-principal);
+      color: var(--texto);
     }
 
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: bold;
-      font-size: 1.1rem;
+    .search-bar {
+      position: relative;
     }
 
-    .school-logo {
-      max-height: 40px;
-      max-width: 120px;
-      object-fit: contain;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .btn-theme {
-      background: var(--bg-principal);
+    .search-bar input {
+      padding: 0.5rem 1rem 0.5rem 2.2rem;
+      border-radius: 20px;
       border: 1px solid var(--borda);
-      color: var(--texto-principal);
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
+      background-color: var(--creme);
+      color: var(--texto);
+      outline: none;
     }
 
-    /* MENU LATERAL */
-    aside {
-      position: fixed;
-      top: 60px;
-      bottom: 0;
-      left: 0;
-      width: 240px;
-      background-color: var(--bg-sidebar);
-      color: var(--texto-sidebar);
-      transition: transform 0.3s ease, width 0.3s ease;
-      z-index: 900;
-      overflow-y: auto;
-    }
-
-    body.sidebar-collapsed aside {
-      width: 70px;
-    }
-
-    body.sidebar-collapsed aside .nav-text {
-      display: none;
-    }
-
-    body.sidebar-collapsed main {
-      margin-left: 70px;
-    }
-
-    .nav-list {
-      list-style: none;
-      padding: 1rem 0;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.8rem 1.2rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .nav-item:hover, .nav-item.active {
-      background-color: var(--terracota);
-      color: #fff;
-    }
-
-    /* CONTEÚDO PRINCIPAL */
-    main {
-      margin-top: 60px;
-      margin-left: 240px;
-      flex: 1;
-      padding: 2rem;
-      transition: margin-left 0.3s ease;
+    .search-bar span {
+      position: absolute;
+      left: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--texto-secundario);
     }
 
     .page {
       display: none;
+      padding: 2rem;
     }
 
     .page.active {
       display: block;
     }
 
-    /* HERO & BUSCA */
+    /* HERO */
     .hero {
-      background-color: var(--bg-card);
-      padding: 2rem;
-      border-radius: 8px;
+      background: linear-gradient(135deg, var(--terracota), var(--terracota-dark));
+      color: white;
+      padding: 2.5rem 2rem;
+      border-radius: 12px;
       margin-bottom: 2rem;
-      box-shadow: var(--sombra);
-      border: 1px solid var(--borda);
     }
 
-    .search-bar {
-      margin-top: 1rem;
-      display: flex;
-      gap: 0.5rem;
+    .hero h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
     }
 
-    .search-bar input {
-      flex: 1;
-      padding: 0.6rem 1rem;
-      border: 1px solid var(--borda);
-      border-radius: 6px;
-      background-color: var(--bg-principal);
-      color: var(--texto-principal);
-    }
-
-    /* CARDS */
-    .grid-cards {
+    /* CARDS & WINDOWS */
+    .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1.5rem;
@@ -206,25 +196,23 @@
       border: 1px solid var(--borda);
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: var(--sombra);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       cursor: pointer;
-      transition: transform 0.2s;
-      display: flex;
-      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .window-card:hover {
       transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
     .window-header {
-      background-color: var(--bg-principal);
+      background-color: rgba(0,0,0,0.03);
       padding: 0.5rem 1rem;
       border-bottom: 1px solid var(--borda);
-      font-size: 0.8rem;
-      font-weight: bold;
       display: flex;
       justify-content: space-between;
+      font-size: 0.8rem;
       color: var(--texto-secundario);
     }
 
@@ -235,62 +223,64 @@
     }
 
     .window-body {
-      padding: 1rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
+      padding: 1.2rem;
     }
 
     .window-title {
       font-size: 1.1rem;
+      color: var(--texto);
       margin-bottom: 0.5rem;
     }
 
     .window-desc {
       font-size: 0.9rem;
       color: var(--texto-secundario);
-      flex: 1;
+      line-height: 1.4;
     }
 
     .meta-tag {
       display: inline-block;
-      margin-top: 1rem;
+      margin-top: 0.8rem;
       font-size: 0.75rem;
+      background-color: rgba(200, 90, 50, 0.1);
       color: var(--terracota);
-      font-weight: bold;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-weight: 600;
     }
 
     /* TABS */
-    .tabs-container {
+    .tabs {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1.5rem;
-      flex-wrap: wrap;
+      border-bottom: 1px solid var(--borda);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
     }
 
     .tab-btn {
       padding: 0.5rem 1rem;
-      border: 1px solid var(--borda);
-      background-color: var(--bg-card);
-      color: var(--texto-principal);
-      border-radius: 20px;
+      border: none;
+      background: none;
+      color: var(--texto-secundario);
       cursor: pointer;
+      border-radius: 4px;
+      font-weight: 500;
     }
 
     .tab-btn.active {
       background-color: var(--terracota);
-      color: #fff;
-      border-color: var(--terracota);
+      color: white;
     }
 
-    /* PAINEL ADMIN E FORMULÁRIOS */
+    /* ADMIN COMPONENTS */
     .admin-card {
       background-color: var(--bg-card);
       border: 1px solid var(--borda);
       padding: 1.5rem;
       border-radius: 8px;
       margin-bottom: 2rem;
-      box-shadow: var(--sombra);
     }
 
     .form-group {
@@ -300,62 +290,56 @@
     .form-group label {
       display: block;
       margin-bottom: 0.4rem;
-      font-weight: bold;
+      font-weight: 500;
       font-size: 0.9rem;
     }
 
-    .form-group input, .form-group select {
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%;
       padding: 0.6rem;
       border: 1px solid var(--borda);
-      border-radius: 6px;
-      background-color: var(--bg-principal);
-      color: var(--texto-principal);
+      border-radius: 4px;
+      background-color: var(--creme);
+      color: var(--texto);
     }
 
     .editor-container {
       border: 1px solid var(--borda);
-      border-radius: 6px;
+      border-radius: 4px;
       overflow: hidden;
     }
 
     .editor-toolbar {
-      background-color: var(--bg-principal);
-      padding: 0.5rem;
+      background-color: rgba(0,0,0,0.05);
+      padding: 0.4rem;
       border-bottom: 1px solid var(--borda);
       display: flex;
-      gap: 0.4rem;
+      gap: 0.3rem;
     }
 
     .editor-toolbar button {
-      background: var(--bg-card);
+      padding: 0.2rem 0.5rem;
       border: 1px solid var(--borda);
-      color: var(--texto-principal);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
+      background: var(--bg-card);
+      color: var(--texto);
       cursor: pointer;
+      border-radius: 3px;
     }
 
     .editor-content {
       min-height: 150px;
-      padding: 1rem;
-      background-color: var(--bg-card);
-      color: var(--texto-principal);
+      padding: 0.8rem;
       outline: none;
     }
 
     .btn-action {
       background-color: var(--terracota);
-      color: #fff;
+      color: white;
       border: none;
       padding: 0.6rem 1.2rem;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-action:hover {
-      background-color: var(--terracota-hover);
+      font-weight: 600;
     }
 
     .btn-secondary {
@@ -366,40 +350,63 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      background-color: var(--bg-card);
     }
 
     .admin-table th, .admin-table td {
+      padding: 0.75rem;
       border: 1px solid var(--borda);
-      padding: 0.8rem;
       text-align: left;
     }
 
     .admin-table th {
-      background-color: var(--bg-principal);
+      background-color: rgba(0,0,0,0.03);
     }
 
-    /* RESPONSIVIDADE */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--borda);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--terracota);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 95;
+    }
+
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-      aside {
+      .sidebar {
         transform: translateX(-100%);
       }
-      body.sidebar-open aside {
+      body.sidebar-open .sidebar {
         transform: translateX(0);
-        width: 240px;
-      }
-      main {
-        margin-left: 0 !important;
-      }
-      .overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 850;
       }
       body.sidebar-open .overlay {
         display: block;
+      }
+      .main-content {
+        margin-left: 0;
       }
     }
   </style>
@@ -408,182 +415,167 @@
 
   <div class="overlay" id="overlay"></div>
 
-  <header>
-    <div class="header-left">
-      <button class="btn-toggle-sidebar" id="btnToggleSidebar" title="Menu">☰</button>
-      <div class="logo-container">
-        <img id="schoolLogo" class="school-logo" src="" alt="Logo Escola" style="display: none;">
-        <span id="headerTitleText">Escravo, Nem Pensar!</span>
-      </div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img id="schoolLogo" src="" alt="Logo" style="display:none;">
+      <h1 id="headerTitleText">Escravo, Nem Pensar!</h1>
     </div>
-    <div class="header-right">
-      <button class="btn-theme" id="btnToggleTheme">Modo Escuro</button>
-    </div>
-  </header>
-
-  <aside>
-    <ul class="nav-list">
-      <li class="nav-item active" data-target="home">
-        <span>🏠</span><span class="nav-text">Início</span>
-      </li>
-      <li class="nav-item" data-target="activities">
-        <span>📚</span><span class="nav-text">Atividades</span>
-      </li>
-      <li class="nav-item" data-target="practice">
-        <span>📸</span><span class="nav-text">Projeto na Prática</span>
-      </li>
-      <li class="nav-item" data-target="materials">
-        <span>📄</span><span class="nav-text">Materiais de Apoio</span>
-      </li>
-      <li class="nav-item" data-target="about">
-        <span>ℹ️</span><span class="nav-text">Sobre o Projeto</span>
-      </li>
-      <li class="nav-item" data-target="admin">
-        <span>⚙️</span><span class="nav-text">Administração</span>
-      </li>
+    <ul class="sidebar-menu">
+      <li class="nav-item active" data-target="home"><span>🏠</span> Início</li>
+      <li class="nav-item" data-target="about"><span>ℹ️</span> Sobre o Projeto</li>
+      <li class="nav-item" data-target="activities"><span>📚</span> Atividades</li>
+      <li class="nav-item" data-target="practice"><span>📸</span> Projeto na Prática</li>
+      <li class="nav-item" data-target="materials"><span>📄</span> Materiais de Apoio</li>
+      <li class="nav-item" data-target="admin"><span>⚙️</span> Painel Admin</li>
     </ul>
+    <div class="sidebar-footer">
+      <button class="btn-action btn-secondary" id="btnToggleTheme" style="width: 100%;">Modo Escuro</button>
+    </div>
   </aside>
 
-  <main>
-    <!-- PÁGINA INÍCIO -->
-    <section id="home" class="page active">
-      <div class="hero">
-        <h1 id="heroTitleText">Projeto Escravo, Nem Pensar!</h1>
-        <p style="margin-top: 0.5rem; color: var(--texto-secundario);">Plataforma educativa de prevenção ao trabalho escravo e promoção dos direitos humanos.</p>
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header>
+      <div class="header-left">
+        <button class="btn-toggle-sidebar" id="btnToggleSidebar">☰</button>
         <div class="search-bar">
-          <input type="text" id="searchInput" placeholder="Buscar atividades por título ou conteúdo...">
+          <span>🔍</span>
+          <input type="text" id="searchInput" placeholder="Buscar atividades...">
         </div>
       </div>
+    </header>
 
-      <h2>Atividades em Destaque</h2>
+    <!-- INÍCIO -->
+    <section id="home" class="page active">
+      <div class="hero">
+        <h2 id="heroTitleText">Projeto Escravo, Nem Pensar!</h2>
+        <p>Promovendo a educação em direitos humanos e a prevenção ao trabalho escravo.</p>
+      </div>
+      <h3>Atividades em Destaque</h3>
       <br>
-      <div class="grid-cards" id="cardsContainer"></div>
+      <div class="cards-grid" id="cardsContainer"></div>
     </section>
 
-    <!-- PÁGINA ATIVIDADES -->
+    <!-- SOBRE O PROJETO -->
+    <section id="about" class="page">
+      <h2>Sobre o Projeto</h2>
+      <br>
+      <div class="admin-card" id="aboutPageContent"></div>
+    </section>
+
+    <!-- ATIVIDADES -->
     <section id="activities" class="page">
-      <h2>Todas as Atividades</h2>
+      <h2>Atividades Educativas</h2>
       <br>
-      <div class="grid-cards" id="activitiesContainer"></div>
+      <div class="cards-grid" id="activitiesContainer"></div>
     </section>
 
-    <!-- PÁGINA PROJETO NA PRÁTICA -->
+    <!-- PROJETO NA PRÁTICA -->
     <section id="practice" class="page">
       <h2>Projeto na Prática</h2>
-      <p style="margin-bottom: 1rem; color: var(--texto-secundario);">Registros das produções, relatos e eventos realizados pelos alunos.</p>
-
-      <div class="tabs-container">
+      <p style="color: var(--texto-secundario); margin-bottom: 1rem;">Registros das ações, culminâncias e fotos.</p>
+      
+      <div class="tabs">
         <button class="tab-btn active" onclick="App.filterPractice('Todos', this)">Todos</button>
         <button class="tab-btn" onclick="App.filterPractice('Culminância', this)">Culminância</button>
         <button class="tab-btn" onclick="App.filterPractice('Galeria de Fotos', this)">Galeria de Fotos</button>
         <button class="tab-btn" onclick="App.filterPractice('Apresentações', this)">Apresentações</button>
-        <button class="tab-btn" onclick="App.filterPractice('Relatos dos estudantes', this)">Relatos dos estudantes</button>
-        <button class="tab-btn" onclick="App.filterPractice('Trabalhos produzidos', this)">Trabalhos produzidos</button>
+        <button class="tab-btn" onclick="App.filterPractice('Relatos dos estudantes', this)">Relatos</button>
+        <button class="tab-btn" onclick="App.filterPractice('Trabalhos produzidos', this)">Trabalhos</button>
       </div>
 
-      <div class="grid-cards" id="practiceContainer"></div>
+      <div class="cards-grid" id="practiceContainer"></div>
     </section>
 
-    <!-- PÁGINA MATERIAIS DE APOIO -->
+    <!-- MATERIAIS DE APOIO -->
     <section id="materials" class="page">
       <h2>Materiais de Apoio</h2>
-      <p style="margin-bottom: 1rem; color: var(--texto-secundario);">Guias, cadernos pedagógicos e links oficiais para consulta.</p>
-      <div class="grid-cards" id="materialsContainer"></div>
+      <br>
+      <div class="cards-grid" id="materialsContainer"></div>
     </section>
 
-    <!-- PÁGINA SOBRE O PROJETO -->
-    <section id="about" class="page">
-      <div class="admin-card">
-        <h2>Sobre o Projeto</h2>
-        <br>
-        <div id="aboutPageContent"></div>
-      </div>
-    </section>
-
-    <!-- LEITOR DE CONTEÚDO (DETALHES DA ATIVIDADE OU REGISTRO) -->
+    <!-- VISUALIZADOR DE CONTEÚDO -->
     <section id="contentView" class="page">
-      <button class="btn-action btn-secondary" onclick="App.navigateTo('home')" style="margin-bottom: 1rem;">← Voltar</button>
+      <button class="btn-action btn-secondary" onclick="App.navigateTo('activities')" style="margin-bottom: 1rem;">← Voltar</button>
       <div class="admin-card">
-        <h1 id="viewTitle"></h1>
-        <p id="viewMetaInfo" style="color: var(--terracota); font-weight: bold; margin-top: 0.5rem;"></p>
+        <h2 id="viewTitle"></h2>
+        <p id="viewMetaInfo" style="color: var(--terracota); font-weight: 600; margin: 0.5rem 0;"></p>
         <div id="viewCoverContainer"></div>
-        <hr style="margin: 1.5rem 0; border-color: var(--borda);">
+        <hr style="margin: 1rem 0; border-color: var(--borda);">
         <div id="viewBody" style="line-height: 1.6;"></div>
       </div>
     </section>
 
-    <!-- PÁGINA ÁREA ADMINISTRATIVA -->
+    <!-- PAINEL ADMIN -->
     <section id="admin" class="page">
-      <!-- TELA DE LOGIN -->
-      <div id="adminLoginBox" class="admin-card" style="max-width: 400px; margin: 2rem auto;">
-        <h3>🔒 Acesso Restrito</h3>
+      <h2>Painel Administrativo</h2>
+      <br>
+
+      <!-- LOGIN -->
+      <div id="adminLoginBox" class="admin-card" style="max-width: 400px; margin: 0 auto;">
+        <h3>Acesso Restrito</h3>
         <br>
         <form id="loginForm">
           <div class="form-group">
-            <label for="inputPassword">Senha de Administrador</label>
-            <input type="password" id="inputPassword" placeholder="Digite a senha" required>
+            <label for="inputPassword">Senha do Administrador</label>
+            <input type="password" id="inputPassword" placeholder="Digite a senha..." required>
           </div>
           <button type="submit" class="btn-action" style="width: 100%;">Entrar</button>
         </form>
       </div>
 
-      <!-- PAINEL ADMINISTRATIVO -->
+      <!-- PAINEL LOGADO -->
       <div id="adminPanel" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h2>Painel Administrativo</h2>
-          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair da Admin</button>
+          <p>Sessão ativa como administrador</p>
+          <button class="btn-action btn-secondary" onclick="App.logoutAdmin()">Sair</button>
         </div>
 
-        <div class="grid-cards" style="margin-bottom: 2rem;">
-          <div class="window-card">
-            <div class="window-body">
-              <h4>Total de Atividades</h4>
-              <p id="statTotal" style="font-size: 2rem; font-weight: bold; color: var(--terracota);">0</p>
-            </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="statTotal">0</div>
+            <div>Atividades</div>
           </div>
-          <div class="window-card">
-            <div class="window-body">
-              <h4>Registros de Prática</h4>
-              <p id="statPractice" style="font-size: 2rem; font-weight: bold; color: var(--terracota);">0</p>
-            </div>
+          <div class="stat-card">
+            <div class="stat-number" id="statPractice">0</div>
+            <div>Registros Práticos</div>
           </div>
-          <div class="window-card">
-            <div class="window-body">
-              <h4>Materiais de Apoio</h4>
-              <p id="statMaterials" style="font-size: 2rem; font-weight: bold; color: var(--terracota);">0</p>
-            </div>
+          <div class="stat-card">
+            <div class="stat-number" id="statMaterials">0</div>
+            <div>Materiais</div>
           </div>
         </div>
 
-        <!-- CONFIGURAÇÕES DO CABEÇALHO E SOBRE -->
+        <!-- CONFIGURAÇÕES DO PROJETO -->
         <div class="admin-card">
           <h3>⚙️ Configurações Gerais</h3>
           <br>
           <form id="settingsForm">
             <div class="form-group">
-              <label for="inputHeaderTitle">Título da Plataforma</label>
+              <label for="inputHeaderTitle">Nome da Instituição / Projeto</label>
               <input type="text" id="inputHeaderTitle" required>
             </div>
             <div class="form-group">
-              <label for="inputSchoolLogo">Logo da Escola / Projeto</label>
+              <label for="inputSchoolLogo">Logo da Escola / Instituição</label>
               <input type="file" id="inputSchoolLogo" accept="image/*">
             </div>
             <div class="form-group">
-              <label>Conteúdo da Página "Sobre o Projeto"</label>
+              <label>Texto da Página "Sobre o Projeto"</label>
               <div class="editor-container">
                 <div class="editor-toolbar">
                   <button type="button" onclick="App.execAboutCmd('bold')">B</button>
                   <button type="button" onclick="App.execAboutCmd('italic')">I</button>
-                  <button type="button" onclick="App.execAboutCmd('insertUnorderedList')">• Lista</button>
+                  <button type="button" onclick="App.execAboutCmd('underline')">U</button>
                 </div>
                 <div id="aboutEditorContent" class="editor-content" contenteditable="true"></div>
               </div>
             </div>
-            <button type="submit" class="btn-action">Salvar Configurações Gerais</button>
+            <button type="submit" class="btn-action">Salvar Configurações</button>
           </form>
         </div>
 
-        <!-- FORMULÁRIO 1: CRIAR / EDITAR ATIVIDADE -->
+        <!-- FORMULÁRIO 1: ATIVIDADES -->
         <div class="admin-card">
           <h3 id="formTitle">➕ Criar Nova Atividade</h3>
           <br>
@@ -598,7 +590,7 @@
 
             <div class="form-group">
               <label for="inputDesc">Descrição Curta</label>
-              <input type="text" id="inputDesc" required placeholder="Ex: Resumo sobre os elementos do Artigo 149 do Código Penal.">
+              <input type="text" id="inputDesc" required placeholder="Ex: Breve resumo para ser exibido nos cards.">
             </div>
 
             <div class="form-group">
@@ -612,18 +604,17 @@
             <div class="form-group">
               <label for="inputCoverImage">Imagem de Capa</label>
               <input type="file" id="inputCoverImage" accept="image/*">
-              <div id="coverPreview" style="margin-top: 0.5rem;"></div>
             </div>
 
             <div class="form-group">
-              <label>Conteúdo Detalhado (Editor Visual)</label>
+              <label>Conteúdo Completo (Editor Visual)</label>
               <div class="editor-container">
                 <div class="editor-toolbar">
-                  <button type="button" onclick="App.execContentCmd('bold')" title="Negrito">B</button>
-                  <button type="button" onclick="App.execContentCmd('italic')" title="Itálico">I</button>
-                  <button type="button" onclick="App.execContentCmd('underline')" title="Sublinhado">U</button>
-                  <button type="button" onclick="App.execContentCmd('insertUnorderedList')" title="Lista">• Lista</button>
-                  <button type="button" onclick="App.insertImageInContent()" title="Inserir Imagem">🖼️ Imagem</button>
+                  <button type="button" onclick="App.execContentCmd('bold')">B</button>
+                  <button type="button" onclick="App.execContentCmd('italic')">I</button>
+                  <button type="button" onclick="App.execContentCmd('underline')">U</button>
+                  <button type="button" onclick="App.execContentCmd('insertUnorderedList')">• Lista</button>
+                  <button type="button" onclick="App.insertImageInContent()">🖼️ Imagem</button>
                 </div>
                 <div id="contentEditor" class="editor-content" contenteditable="true"></div>
               </div>
@@ -649,9 +640,10 @@
           </thead>
           <tbody id="adminTableBody"></tbody>
         </table>
+        <br><br>
 
-        <!-- FORMULÁRIO 2: REGISTROS NA PRÁTICA -->
-        <div class="admin-card" style="margin-top: 2rem;">
+        <!-- FORMULÁRIO 2: PROJETO NA PRÁTICA -->
+        <div class="admin-card">
           <h3 id="practiceFormTitle">➕ Novo Registro no "Projeto na Prática"</h3>
           <br>
           <form id="practiceForm">
@@ -665,8 +657,8 @@
 
             <div class="form-group">
               <label for="inputPracticeCategory">Categoria</label>
-              <select id="inputPracticeCategory" required>
-                <option                 value="Culminância">Culminância</option>
+              <select id="inputPracticeCategory">
+                <option value="Culminância">Culminância</option>
                 <option value="Galeria de Fotos">Galeria de Fotos</option>
                 <option value="Apresentações">Apresentações</option>
                 <option value="Relatos dos estudantes">Relatos dos estudantes</option>
@@ -682,17 +674,16 @@
             <div class="form-group">
               <label for="inputPracticeImage">Imagem do Registro</label>
               <input type="file" id="inputPracticeImage" accept="image/*">
-              <div id="practiceCoverPreview" style="margin-top: 0.5rem;"></div>
             </div>
 
             <div class="form-group">
               <label>Detalhes do Registro (Editor Visual)</label>
               <div class="editor-container">
                 <div class="editor-toolbar">
-                  <button type="button" onclick="App.execPracticeCmd('bold')" title="Negrito">B</button>
-                  <button type="button" onclick="App.execPracticeCmd('italic')" title="Itálico">I</button>
-                  <button type="button" onclick="App.execPracticeCmd('underline')" title="Sublinhado">U</button>
-                  <button type="button" onclick="App.execPracticeCmd('insertUnorderedList')" title="Lista">• Lista</button>
+                  <button type="button" onclick="App.execPracticeCmd('bold')">B</button>
+                  <button type="button" onclick="App.execPracticeCmd('italic')">I</button>
+                  <button type="button" onclick="App.execPracticeCmd('underline')">U</button>
+                  <button type="button" onclick="App.execPracticeCmd('insertUnorderedList')">• Lista</button>
                 </div>
                 <div id="practiceEditor" class="editor-content" contenteditable="true"></div>
               </div>
@@ -718,9 +709,10 @@
           </thead>
           <tbody id="adminPracticeTableBody"></tbody>
         </table>
+        <br><br>
 
         <!-- FORMULÁRIO 3: MATERIAIS DE APOIO -->
-        <div class="admin-card" style="margin-top: 2rem;">
+        <div class="admin-card">
           <h3>➕ Adicionar Material de Apoio (PDF / Link)</h3>
           <br>
           <form id="materialForm">
@@ -763,7 +755,6 @@
 
   <script>
     const App = {
-      // Estado da Aplicação
       data: {
         theme: 'light',
         isAdmin: false,
@@ -824,47 +815,36 @@
       },
 
       bindEvents() {
-        // Toggle Menu Lateral
         document.getElementById('btnToggleSidebar').addEventListener('click', () => {
-          if (window.innerWidth <= 768) {
-            document.body.classList.toggle('sidebar-open');
-          } else {
-            document.body.classList.toggle('sidebar-collapsed');
-          }
+          document.body.classList.toggle('sidebar-open');
         });
 
         document.getElementById('overlay').addEventListener('click', () => {
           document.body.classList.remove('sidebar-open');
         });
 
-        // Alternar Tema Light/Dark
         document.getElementById('btnToggleTheme').addEventListener('click', () => {
           this.data.theme = this.data.theme === 'light' ? 'dark' : 'light';
           this.applyTheme();
           this.saveStorage();
         });
 
-        // Navegação pelos Menus
         document.querySelectorAll('.nav-item').forEach(item => {
           item.addEventListener('click', () => {
             const target = item.getAttribute('data-target');
             this.navigateTo(target);
-            if (window.innerWidth <= 768) {
-              document.body.classList.remove('sidebar-open');
-            }
+            document.body.classList.remove('sidebar-open');
           });
         });
 
-        // Busca Interativa
         document.getElementById('searchInput').addEventListener('input', (e) => {
           this.renderActivitiesCards(e.target.value);
         });
 
-        // Formulário de Login do Admin
         document.getElementById('loginForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const pass = document.getElementById('inputPassword').value;
-          if (pass === 'admin123') { // Senha padrão demonstrativa
+          if (pass === 'admin123') {
             this.data.isAdmin = true;
             document.getElementById('inputPassword').value = '';
             this.renderAdminView();
@@ -873,7 +853,6 @@
           }
         });
 
-        // Formulário de Configurações
         document.getElementById('settingsForm').addEventListener('submit', (e) => {
           e.preventDefault();
           this.data.settings.title = document.getElementById('inputHeaderTitle').value;
@@ -896,19 +875,16 @@
           }
         });
 
-        // Formulário de Atividades
         document.getElementById('contentForm').addEventListener('submit', (e) => {
           e.preventDefault();
           this.saveActivity();
         });
 
-        // Formulário de Prática
         document.getElementById('practiceForm').addEventListener('submit', (e) => {
           e.preventDefault();
           this.savePractice();
         });
 
-        // Formulário de Materiais
         document.getElementById('materialForm').addEventListener('submit', (e) => {
           e.preventDefault();
           this.saveMaterial();
@@ -937,7 +913,6 @@
       renderAll() {
         this.applyTheme();
 
-        // Títulos e Logos
         document.getElementById('headerTitleText').textContent = this.data.settings.title;
         document.getElementById('heroTitleText').textContent = `Projeto ${this.data.settings.title}`;
         document.getElementById('docTitle').textContent = this.data.settings.title;
@@ -950,10 +925,8 @@
           schoolLogoEl.style.display = 'none';
         }
 
-        // Conteúdo da página "Sobre"
         document.getElementById('aboutPageContent').innerHTML = this.data.settings.aboutHtml;
 
-        // Renderização de cards e tabelas
         this.renderActivitiesCards();
         this.renderPracticeCards();
         this.renderMaterialsCards();
@@ -1104,21 +1077,17 @@
         loginBox.style.display = 'none';
         adminPanel.style.display = 'block';
 
-        // Atualizar Estatísticas
         document.getElementById('statTotal').textContent = this.data.activities.length;
         document.getElementById('statPractice').textContent = this.data.practice.length;
         document.getElementById('statMaterials').textContent = this.data.materials.length;
 
-        // Preencher Campos de Configuração
         document.getElementById('inputHeaderTitle').value = this.data.settings.title;
         document.getElementById('aboutEditorContent').innerHTML = this.data.settings.aboutHtml;
 
-        // Renderizar Tabelas
         this.renderAdminTables();
       },
 
       renderAdminTables() {
-        // Tabela Atividades
         const actBody = document.getElementById('adminTableBody');
         actBody.innerHTML = '';
         this.data.activities.forEach(item => {
@@ -1134,7 +1103,6 @@
           `;
         });
 
-        // Tabela Prática
         const pracBody = document.getElementById('adminPracticeTableBody');
         pracBody.innerHTML = '';
         this.data.practice.forEach(item => {
@@ -1150,7 +1118,6 @@
           `;
         });
 
-        // Tabela Materiais
         const matBody = document.getElementById('adminMaterialsTableBody');
         matBody.innerHTML = '';
         this.data.materials.forEach(item => {
@@ -1164,12 +1131,13 @@
             </tr>
           `;
         });
-         logoutAdmin() {
+      },
+
+      logoutAdmin() {
         this.data.isAdmin = false;
         this.renderAdminView();
       },
 
-      // CRUD ATIVIDADES
       saveActivity() {
         const id = document.getElementById('editId').value;
         const title = document.getElementById('inputTitle').value;
@@ -1247,7 +1215,6 @@
         document.getElementById('btnCancelEdit').style.display = 'none';
       },
 
-      // CRUD PRÁTICA
       savePractice() {
         const id = document.getElementById('editPracticeId').value;
         const title = document.getElementById('inputPracticeTitle').value;
@@ -1325,7 +1292,6 @@
         document.getElementById('btnCancelPracticeEdit').style.display = 'none';
       },
 
-      // CRUD MATERIAIS
       saveMaterial() {
         const title = document.getElementById('inputMaterialTitle').value;
         const desc = document.getElementById('inputMaterialDesc').value;
@@ -1353,7 +1319,6 @@
         }
       },
 
-      // COMANDOS DOS EDITORES VISUAIS
       execAboutCmd(cmd) {
         document.execCommand(cmd, false, null);
       },
@@ -1374,7 +1339,6 @@
       }
     };
 
-    // Inicialização da aplicação
     document.addEventListener('DOMContentLoaded', () => {
       App.init();
     });
