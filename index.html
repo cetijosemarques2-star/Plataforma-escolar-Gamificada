@@ -334,9 +334,10 @@
       display: flex;
       gap: 0.4rem;
       flex-wrap: wrap;
+      align-items: center;
     }
 
-    .editor-toolbar button {
+    .editor-toolbar button, .editor-toolbar select {
       background: var(--fundo-claro);
       border: 1px solid var(--card-border);
       color: var(--texto);
@@ -568,12 +569,11 @@
       <div class="cards-grid" id="practiceContainer"></div>
     </section>
 
-    <!-- MATERIAIS -->
+    <!-- MATERIAIS DE APOIO -->
     <section id="materials" class="page">
       <h1>📚 Materiais de Apoio</h1>
-      <div class="content-area">
-        <p>Guias pedagógicos, cartilhas e publicações de referência para download e consulta.</p>
-      </div>
+      <p style="margin-bottom: 1.5rem; color: var(--texto-secundario);">Guias pedagógicos, cartilhas, imagens e links de referência disponíveis para acesso.</p>
+      <div class="cards-grid" id="materialsContainer"></div>
     </section>
 
     <!-- VISUALIZADOR DE CONTEÚDO -->
@@ -619,6 +619,10 @@
             <span>Registros na Prática</span>
             <strong id="statPractice">0</strong>
           </div>
+          <div class="stat-box">
+            <span>Materiais de Apoio</span>
+            <strong id="statMaterials">0</strong>
+          </div>
         </div>
 
         <!-- CONFIGURAÇÕES GERAIS / TEXTO E LOGO -->
@@ -642,9 +646,27 @@
               <label>Texto da Página "Sobre o Projeto" (Editor Visual)</label>
               <div class="editor-container">
                 <div class="editor-toolbar">
+                  <!-- Fontes -->
+                  <select onchange="App.execAboutCmd('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                  </select>
+                  <!-- Tamanho -->
+                  <select onchange="App.execAboutCmd('fontSize', this.value)">
+                    <option value="1">Pequena (Muito pequena)</option>
+                    <option value="2">Pequena</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Média</option>
+                    <option value="5">Grande</option>
+                    <option value="6">Muito Grande</option>
+                  </select>
                   <button type="button" onclick="App.execAboutCmd('bold')" title="Negrito">B</button>
                   <button type="button" onclick="App.execAboutCmd('italic')" title="Itálico">I</button>
                   <button type="button" onclick="App.execAboutCmd('underline')" title="Sublinhado">U</button>
+                  <button type="button" onclick="App.execAboutCmd('strikeThrough')" title="Tachado">S</button>
                   <button type="button" onclick="App.execAboutCmd('insertUnorderedList')" title="Lista">• Lista</button>
                 </div>
                 <div id="aboutEditorContent" class="editor-content" contenteditable="true"></div>
@@ -691,9 +713,27 @@
               <label>Conteúdo Detalhado (Editor Visual WYSIWYG)</label>
               <div class="editor-container">
                 <div class="editor-toolbar">
+                  <!-- Fontes -->
+                  <select onchange="App.execCmd('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                  </select>
+                  <!-- Tamanho -->
+                  <select onchange="App.execCmd('fontSize', this.value)">
+                    <option value="1">Pequena (Muito pequena)</option>
+                    <option value="2">Pequena</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Média</option>
+                    <option value="5">Grande</option>
+                    <option value="6">Muito Grande</option>
+                  </select>
                   <button type="button" onclick="App.execCmd('bold')" title="Negrito">B</button>
                   <button type="button" onclick="App.execCmd('italic')" title="Itálico">I</button>
                   <button type="button" onclick="App.execCmd('underline')" title="Sublinhado">U</button>
+                  <button type="button" onclick="App.execCmd('strikeThrough')" title="Tachado">S</button>
                   <button type="button" onclick="App.execCmd('formatBlock', '<h2>')" title="Título">H2</button>
                   <button type="button" onclick="App.execCmd('insertUnorderedList')" title="Lista">• Lista</button>
                   <button type="button" onclick="App.triggerImageUpload()" title="Inserir Imagem">📷 Imagem</button>
@@ -764,9 +804,27 @@
               <label>Relato / Conteúdo Completo (Editor Visual)</label>
               <div class="editor-container">
                 <div class="editor-toolbar">
+                  <!-- Fontes -->
+                  <select onchange="App.execPracticeCmd('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                  </select>
+                  <!-- Tamanho -->
+                  <select onchange="App.execPracticeCmd('fontSize', this.value)">
+                    <option value="1">Pequena (Muito pequena)</option>
+                    <option value="2">Pequena</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Média</option>
+                    <option value="5">Grande</option>
+                    <option value="6">Muito Grande</option>
+                  </select>
                   <button type="button" onclick="App.execPracticeCmd('bold')" title="Negrito">B</button>
                   <button type="button" onclick="App.execPracticeCmd('italic')" title="Itálico">I</button>
                   <button type="button" onclick="App.execPracticeCmd('underline')" title="Sublinhado">U</button>
+                  <button type="button" onclick="App.execPracticeCmd('strikeThrough')" title="Tachado">S</button>
                   <button type="button" onclick="App.execPracticeCmd('insertUnorderedList')" title="Lista">• Lista</button>
                   <button type="button" onclick="App.triggerPracticeImageUpload()" title="Inserir Imagem">📷 Imagem</button>
                   <input type="file" id="practiceEditorImgInput" accept="image/*" style="display:none;" onchange="App.insertPracticeEditorImage(this)">
@@ -794,6 +852,68 @@
               </tr>
             </thead>
             <tbody id="practiceAdminTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- FORMULÁRIO 3: CADASTRAR MATERIAIS DE APOIO -->
+        <div class="admin-card">
+          <h3 id="materialFormTitle">📚 Adicionar Material de Apoio</h3>
+          <br>
+          <form id="materialForm">
+            <input type="hidden" id="editMaterialId">
+            <input type="hidden" id="currentMaterialFileUrl">
+
+            <div class="form-group">
+              <label for="inputMaterialTitle">Título do Material</label>
+              <input type="text" id="inputMaterialTitle" required placeholder="Ex: Cartilha sobre Trabalho Escravo Contemporâneo">
+            </div>
+
+            <div class="form-group">
+              <label for="inputMaterialType">Tipo de Material</label>
+              <select id="inputMaterialType" onchange="App.toggleMaterialFields()">
+                <option value="link">Link Externo</option>
+                <option value="pdf">Arquivo PDF</option>
+                <option value="imagem">Imagem</option>
+              </select>
+            </div>
+
+            <!-- Campo Link -->
+            <div class="form-group" id="materialLinkGroup">
+              <label for="inputMaterialUrl">URL do Link</label>
+              <input type="url" id="inputMaterialUrl" placeholder="https://exemplo.com/cartilha">
+            </div>
+
+            <!-- Campo Arquivo (PDF / Imagem) -->
+            <div class="form-group" id="materialFileGroup" style="display: none;">
+              <label for="inputMaterialFile">Selecione o Arquivo</label>
+              <input type="file" id="inputMaterialFile" accept=".pdf">
+              <div id="materialFilePreview" style="margin-top: 0.5rem;"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputMaterialDesc">Descrição Curta</label>
+              <input type="text" id="inputMaterialDesc" required placeholder="Ex: Material explicativo produzido pelo programa.">
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="submit" class="btn-action">Salvar Material</button>
+              <button type="button" class="btn-action btn-secondary" onclick="App.resetMaterialForm()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-card">
+          <h3>📋 Materiais Cadastrados</h3>
+          <br>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="materialAdminTableBody"></tbody>
           </table>
         </div>
 
@@ -826,6 +946,7 @@
       state: {
         activities: [],
         practiceItems: [],
+        materials: [],
         settings: {
           headerTitle: 'Escravo, Nem Pensar!',
           schoolLogo: '',
@@ -866,6 +987,20 @@
             }));
           } else {
             this.state.practiceItems = [];
+          }
+          this.renderAll();
+        });
+
+        const matRef = ref(db, 'materials');
+        onValue(matRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            this.state.materials = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+          } else {
+            this.state.materials = [];
           }
           this.renderAll();
         });
@@ -1034,6 +1169,48 @@
             processSave(document.getElementById('currentPracticeCoverUrl').value);
           }
         });
+
+        // SUBMIT DO FORMULÁRIO DE MATERIAIS
+        document.getElementById('materialForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('editMaterialId').value;
+          const title = document.getElementById('inputMaterialTitle').value;
+          const type = document.getElementById('inputMaterialType').value;
+          const desc = document.getElementById('inputMaterialDesc').value;
+          const urlInput = document.getElementById('inputMaterialUrl').value;
+          const fileInput = document.getElementById('inputMaterialFile').files[0];
+
+          const processSave = (fileOrUrl) => {
+            const materialData = {
+              title, type, desc,
+              fileUrl: fileOrUrl || ''
+            };
+
+            if (editId) {
+              update(ref(db, `materials/${editId}`), materialData)
+                .then(() => {
+                  alert('Material atualizado!');
+                  this.resetMaterialForm();
+                });
+            } else {
+              push(ref(db, 'materials'), materialData)
+                .then(() => {
+                  alert('Material cadastrado!');
+                  this.resetMaterialForm();
+                });
+            }
+          };
+
+          if (type === 'link') {
+            processSave(urlInput);
+          } else if (fileInput) {
+            const reader = new FileReader();
+            reader.onload = (evt) => processSave(evt.target.result);
+            reader.readAsDataURL(fileInput);
+          } else {
+            processSave(document.getElementById('currentMaterialFileUrl').value);
+          }
+        });
       },
 
       navigateTo(pageId) {
@@ -1073,6 +1250,7 @@
         this.renderCards();
         this.renderActivitiesPage();
         this.renderPracticeCards();
+        this.renderMaterialsPage();
         if (this.state.isAdmin) {
           this.renderAdminTables();
         }
@@ -1168,9 +1346,46 @@
               <span>${item.category}</span>
               <span>📸</span>
             </div>
-            ${item.cover ? `<img src="${item.cover}" alt="${item.title}" class="card-cover-img">` : ''}<div class="window-body">
+            ${item.cover ? `<img src="${item.cover}" alt="${item.title}" class="card-cover-img">` : ''}
+            <div class="window-body">
               <div class="window-title">${item.title}</div>
               <div class="window-desc">${item.desc}</div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      },
+
+      renderMaterialsPage() {
+        const container = document.getElementById('materialsContainer');
+        container.innerHTML = '';
+
+        if (this.state.materials.length === 0) {
+          container.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum material de apoio cadastrado no momento.</p>';
+          return;
+        }
+
+        this.state.materials.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'window-card';
+
+          let icon = '🔗';
+          if (item.type === 'pdf') icon = '📄';
+          if (item.type === 'imagem') icon = '🖼️';
+
+          card.innerHTML = `
+            <div class="window-header">
+              <span>${item.type.toUpperCase()}</span>
+              <span>${icon}</span>
+            </div>
+            ${item.type === 'imagem' && item.fileUrl ? `<img src="${item.fileUrl}" alt="${item.title}" class="card-cover-img">` : ''}
+            <div class="window-body">
+              <div class="window-title">${item.title}</div>
+              <div class="window-desc">${item.desc}</div>
+              <br>
+              <a href="${item.fileUrl}" target="_blank" class="btn-action" style="display: inline-block; text-decoration: none; text-align: center; width: 100%;">
+                ${item.type === 'link' ? 'Acessar Link' : 'Baixar / Visualizar'}
+              </a>
             </div>
           `;
           container.appendChild(card);
@@ -1195,6 +1410,7 @@
       renderAdminTables() {
         document.getElementById('statTotal').textContent = this.state.activities.length;
         document.getElementById('statPractice').textContent = this.state.practiceItems.length;
+        document.getElementById('statMaterials').textContent = this.state.materials.length;
 
         const actBody = document.getElementById('adminTableBody');
         actBody.innerHTML = '';
@@ -1225,6 +1441,81 @@
           `;
           prcBody.appendChild(tr);
         });
+
+        const matBody = document.getElementById('materialAdminTableBody');
+        matBody.innerHTML = '';
+        this.state.materials.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.title}</td>
+            <td><strong>${item.type.toUpperCase()}</strong></td>
+            <td>
+              <button class="btn-action" style="padding:0.2rem 0.5rem; font-size:0.8rem;" onclick="App.editMaterial('${item.id}')">Editar</button>
+              <button class="btn-action btn-secondary" style="padding:0.2rem 0.5rem; font-size:0.8rem;" onclick="App.deleteMaterial('${item.id}')">Excluir</button>
+            </td>
+          `;
+          matBody.appendChild(tr);
+        });
+      },
+
+      toggleMaterialFields() {
+        const type = document.getElementById('inputMaterialType').value;
+        const linkGroup = document.getElementById('materialLinkGroup');
+        const fileGroup = document.getElementById('materialFileGroup');
+        const fileInput = document.getElementById('inputMaterialFile');
+
+        if (type === 'link') {
+          linkGroup.style.display = 'block';
+          fileGroup.style.display = 'none';
+        } else {
+          linkGroup.style.display = 'none';
+          fileGroup.style.display = 'block';
+
+          if (type === 'pdf') {
+            fileInput.setAttribute('accept', '.pdf');
+          } else if (type === 'imagem') {
+            fileInput.setAttribute('accept', 'image/*');
+          }
+        }
+      },
+
+      editMaterial(id) {
+        const item = this.state.materials.find(m => m.id === id);
+        if (!item) return;
+
+        document.getElementById('editMaterialId').value = item.id;
+        document.getElementById('inputMaterialTitle').value = item.title;
+        document.getElementById('inputMaterialType').value = item.type;
+        document.getElementById('inputMaterialDesc').value = item.desc;
+        document.getElementById('currentMaterialFileUrl').value = item.fileUrl || '';
+        document.getElementById('materialFormTitle').textContent = '✏️ Editar Material de Apoio';
+
+        this.toggleMaterialFields();
+
+        if (item.type === 'link') {
+          document.getElementById('inputMaterialUrl').value = item.fileUrl || '';
+        } else if (item.type === 'imagem' && item.fileUrl) {
+          document.getElementById('materialFilePreview').innerHTML = `<img src="${item.fileUrl}" style="height: 60px; border-radius: 4px;">`;
+        } else {
+          document.getElementById('materialFilePreview').innerHTML = `<em>Arquivo já anexado.</em>`;
+        }
+      },
+
+      deleteMaterial(id) {
+        if (confirm('Deseja excluir este material de apoio?')) {
+          remove(ref(db, `materials/${id}`))
+            .then(() => alert('Material removido!'))
+            .catch(err => alert('Erro ao excluir: ' + err.message));
+        }
+      },
+
+      resetMaterialForm() {
+        document.getElementById('editMaterialId').value = '';
+        document.getElementById('currentMaterialFileUrl').value = '';
+        document.getElementById('materialForm').reset();
+        document.getElementById('materialFilePreview').innerHTML = '';
+        document.getElementById('materialFormTitle').textContent = '📚 Adicionar Material de Apoio';
+        this.toggleMaterialFields();
       },
 
       editActivity(id) {
@@ -1330,26 +1621,4 @@
         }
       },
 
-      triggerPracticeImageUpload() {
-        document.getElementById('practiceEditorImgInput').click();
-      },
-      insertPracticeEditorImage(input) {
-        const file = input.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.execPracticeCmd('insertImage', e.target.result);
-          };
-          reader.readAsDataURL(file);
-        }
-      }
-    };
-
-    window.App = App;
-
-    document.addEventListener('DOMContentLoaded', () => {
-      App.init();
-    });
-  </script>
-</body>
-</html>
+      tri
