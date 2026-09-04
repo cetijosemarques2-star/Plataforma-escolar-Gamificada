@@ -1621,4 +1621,27 @@
         }
       },
 
-      tri
+      triggerPracticeImageUpload() {
+        document.getElementById('practiceEditorImgInput').click();
+      },
+      insertPracticeEditorImage(input) {
+        const file = input.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.execPracticeCmd('insertImage', e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    };
+
+    window.App = App;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      App.init();
+    });
+  </script>
+</body>
+</html>
+
